@@ -1,0 +1,119 @@
+.slide-motion(@className, @keyframeName) {
+    .make-motion(@className, @keyframeName);
+    .@{className}-enter,
+    .@{className}-appear {
+        opacity: 0;
+        animation-timing-function: @ease-out-quint;
+    }
+    .@{className}-leave {
+        animation-timing-function: @ease-in-quint;
+    }
+}
+
+.slide-motion(slide-up, vcuSlideUp);
+.slide-motion(slide-down, vcuSlideDown);
+.slide-motion(slide-left, vcuSlideLeft);
+.slide-motion(slide-right, vcuSlideRight);
+@keyframes vcuSlideUpIn {
+    0% {
+        opacity: 0;
+        transform-origin: 0% 0%;
+        transform: scaleY(.8);
+    }
+    100% {
+        opacity: 1;
+        transform-origin: 0% 0%;
+        transform: scaleY(1);
+    }
+}
+
+@keyframes vcuSlideUpOut {
+    0% {
+        opacity: 1;
+        transform-origin: 0% 0%;
+        transform: scaleY(1);
+    }
+    100% {
+        opacity: 0;
+        transform-origin: 0% 0%;
+        transform: scaleY(.8);
+    }
+}
+
+@keyframes vcuSlideDownIn {
+    0% {
+        opacity: 0;
+        transform-origin: 100% 100%;
+        transform: scaleY(.8);
+    }
+    100% {
+        opacity: 1;
+        transform-origin: 100% 100%;
+        transform: scaleY(1);
+    }
+}
+
+@keyframes vcuSlideDownOut {
+    0% {
+        opacity: 1;
+        transform-origin: 100% 100%;
+        transform: scaleY(1);
+    }
+    100% {
+        opacity: 0;
+        transform-origin: 100% 100%;
+        transform: scaleY(.8);
+    }
+}
+
+@keyframes vcuSlideLeftIn {
+    0% {
+        opacity: 0;
+        transform-origin: 0% 0%;
+        transform: scaleX(.8);
+    }
+    100% {
+        opacity: 1;
+        transform-origin: 0% 0%;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes vcuSlideLeftOut {
+    0% {
+        opacity: 1;
+        transform-origin: 0% 0%;
+        transform: scaleX(1);
+    }
+    100% {
+        opacity: 0;
+        transform-origin: 0% 0%;
+        transform: scaleX(.8);
+    }
+}
+
+@keyframes vcuSlideRightIn {
+    0% {
+        opacity: 0;
+        transform-origin: 100% 0%;
+        transform: scaleX(.8);
+    }
+    100% {
+        opacity: 1;
+        transform-origin: 100% 0%;
+        transform: scaleX(1);
+    }
+}
+
+@keyframes vcuSlideRightOut {
+    0% {
+        opacity: 1;
+        transform-origin: 100% 0%;
+        transform: scaleX(1);
+    }
+    100% {
+        opacity: 0;
+        transform-origin: 100% 0%;
+        transform: scaleX(.8);
+    }
+}
