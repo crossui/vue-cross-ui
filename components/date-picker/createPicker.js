@@ -7,6 +7,7 @@ import classNames from 'classnames'
 import Icon from '../icon'
 import interopDefault from '../_util/interopDefault'
 import BaseMixin from '../_util/BaseMixin'
+import Emitter from '../_util/emitter'
 import { hasProp, getOptionProps, initDefaultProps, mergeProps } from '../_util/props-util'
 
 // export const PickerProps = {
@@ -28,7 +29,7 @@ export default function createPicker(TheCalendar, props) {
       allowClear: true,
       showToday: true,
     }),
-    mixins: [BaseMixin],
+    mixins: [BaseMixin, Emitter],
     model: {
       prop: 'value',
       event: 'change',
@@ -52,6 +53,7 @@ export default function createPicker(TheCalendar, props) {
           sValue: val,
           showDate: val,
         })
+		this.dispatch('VFormItem', 'on-form-change', val);
       },
     },
     methods: {

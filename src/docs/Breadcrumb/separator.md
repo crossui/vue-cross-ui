@@ -1,23 +1,20 @@
 > 分隔符
 
-:::demo 使用` separator=">" `可以自定义分隔符，或者使用slot="separator"自定义更复杂的分隔符
+:::demo 通过设置`separator`属性来自定义分隔符，比如 `>` ，也可以接受自定义的HTML字符串。
 
 ```html
 <template>
 <div>
   <v-breadcrumb separator=">">
-    <v-breadcrumb-item>Home</v-breadcrumb-item>
-    <v-breadcrumb-item href="">Application Center</v-breadcrumb-item>
-    <v-breadcrumb-item href="">Application List</v-breadcrumb-item>
-    <v-breadcrumb-item>An Application</v-breadcrumb-item>
-  </v-breadcrumb>
-  <v-breadcrumb>
-    <span slot="separator" style="color: red">></span>
-    <v-breadcrumb-item>Home</v-breadcrumb-item>
-    <v-breadcrumb-item href="">Application Center</v-breadcrumb-item>
-    <v-breadcrumb-item href="">Application List</v-breadcrumb-item>
-    <v-breadcrumb-item>An Application</v-breadcrumb-item>
-  </v-breadcrumb>
+        <v-breadcrumb-item to="/">Home</v-breadcrumb-item>
+        <v-breadcrumb-item to="/components/breadcrumb">Components</v-breadcrumb-item>
+        <v-breadcrumb-item>Breadcrumb</v-breadcrumb-item>
+    </v-breadcrumb>
+    <v-breadcrumb separator="<b class='demo-breadcrumb-separator'>=></b>">
+        <v-breadcrumb-item to="/">Home</v-breadcrumb-item>
+        <v-breadcrumb-item to="/components/breadcrumb">Components</v-breadcrumb-item>
+        <v-breadcrumb-item>Breadcrumb</v-breadcrumb-item>
+    </v-breadcrumb>
 </div>
 </template>
 ```

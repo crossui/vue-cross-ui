@@ -46,6 +46,8 @@ export default {
       this.$emit('afterClose')
     },
     close(e) {
+	  e.stopPropagation()
+      e.preventDefault()
       this.$emit('close', e)
       if (e.defaultPrevented) {
         return

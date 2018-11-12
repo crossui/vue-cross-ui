@@ -18,7 +18,7 @@ $ yarn global add @vue/cli
 使用命令行进行初始化。
 
 ```jsx
-$ vue create vcu-demo
+$ vue init webpack vcu-demo
 ```
 
 并配置项目。

@@ -1,10 +1,5 @@
-import Vue from 'vue'
-import Form from './Form'
-import antRefDirective from '../_util/antRefDirective'
+import Form from './form.vue';
+import FormItem from './form-item.vue';
 
-Vue.use(antRefDirective)
-
-export { FormProps, FormCreateOption, ValidationRule } from './Form'
-export { FormItemProps } from './FormItem'
-
-export default Form
+Form.Item = FormItem;
+export default Form;

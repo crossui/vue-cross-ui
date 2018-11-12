@@ -2,11 +2,13 @@ import PropTypes from '../_util/vue-types'
 import classNames from 'classnames'
 import VcCheckbox from '../vc-checkbox'
 import { getOptionProps, getAttrs } from '../_util/props-util'
+import Emitter from '../_util/emitter'
 function noop () {}
 
 export default {
   inheritAttrs: false,
   name: 'VCheckbox',
+    mixins: [Emitter],
   props: {
     prefixCls: {
       default: 'vcu-checkbox',
@@ -34,6 +36,7 @@ export default {
       const targetChecked = event.target.checked
       this.$emit('input', targetChecked)
       this.$emit('change', event)
+            this.dispatch('VFormItem', 'on-form-change', targetChecked);
     },
     focus () {
       this.$refs.vcCheckbox.focus()

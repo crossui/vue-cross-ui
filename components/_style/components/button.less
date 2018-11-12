@@ -452,7 +452,14 @@
     }
     &-text {
         border-width: 0;
-        color: @primary-color;
+        background: transparent;
+        color: @text-color;
+        &:hover,
+        &:active,
+        &:focus {
+            color: @link-color;
+            background: transparent;
+        }
     }
     &-block {
         width: 100%;

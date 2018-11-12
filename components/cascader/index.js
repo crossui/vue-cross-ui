@@ -9,6 +9,7 @@ import Input from '../input'
 import Icon from '../icon'
 import { hasProp, filterEmpty, getOptionProps, getStyle, getClass, getAttrs } from '../_util/props-util'
 import BaseMixin from '../_util/BaseMixin'
+import Emitter from '../_util/emitter'
 
 const CascaderOptionType = PropTypes.shape({
   value: PropTypes.string,
@@ -108,7 +109,7 @@ const defaultDisplayRender = ({ labels }) => labels.join(' / ')
 export default {
   inheritAttrs: false,
   name: 'VCascader',
-  mixins: [BaseMixin],
+  mixins: [BaseMixin, Emitter],
   props: CascaderProps,
   model: {
     prop: 'value',
@@ -135,6 +136,7 @@ export default {
   watch: {
     value(val) {
       this.setState({ sValue: val || [] })
+	  this.dispatch('VFormItem', 'on-form-change', this.sValue);
     },
     popupVisible(val) {
       this.setState({ sPopupVisible: val })

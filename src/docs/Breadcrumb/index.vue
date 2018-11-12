@@ -5,7 +5,6 @@
       <basic id="basic"></basic>
       <separator id="separator"></separator>
       <with-icon id="with-icon"></with-icon>
-      <router id="router"></router>
       <api id="api"></api>
     </v-col>
     <v-col :span="4">
@@ -13,7 +12,6 @@
         <v-anchor-link href="#basic" title="基本" />
         <v-anchor-link href="#separator" title="分隔符" />
         <v-anchor-link href="#with-icon" title="带有图标的" />
-        <v-anchor-link href="#router" title="vue-router" />
         <v-anchor-link href="#api" title="API" />
       </v-anchor>
     </v-col>
@@ -25,7 +23,6 @@ import api from './api.md';
 import basic from './basic.md';
 import separator from './separator.md';
 import withIcon from './withIcon.md';
-import router from './router.md';
 export default {
   components: {
     headerInfo,
@@ -33,7 +30,6 @@ export default {
     basic,
     separator,
     withIcon,
-    router
   },
   data() {
     return {

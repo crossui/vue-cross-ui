@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import PropTypes from '../_util/vue-types'
 import Radio from './Radio'
 import { getOptionProps, filterEmpty, hasProp } from '../_util/props-util'
+import Emitter from '../_util/emitter'
 function noop () {}
 
 function getCheckedValue (children) {
@@ -18,6 +19,7 @@ function getCheckedValue (children) {
 
 export default {
   name: 'VRadioGroup',
+    mixins: [Emitter],
   props: {
     prefixCls: {
       default: 'vcu-radio',
@@ -86,6 +88,7 @@ export default {
   watch: {
     value (val) {
       this.stateValue = val
+            this.dispatch('VFormItem', 'on-form-change', this.stateValue);
     },
   },
   render () {

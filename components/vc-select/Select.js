@@ -11,6 +11,7 @@ import { hasProp, getSlotOptions, getPropsData, getValueByProp as getValue, getC
 import getTransitionProps from '../_util/getTransitionProps'
 import { cloneElement } from '../_util/vnode'
 import BaseMixin from '../_util/BaseMixin'
+import Emitter from '../_util/emitter'
 import proxyComponent from '../_util/proxyComponent'
 import antRefDirective from '../_util/antRefDirective'
 
@@ -56,7 +57,7 @@ function chaining (...fns) {
 const Select = {
   inheritAttrs: false,
   name: 'Select',
-  mixins: [BaseMixin],
+  mixins: [BaseMixin, Emitter],
   props: {
     ...SelectPropTypes,
     prefixCls: SelectPropTypes.prefixCls.def('rc-select'),
@@ -581,6 +582,9 @@ const Select = {
           return v.key
         })
       }
+	  value = value.filter((v) => {
+		  return v != ''
+	  })
       return value
     },
 
@@ -1197,6 +1201,7 @@ const Select = {
       const options = this.getOptionsBySingleValue(value)
       this._valueOptions = options
       this.$emit('change', vls, isMultipleOrTags(this.$props) ? options : options[0])
+	this.dispatch('VFormItem', 'on-form-change', value);
     },
 
     isChildDisabled (key) {

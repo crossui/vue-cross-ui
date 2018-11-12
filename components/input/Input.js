@@ -4,6 +4,7 @@ import omit from 'omit.js'
 import inputProps from './inputProps'
 import { hasProp, getComponentFromProp, getStyle, getClass } from '../_util/props-util'
 import { isIE, isIE9 } from '../_util/env'
+import Emitter from '../_util/emitter'
 
 function fixControlledValue (value) {
   if (typeof value === 'undefined' || value === null) {
@@ -15,6 +16,7 @@ function fixControlledValue (value) {
 export default {
   inheritAttrs: false,
   name: 'VInput',
+  mixins: [Emitter],
   props: {
     ...inputProps,
   },
@@ -47,6 +49,9 @@ export default {
       }
       this.$emit('keydown', e)
     },
+	handleBlur(e) {
+		this.dispatch('VFormItem', 'on-form-blur', this.stateValue);
+	},
     handleChange (e) {
       if (isIE && !isIE9 && this.stateValue === e.target.value) {
         return
@@ -61,6 +66,7 @@ export default {
       }
       this.$emit('change', e)
       this.$emit('input', e)
+	  this.dispatch('VFormItem', 'on-form-change', this.stateValue);
     },
 
     focus () {
@@ -168,7 +174,7 @@ export default {
         'prefix',
         'suffix',
       ])
-      const { stateValue, getInputClassName, handleKeyDown, handleChange, $listeners } = this
+      const { stateValue, getInputClassName, handleKeyDown, handleChange, handleBlur, $listeners } = this
       const inputProps = {
         domProps: {
           value: stateValue,
@@ -178,6 +184,7 @@ export default {
           ...$listeners,
           keydown: handleKeyDown,
           input: handleChange,
+          blur: handleBlur
         },
         class: classNames(getInputClassName(), getClass(this)),
         ref: 'input',

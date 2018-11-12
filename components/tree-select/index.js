@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { TreeSelectProps } from './interface'
 import LocaleReceiver from '../locale-provider/LocaleReceiver'
 import warning from '../_util/warning'
+import Emitter from '../_util/emitter'
 import { initDefaultProps, getOptionProps, getComponentFromProp, filterEmpty } from '../_util/props-util'
 
 export { TreeData, TreeSelectProps } from './interface'
@@ -14,6 +15,7 @@ export default {
   SHOW_PARENT,
   SHOW_CHILD,
   name: 'VTreeSelect',
+  mixins: [Emitter],
   props: initDefaultProps(TreeSelectProps(), {
     prefixCls: 'vcu-select',
     transitionName: 'slide-up',
@@ -23,6 +25,11 @@ export default {
   model: {
     prop: 'value',
     event: 'change',
+  },
+  watch:{
+	value(val){
+		this.dispatch('VFormItem', 'on-form-change', val);
+	}
   },
 
   created () {

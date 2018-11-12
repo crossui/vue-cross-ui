@@ -1,8 +1,10 @@
 
 import Checkbox from './Checkbox'
 import hasProp from '../_util/props-util'
+import Emitter from '../_util/emitter'
 export default {
   name: 'VCheckboxGroup',
+    mixins: [Emitter],
   props: {
     prefixCls: {
       default: 'vcu-checkbox',
@@ -39,6 +41,7 @@ export default {
   watch: {
     value (val) {
       this.sValue = val
+            this.dispatch('VFormItem', 'on-form-change', this.sValue);
     },
   },
   methods: {

@@ -2,7 +2,6 @@ import shallowEqual from 'shallowequal'
 import omit from 'omit.js'
 import { getOptionProps } from '../props-util'
 import PropTypes from '../vue-types'
-import proxyComponent from '../proxyComponent'
 
 function getDisplayName (WrappedComponent) {
   return WrappedComponent.name || 'Component'
@@ -14,10 +13,8 @@ export default function connect (mapStateToProps) {
   const finnalMapStateToProps = mapStateToProps || defaultMapStateToProps
   return function wrapWithConnect (WrappedComponent) {
     const tempProps = omit(WrappedComponent.props || {}, ['store'])
-    const props = {
-      __propsSymbol__: PropTypes.any,
-    }
-    Object.keys(tempProps).forEach(k => { props[k] = ({ ...k, required: false }) })
+    const props = {}
+    Object.keys(tempProps).forEach(k => { props[k] = PropTypes.any })
     const Connect = {
       name: `Connect_${getDisplayName(WrappedComponent)}`,
       props,
@@ -31,11 +28,7 @@ export default function connect (mapStateToProps) {
         }
       },
       watch: {
-        __propsSymbol__ () {
-          if (mapStateToProps && mapStateToProps.length === 2) {
-            this.subscribed = finnalMapStateToProps(this.store.getState(), this.$props)
-          }
-        },
+
       },
       mounted () {
         this.trySubscribe()
@@ -95,6 +88,6 @@ export default function connect (mapStateToProps) {
         )
       },
     }
-    return proxyComponent(Connect)
+    return Connect
   }
 }

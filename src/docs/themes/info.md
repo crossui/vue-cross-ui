@@ -33,8 +33,6 @@ Vue.use(vcu);
 ### 默认样式变量
 
 ```less
-
-// -------- Colors -----------
 @primary-color          : @blue-6;
 @info-color             : @blue-4;
 @success-color          : @green-6;
@@ -486,14 +484,8 @@ Vue.use(vcu);
 
 // Breadcrumb
 // ---
-@breadcrumb-base-color:        @text-color-secondary;
-@breadcrumb-last-item-color:   @text-color;
-@breadcrumb-font-size:         @font-size-base;
-@breadcrumb-icon-font-size:    @font-size-base;
-@breadcrumb-link-color:        @text-color-secondary;
-@breadcrumb-link-color-hover:  @primary-5;
-@breadcrumb-separator-color:   @text-color-secondary;
-@breadcrumb-separator-margin:  0 @padding-xs;
+@breadcrumb-base-color: @text-color-secondary;
+@breadcrumb-font-size: @font-size-base;
 
 // Slider
 // ---

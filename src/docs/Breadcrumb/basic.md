@@ -1,14 +1,13 @@
 > 基本
 
-:::demo 最简单的用法。
+:::demo 最基础的用法，通过设置`to`属性添加链接。
 
 ```html
 <template>
   <v-breadcrumb>
-    <v-breadcrumb-item>Home</v-breadcrumb-item>
-    <v-breadcrumb-item><a href="">Application Center</a></v-breadcrumb-item>
-    <v-breadcrumb-item><a href="">Application List</a></v-breadcrumb-item>
-    <v-breadcrumb-item>An Application</v-breadcrumb-item>
+    <v-breadcrumb-item to="/">Home</v-breadcrumb-item>
+    <v-breadcrumb-item to="/components/breadcrumb">Components</v-breadcrumb-item>
+    <v-breadcrumb-item>Breadcrumb</v-breadcrumb-item>
   </v-breadcrumb>
 </template>
 ```

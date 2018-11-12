@@ -1,4 +1,10 @@
+> 弹出窗表单验证
 
+:::demo 弹出窗表单验证
+
+
+
+```html
 <template>
   <div>
     <v-button type="primary" @click="handleCollection">New Collection</v-button>
@@ -227,3 +233,8 @@ export default {
   }
 }
 </script>
+```
+
+
+
+

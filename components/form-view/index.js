@@ -34,7 +34,6 @@ export default {
     const { classes, $slots, $attrs, $listeners } = this
     const props = getOptionProps(this)
     const { title, content, prefixCls, lableWidth, textAlign } = props
-    const _title = title ? title : $slots.title;
     const _content = content ? content : $slots.content;
     const formViemProps = {
       attrs: {
@@ -54,7 +53,7 @@ export default {
     }
     return (
       <div {...formViemProps}>
-        <div {...titleProps}>{_title}</div>
+        <div {...titleProps}>{title}</div>
         <div class={`${prefixCls}-content`}>{_content}</div>
       </div >
     )

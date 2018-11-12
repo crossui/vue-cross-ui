@@ -2,11 +2,13 @@ import PropTypes from '../_util/vue-types'
 import VcCheckbox from '../vc-checkbox'
 import classNames from 'classnames'
 import { getOptionProps, getAttrs } from '../_util/props-util'
+import Emitter from '../_util/emitter'
 
 function noop () {}
 
 export default {
   name: 'VRadio',
+    mixins: [Emitter],
   props: {
     prefixCls: {
       default: 'vcu-radio',
@@ -33,6 +35,7 @@ export default {
       const targetChecked = event.target.checked
       this.$emit('input', targetChecked)
       this.$emit('change', event)
+            this.dispatch('VFormItem', 'on-form-change', targetChecked);
     },
     focus () {
       this.$refs.vcCheckbox.focus()

@@ -10,6 +10,7 @@
       <hide-column id="hide-column"></hide-column>
       <addon id="addon"></addon>
       <twelve-hours id="twelve-hours"></twelve-hours>
+      <star-end id="star-end"></star-end>
       <api id="api"></api>
     </v-col>
     <v-col :span="4">
@@ -22,6 +23,7 @@
         <v-anchor-link href="#hide-column" title="选择时分" />
         <v-anchor-link href="#addon" title="附加内容" />
         <v-anchor-link href="#twelve-hours" title="12 小时制" />
+        <v-anchor-link href="#star-end" title="自定义范围选择" />
         <v-anchor-link href="#api" title="API" />
       </v-anchor>
     </v-col>
@@ -38,6 +40,7 @@ import intervalOptions from './interval-options.md';
 import hideColumn from './hide-column.md';
 import addon from './addon.md';
 import twelveHours from './twelve-hours.md';
+import starEnd from './star-end.md';
 export default {
   components: {
     headerInfo,
@@ -50,6 +53,7 @@ export default {
     hideColumn,
     addon,
     twelveHours,
+    starEnd,
   },
   data() {
     return {

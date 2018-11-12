@@ -4,19 +4,19 @@ import TransitionEvents from './css-animation/Event'
 export default {
   name: 'Wave',
   props: ['insertExtraNode'],
-  mounted() {
+  mounted () {
     this.$nextTick(() => {
       this.instance = this.bindAnimationEvent(this.$el)
     })
   },
 
-  beforeDestroy() {
+  beforeDestroy () {
     if (this.instance) {
       this.instance.cancel()
     }
   },
   methods: {
-    isNotGrey(color) {
+    isNotGrey (color) {
       const match = (color || '').match(/rgba?\((\d*), (\d*), (\d*)(, [\.\d]*)?\)/)
       if (match && match[1] && match[2] && match[3]) {
         return !(match[1] === match[2] && match[2] === match[3])
@@ -24,25 +24,29 @@ export default {
       return true
     },
 
-    onClick(node, waveColor) {
+    onClick (node) {
       if (node.className.indexOf('-leave') >= 0) {
         return
       }
       this.removeExtraStyleNode()
       const { insertExtraNode } = this.$props
-      this.extraNode = document.createElement('div')
-      const extraNode = this.extraNode
+      const extraNode = document.createElement('div')
       extraNode.className = 'vcu-click-animating-node'
-      const attributeName = this.getAttributeName()
+      const attributeName = insertExtraNode ? 'vcu-click-animating' : 'vcu-click-animating-without-extra-node'
       node.removeAttribute(attributeName)
       node.setAttribute(attributeName, 'true')
+      // Get wave color from target
+      const waveColor =
+        getComputedStyle(node).getPropertyValue('border-top-color') || // Firefox Compatible
+        getComputedStyle(node).getPropertyValue('border-color') ||
+        getComputedStyle(node).getPropertyValue('background-color')
       // Not white or transparnt or grey
       if (waveColor &&
-        waveColor !== '#ffffff' &&
-        waveColor !== 'rgb(255, 255, 255)' &&
-        this.isNotGrey(waveColor) &&
-        !/rgba\(\d*, \d*, \d*, 0\)/.test(waveColor) && // any transparent rgba color
-        waveColor !== 'transparent') {
+          waveColor !== '#ffffff' &&
+          waveColor !== 'rgb(255, 255, 255)' &&
+          this.isNotGrey(waveColor) &&
+          !/rgba\(\d*, \d*, \d*, 0\)/.test(waveColor) && // any transparent rgba color
+          waveColor !== 'transparent') {
         extraNode.style.borderColor = waveColor
         this.styleForPesudo = document.createElement('style')
         this.styleForPesudo.innerHTML =
@@ -52,14 +56,20 @@ export default {
       if (insertExtraNode) {
         node.appendChild(extraNode)
       }
-      TransitionEvents.addEndEventListener(node, this.onTransitionEnd)
+      const transitionEnd = () => {
+        node.removeAttribute(attributeName)
+        this.removeExtraStyleNode()
+        if (insertExtraNode) {
+          node.removeChild(extraNode)
+        }
+        TransitionEvents.removeEndEventListener(node, transitionEnd)
+      }
+      TransitionEvents.addEndEventListener(node, transitionEnd)
     },
 
-    bindAnimationEvent(node) {
-      if (!node ||
-        !node.getAttribute ||
-        node.getAttribute('disabled') ||
-        node.className.indexOf('disabled') >= 0) {
+    bindAnimationEvent (node) {
+      if (node.getAttribute('disabled') ||
+          node.className.indexOf('disabled') >= 0) {
         return
       }
       const onClick = (e) => {
@@ -67,13 +77,7 @@ export default {
         if (e.target.tagName === 'INPUT') {
           return
         }
-        this.resetEffect(node)
-        // Get wave color from target
-        const waveColor =
-          getComputedStyle(node).getPropertyValue('border-top-color') || // Firefox Compatible
-          getComputedStyle(node).getPropertyValue('border-color') ||
-          getComputedStyle(node).getPropertyValue('background-color')
-        this.clickWaveTimeoutId = window.setTimeout(() => this.onClick(node, waveColor), 0)
+        setTimeout(() => this.onClick(node), 0)
       }
       node.addEventListener('click', onClick, true)
       return {
@@ -82,32 +86,8 @@ export default {
         },
       }
     },
-    getAttributeName() {
-      const { insertExtraNode } = this.$props
-      return insertExtraNode ? 'vcu-click-animating' : 'vcu-click-animating-without-extra-node'
-    },
 
-    resetEffect(node) {
-      if (!node || node === this.extraNode) {
-        return
-      }
-      const { insertExtraNode } = this.$props
-      const attributeName = this.getAttributeName()
-      node.removeAttribute(attributeName)
-      this.removeExtraStyleNode()
-      if (insertExtraNode && this.extraNode && node.contains(this.extraNode)) {
-        node.removeChild(this.extraNode)
-      }
-      TransitionEvents.removeEndEventListener(node, this.onTransitionEnd)
-    },
-
-    onTransitionEnd(e) {
-      if (!e || e.animationName !== 'fadeEffect') {
-        return
-      }
-      this.resetEffect(e.target)
-    },
-    removeExtraStyleNode() {
+    removeExtraStyleNode () {
       if (this.styleForPesudo && document.body.contains(this.styleForPesudo)) {
         document.body.removeChild(this.styleForPesudo)
         this.styleForPesudo = null
@@ -115,7 +95,7 @@ export default {
     },
   },
 
-  render() {
+  render () {
     return this.$slots.default && this.$slots.default[0]
   },
 }

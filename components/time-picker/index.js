@@ -5,6 +5,7 @@ import defaultLocale from './locale/en_US'
 import BaseMixin from '../_util/BaseMixin'
 import PropTypes from '../_util/vue-types'
 import interopDefault from '../_util/interopDefault'
+import Emitter from '../_util/emitter'
 import { initDefaultProps, hasProp, getOptionProps, getComponentFromProp } from '../_util/props-util'
 
 export function generateShowHourMinuteSecond(format) {
@@ -61,7 +62,7 @@ export const TimePickerProps = () => ({
 
 export default {
     name: 'VTimePicker',
-    mixins: [BaseMixin],
+    mixins: [BaseMixin, Emitter],
     props: initDefaultProps(TimePickerProps(), {
         prefixCls: 'vcu-time-picker',
         align: {
@@ -94,6 +95,7 @@ export default {
     watch: {
         value(val) {
             this.setState({ sValue: val })
+            this.dispatch('VFormItem', 'on-form-change', val);
         },
     },
     methods: {

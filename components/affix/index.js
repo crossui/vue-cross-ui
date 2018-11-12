@@ -52,7 +52,6 @@ const AffixProps = {
   // onChange?: (affixed?: boolean) => void;
   /** 设置 Affix 需要监听其滚动事件的元素，值为一个返回对应 DOM 元素的函数 */
   target: PropTypes.func,
-  zIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   prefixCls: PropTypes.string,
 }
 
@@ -150,8 +149,8 @@ export default {
     },
 
     updatePosition(e) {
-      let { offsetBottom, offsetTop } = this
-      const { zIndex, offset, target = getDefaultTarget } = this
+      let { offsetTop } = this
+      const { offsetBottom, offset, target = getDefaultTarget } = this
       const targetNode = target()
 
       // Backwards support
@@ -189,7 +188,6 @@ export default {
           top,
           left: `${targetRect.left + elemOffset.left}px`,
           width,
-          'z-index': zIndex ? zIndex : 10
         })
         this.setPlaceholderStyle({
           width,
@@ -207,7 +205,6 @@ export default {
           bottom: targetBottomOffet + offsetBottom + 'px',
           left: targetRect.left + elemOffset.left + 'px',
           width,
-          'z-index': zIndex ? zIndex : 10
         })
         this.setPlaceholderStyle({
           width,
@@ -255,7 +252,7 @@ export default {
     })
 
     const props = {
-      attrs: omit($props, ['prefixCls', 'offsetTop', 'offsetBottom', 'target', 'zIndex']),
+      attrs: omit($props, ['prefixCls', 'offsetTop', 'offsetBottom', 'target']),
     }
     return (
       <div {...props} style={placeholderStyle} ref='placeholderNode'>

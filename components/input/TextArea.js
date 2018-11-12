@@ -3,6 +3,7 @@ import omit from 'omit.js'
 import inputProps from './inputProps'
 import calculateNodeHeight from './calculateNodeHeight'
 import hasProp from '../_util/props-util'
+import Emitter from '../_util/emitter'
 
 function onNextFrame (cb) {
   if (window.requestAnimationFrame) {
@@ -27,6 +28,7 @@ function fixControlledValue (value) {
 
 export default {
   name: 'VTextarea',
+    mixins: [Emitter],
   props: {
     ...inputProps,
     autosize: [Object, Boolean],
@@ -79,7 +81,9 @@ export default {
       const textareaStyles = calculateNodeHeight(this.$refs.textArea, false, minRows, maxRows)
       this.textareaStyles = textareaStyles
     },
-
+        handleBlur(e) {
+            this.dispatch('VFormItem', 'on-form-blur', this.stateValue);
+        },
     getTextAreaClassName () {
       const { prefixCls, disabled } = this.$props
       return {
@@ -102,6 +106,7 @@ export default {
       }
       this.$emit('change', e)
       this.$emit('input', e)
+            this.dispatch('VFormItem', 'on-form-change', this.stateValue);
     },
 
     focus () {
@@ -117,6 +122,7 @@ export default {
     const { stateValue,
       getTextAreaClassName,
       handleKeyDown,
+            handleBlur,
       handleTextareaChange,
       textareaStyles,
       $attrs,
@@ -133,6 +139,7 @@ export default {
         ...$listeners,
         keydown: handleKeyDown,
         input: handleTextareaChange,
+                blur: handleBlur
       },
     }
     if ($listeners['change.value']) {

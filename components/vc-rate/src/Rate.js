@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import KeyCode from '../../_util/KeyCode'
 import { initDefaultProps, hasProp, getOptionProps } from '../../_util/props-util'
 import BaseMixin from '../../_util/BaseMixin'
+import Emitter from '../../_util/emitter'
 import { getOffsetLeft } from './util'
 import Star from './Star'
 
@@ -23,7 +24,7 @@ function noop () {}
 
 export default {
   name: 'Rate',
-  mixins: [BaseMixin],
+  mixins: [BaseMixin, Emitter],
   props: initDefaultProps(rateProps, {
     defaultValue: 0,
     count: 5,
@@ -61,6 +62,7 @@ export default {
       this.setState({
         sValue: val,
       })
+      this.dispatch('VFormItem', 'on-form-change', this.sValue);
     },
   },
   methods: {

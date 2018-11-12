@@ -669,6 +669,9 @@ const Select = {
           }
         })
       }
+	  value = value.filter((v) => {
+		  return v.value != ''
+	  })
       return value
     },
 
@@ -1002,11 +1005,11 @@ const Select = {
     }
     return (
       <SelectTrigger {...selectTriggerProps}>
-        <span
+        <div
           onClick={props.onClick}
           class={classnames(rootCls)}
         >
-          <span
+          <div
             ref='selection'
             key='selection'
             class={`${prefixCls}-selection
@@ -1021,18 +1024,18 @@ const Select = {
             {allowClear && state.sValue.length &&
           state.sValue[0].value ? clear : null}
             {multiple || !props.showArrow ? null
-              : (<span
+              : (<div
                 key='arrow'
                 class={`${prefixCls}-arrow`}
                 style={{ outline: 'none' }}
               >
                 <b/>
-              </span>)}
+              </div>)}
             {multiple
               ? this.getSearchPlaceholderElement(!!state.sInputValue || state.sValue.length)
               : null}
-          </span>
-        </span>
+          </div>
+        </div>
       </SelectTrigger>
     )
   },

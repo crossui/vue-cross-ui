@@ -53,6 +53,7 @@ const SelectTrigger = {
     _treeNodesStates: PropTypes.any,
     halfCheckedValues: PropTypes.any,
     inputElement: PropTypes.any,
+    getPopupContainer: PropTypes.func,
   },
   data () {
     return {

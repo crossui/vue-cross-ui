@@ -1,725 +1,96 @@
-
-
-.form-control-validation(@text-color: @input-color; @border-color: @input-border-color; @background-color: @input-bg) {
-  .@{vcu-prefix}-form-explain,
-  .@{vcu-prefix}-form-split {
-    color: @text-color;
-  }
-  // 输入框的不同校验状态
-  .@{vcu-prefix}-input {
-    &,
-    &:hover {
-      border-color: @border-color;
-    }
-
-    &:focus {
-      .active(@border-color);
-    }
-
-    &:not([disabled]):hover {
-      border-color: @border-color;
-    }
-  }
-
-  .@{vcu-prefix}-calendar-picker-open .@{vcu-prefix}-calendar-picker-input {
-    .active(@border-color);
-  }
-
-  .@{vcu-prefix}-input-prefix {
-    color: @text-color;
-  }
-
-  .@{vcu-prefix}-input-group-addon {
-    color: @text-color;
-    border-color: @border-color;
-    background-color: @background-color;
-  }
-
-  .has-feedback {
-    color: @text-color;
-  }
-}
-
-// Reset form styles
-// -----------------------------
-// Based on Bootstrap framework
-.reset-form() {
-  legend {
-    display: block;
-    width: 100%;
-    padding: 0;
-    margin-bottom: 20px;
-    font-size: @font-size-lg;
-    line-height: inherit;
-    color: @text-color-secondary;
-    border: 0;
-    border-bottom: @border-width-base @border-style-base @border-color-base;
-  }
-
-  label {
-    font-size: @font-size-base;
-  }
-
-  input[type="search"] {
-    box-sizing: border-box;
-  }
-
-  // Position radios and checkboxes better
-  input[type="radio"],
-  input[type="checkbox"] {
-    line-height: normal;
-  }
-
-  input[type="file"] {
-    display: block;
-  }
-
-  // Make range inputs behave like textual form controls
-  input[type="range"] {
-    display: block;
-    width: 100%;
-  }
-
-  // Make multiple select elements height not fixed
-  select[multiple],
-  select[size] {
-    height: auto;
-  }
-
-  // Focus for file, radio, and checkbox
-  input[type="file"]:focus,
-  input[type="radio"]:focus,
-  input[type="checkbox"]:focus {
-    outline: thin dotted;
-    outline: 5px auto -webkit-focus-ring-color; // lesshint duplicateProperty: false
-    outline-offset: -2px;
-  }
-
-  // Adjust output element
-  output {
-    display: block;
-    padding-top: 15px;
-    font-size: @font-size-base;
-    line-height: @line-height-base;
-    color: @input-color;
-  }
-}
-
-
 @form-prefix-cls: ~"@{vcu-prefix}-form";
-@form-component-height: @input-height-base;
-@form-component-max-height: @input-height-lg;
-@form-feedback-icon-size: 14px;
-@form-help-margin-top: (@form-component-height - @form-component-max-height) / 2 + 2px;
-
+@form-item-prefix-cls: ~"@{form-prefix-cls}-item";
 .@{form-prefix-cls} {
-  .reset-component;
-  .reset-form;
-}
-
-.@{form-prefix-cls}-item-required:before {
-  display: inline-block;
-  margin-right: 4px;
-  content: "*";
-  font-family: SimSun;
-  line-height: 1;
-  font-size: @font-size-base;
-  color: @label-required-color;
-  .@{form-prefix-cls}-hide-required-mark & {
-    display: none;
-  }
-}
-
-// Radio && Checkbox
-input[type="radio"],
-input[type="checkbox"] {
-  &[disabled],
-  &.disabled {
-    cursor: not-allowed;
-  }
-}
-
-// These classes are used directly on <label>s
-.@{vcu-prefix}-radio-inline,
-.@{vcu-prefix}-radio-vertical,
-.@{vcu-prefix}-checkbox-inline,
-.@{vcu-prefix}-checkbox-vertical {
-  &.disabled {
-    cursor: not-allowed;
-  }
-}
-
-// These classes are used on elements with <label> descendants
-.@{vcu-prefix}-radio,
-.@{vcu-prefix}-checkbox {
-  &.disabled {
-    label {
-      cursor: not-allowed;
+    .@{form-item-prefix-cls}-label {
+        text-align: right;
+        vertical-align: middle;
+        float: left;
+        font-size: @font-size-base;
+        color: @text-color;
+        line-height: 1;
+        padding: 10px 12px 10px 0;
+        box-sizing: border-box;
     }
-  }
+    &-label-left .@{form-item-prefix-cls}-label {
+        text-align: left;
+    }
+    &-label-top .@{form-item-prefix-cls}-label {
+        float: none;
+        display: inline-block;
+        padding: 0 0 10px 0;
+    }
+    &-inline {
+        .@{form-item-prefix-cls} {
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: top;
+        }
+    }
 }
 
-// Form items
-// You should wrap labels and controls in .@{form-prefix-cls}-item for optimum spacing
-.@{form-prefix-cls}-item {
-  label {
-    position: relative;
-
-    > .@{iconfont-css-prefix} {
-      vertical-align: top;
-      font-size: @font-size-base;
-    }
-  }
-
-  .reset-component;
-  margin-bottom: @form-item-margin-bottom;
-  vertical-align: top;
-
-  // nested FormItem
-  &-control > &:last-child,
-  & [class^="@{vcu-prefix}-col-"] > &:only-child {
-    margin-bottom: -@form-item-margin-bottom;
-  }
-
-  &-control {
-    line-height: @form-component-max-height - 0.0001px; // //8220
-    position: relative;
-    .clearfix;
-  }
-
-  &-children {
-    position: relative;
-  }
-
-  &-with-help {
-    margin-bottom: @form-item-margin-bottom - @font-size-base * @line-height-base - @form-help-margin-top;
-  }
-
-  &-label {
-    text-align: right;
-    vertical-align: middle;
-    line-height: @form-component-max-height - 0.0001px;
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-
-    label {
-      color: @label-color;
-
-      &:after {
-        & when (@form-item-trailing-colon=true) {
-          content: ":";
-        }
-        & when not (@form-item-trailing-colon=true) {
-          content: " ";
-        }
-        margin: 0 8px 0 2px;
+.@{form-item-prefix-cls} {
+    margin-bottom: 24px;
+    vertical-align: top;
+    .clearfix();
+    &-content {
         position: relative;
-        top: -0.5px;
-      }
+        line-height: 32px;
+        font-size: @font-size-base;
     }
-  }
-
-  .@{vcu-prefix}-switch {
-    margin: 2px 0 4px;
-  }
-
-  &-no-colon &-label label:after {
-    content: " ";
-  }
-}
-
-.@{form-prefix-cls}-explain,
-.@{form-prefix-cls}-extra {
-  color: @text-color-secondary;
-  line-height: @line-height-base;
-  transition: color .15s @ease-out;
-  margin-top: @form-help-margin-top;
-}
-
-.@{form-prefix-cls}-extra {
-  padding-top: 4px;
-}
-
-.@{form-prefix-cls}-text {
-  display: inline-block;
-  padding-right: 8px;
-}
-
-.@{form-prefix-cls}-split {
-  display: block;
-  text-align: center;
-}
-
-// 表单下的输入框尺寸唯一: 大尺寸
-form {
-  .has-feedback {
-    .@{vcu-prefix}-input {
-      padding-right: 24px;
+    & & {
+        margin-bottom: 0;
     }
-
-    // Fix overlapping between feedback icon and <Select>'s arrow.
-    // //4431
-    > .@{vcu-prefix}-select .@{vcu-prefix}-select-arrow,
-    > .@{vcu-prefix}-select .@{vcu-prefix}-select-selection__clear,
-    :not(.@{vcu-prefix}-input-group-addon) > .@{vcu-prefix}-select .@{vcu-prefix}-select-arrow,
-    :not(.@{vcu-prefix}-input-group-addon) > .@{vcu-prefix}-select .@{vcu-prefix}-select-selection__clear {
-      right: 28px;
+    & & &-content {
+        margin-left: 0 !important;
     }
-    > .@{vcu-prefix}-select .@{vcu-prefix}-select-selection-selected-value,
-    :not(.@{vcu-prefix}-input-group-addon) > .@{vcu-prefix}-select .@{vcu-prefix}-select-selection-selected-value {
-      padding-right: 42px;
+    &-error-tip {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        line-height: 1;
+        padding-top: 6px;
+        color: @error-color;
     }
-
-    .@{vcu-prefix}-cascader-picker {
-      &-arrow {
-        margin-right: 17px;
-      }
-      &-clear {
-        right: 28px;
-      }
+    &-required {
+        .@{form-item-prefix-cls}-label:before {
+            content: '*';
+            display: inline-block;
+            margin-right: 4px;
+            line-height: 1;
+            font-family: SimSun;
+            font-size: @font-size-base;
+            color: @error-color;
+        }
     }
-
-    // Fix issue: //7854
-    .@{vcu-prefix}-input-search:not(.@{vcu-prefix}-input-search-enter-button) {
-      .@{vcu-prefix}-input-suffix {
-        right: 28px;
-      }
+    &-error {
+        // todo
     }
-
-    // Fix issue: //4783
-    .@{vcu-prefix}-calendar-picker,
-    .@{vcu-prefix}-time-picker {
-      &-icon,
-      &-clear {
-        right: 28px;
-      }
-    }
-  }
-
-  textarea.@{vcu-prefix}-input {
-    height: auto;
-  }
-
-  // input[type=file]
-  .@{vcu-prefix}-upload {
-    background: transparent;
-  }
-
-  input[type="radio"],
-  input[type="checkbox"] {
-    width: 14px;
-    height: 14px;
-  }
-
-  // Radios and checkboxes on same line
-  .@{vcu-prefix}-radio-inline,
-  .@{vcu-prefix}-checkbox-inline {
-    display: inline-block;
-    vertical-align: middle;
-    font-weight: normal;
-    cursor: pointer;
-    margin-left: 8px;
-
-    &:first-child {
-      margin-left: 0;
-    }
-  }
-
-  .@{vcu-prefix}-checkbox-vertical,
-  .@{vcu-prefix}-radio-vertical {
-    display: block;
-  }
-
-  .@{vcu-prefix}-checkbox-vertical + .@{vcu-prefix}-checkbox-vertical,
-  .@{vcu-prefix}-radio-vertical + .@{vcu-prefix}-radio-vertical {
-    margin-left: 0;
-  }
-
-  .@{vcu-prefix}-input-number + .@{form-prefix-cls}-text {
-    margin-left: 8px;
-  }
-
-  .@{vcu-prefix}-select,
-  .@{vcu-prefix}-cascader-picker {
-    width: 100%;
-  }
-
-  // Don't impact select inside input group
-  .@{vcu-prefix}-input-group .@{vcu-prefix}-select,
-  .@{vcu-prefix}-input-group .@{vcu-prefix}-cascader-picker {
-    width: auto;
-  }
-
-  // fix input with addon position. //8243
-  .@{vcu-prefix}-input-group-wrapper {
-    vertical-align: middle;
-    position: relative;
-    top: -1px;
-  }
 }
 
-// Input combined with select
-.@{vcu-prefix}-input-group-wrap {
-  .@{vcu-prefix}-select-selection {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-    &:hover {
-      border-color: @border-color-base;
+.@{form-item-prefix-cls}-error {
+    .@{vcu-prefix}-input,
+    .@{vcu-prefix}-time-picker-input,
+    .@{vcu-prefix}-select-selection {
+        border: 1px solid @error-color;
     }
-  }
-
-  .@{vcu-prefix}-select-selection--single {
-    margin-left: -1px;
-    height: @input-height-lg;
-    background-color: #eee;
-    .@{vcu-prefix}-select-selection__rendered {
-      padding-left: 8px;
-      padding-right: 25px;
-      line-height: 30px;
+    .@{vcu-prefix}-input,
+    .@{vcu-prefix}-time-picker-input {
+        &:hover {
+            border: 1px solid @error-color  !important;
+        }
     }
-  }
-
-  .@{vcu-prefix}-select-open .@{vcu-prefix}-select-selection {
-    border-color: @border-color-base;
-    box-shadow: none;
-  }
-}
-
-// Form layout
-//== Vertical Form
-.make-vertical-layout-label() {
-  padding: @form-vertical-label-padding;
-  margin: @form-vertical-label-margin;
-  display: block;
-  text-align: left;
-  line-height: @line-height-base;
-
-  label:after {
-    display: none;
-  }
-}
-
-.make-vertical-layout() {
-  .@{form-prefix-cls}-item-label,
-  .@{form-prefix-cls}-item-control-wrapper {
-    display: block;
-    width: 100%;
-  }
-  .@{form-prefix-cls}-item-label {
-    .make-vertical-layout-label();
-  }
-}
-
-.@{form-prefix-cls}-vertical .@{form-prefix-cls}-item-label,
-  // when labelCol is 24, it is a vertical form
-.@{vcu-prefix}-col-24.@{form-prefix-cls}-item-label,
-.@{vcu-prefix}-col-xl-24.@{form-prefix-cls}-item-label {
-  .make-vertical-layout-label();
-}
-
-.@{form-prefix-cls}-vertical {
-  .@{form-prefix-cls}-item {
-    padding-bottom: 8px;
-  }
-  .@{form-prefix-cls}-item-control {
-    line-height: @line-height-base;
-  }
-  .@{form-prefix-cls}-explain,
-  .@{form-prefix-cls}-extra {
-    margin-top: 2px;
-    margin-bottom: -4px;
-  }
-}
-
-@media (max-width: @screen-xs-max) {
-  .make-vertical-layout();
-  .@{vcu-prefix}-col-xs-24.@{form-prefix-cls}-item-label {
-    .make-vertical-layout-label();
-  }
-}
-
-@media (max-width: @screen-sm-max) {
-  .@{vcu-prefix}-col-sm-24.@{form-prefix-cls}-item-label {
-    .make-vertical-layout-label();
-  }
-}
-
-@media (max-width: @screen-md-max) {
-  .@{vcu-prefix}-col-md-24.@{form-prefix-cls}-item-label {
-    .make-vertical-layout-label();
-  }
-}
-
-@media (max-width: @screen-lg-max) {
-  .@{vcu-prefix}-col-lg-24.@{form-prefix-cls}-item-label {
-    .make-vertical-layout-label();
-  }
-}
-
-@media (max-width: @screen-xl-max) {
-  .@{vcu-prefix}-col-xl-24.@{form-prefix-cls}-item-label {
-    .make-vertical-layout-label();
-  }
-}
-
-//== Inline Form
-.@{form-prefix-cls}-inline {
-  .@{form-prefix-cls}-item {
-    display: inline-block;
-    margin-right: 16px;
-    margin-bottom: 0;
-
-    &-with-help {
-      margin-bottom: 24px;
+    .@{vcu-prefix}-input-prefix {
+        .@{iconfont-css-prefix} {
+            color: @error-color;
+        }
     }
-
-    > .@{form-prefix-cls}-item-control-wrapper, > .@{form-prefix-cls}-item-label {
-      display: inline-block;
-      vertical-align: middle;
+    .@{vcu-prefix}-select-arrow {
+        color: @error-color;
     }
-  }
-
-  .@{form-prefix-cls}-text {
-    display: inline-block;
-  }
-
-  .has-feedback {
-    display: inline-block;
-  }
-
-  // Fix //1040
-  .@{form-prefix-cls}-explain {
-    position: absolute;
-  }
-}
-
-// Validation state
-.has-success,
-.has-warning,
-.has-error,
-.is-validating {
-  &.has-feedback .@{form-prefix-cls}-item-children:after {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    visibility: visible;
-    pointer-events: none;
-    width: @form-component-height;
-    height: 20px;
-    line-height: 20px;
-    margin-top: -10px;
-    text-align: center;
-    font-size: @form-feedback-icon-size;
-    animation: zoomIn .3s @ease-out-back;
-    .iconfont-font("");
-    z-index: 1;
-  }
-}
-
-.has-success {
-  &.has-feedback .@{form-prefix-cls}-item-children:after {
-    animation-name: diffZoomIn1 !important;
-    content: '\e89d';
-    color: @success-color;
-  }
-}
-
-.has-warning {
-  .form-control-validation(@warning-color; @warning-color;);
-
-  &.has-feedback .@{form-prefix-cls}-item-children:after {
-    content: '\e8a2';
-    color: @warning-color;
-    animation-name: diffZoomIn3 !important;
-  }
-
-  //select
-  .@{vcu-prefix}-select {
-    &-selection {
-      border-color: @warning-color;
+    .@{vcu-prefix}-time-picker-icon,
+    .@{vcu-prefix}-calendar-picker-icon {
+        &::after {
+            color: @error-color;
+        }
     }
-    &-open .@{vcu-prefix}-select-selection,
-    &-focused .@{vcu-prefix}-select-selection {
-      .active(@warning-color);
-    }
-  }
-
-  // arrow and icon
-  .@{vcu-prefix}-calendar-picker-icon:after,
-  .@{vcu-prefix}-time-picker-icon:after,
-  .@{vcu-prefix}-picker-icon:after,
-  .@{vcu-prefix}-select-arrow,
-  .@{vcu-prefix}-cascader-picker-arrow {
-    color: @warning-color;
-  }
-
-  //input-number, timepicker
-  .@{vcu-prefix}-input-number,
-  .@{vcu-prefix}-time-picker-input {
-    border-color: @warning-color;
-    &-focused,
-    &:focus {
-      .active(@warning-color);
-    }
-    &:not([disabled]):hover {
-      border-color: @warning-color;
-    }
-  }
-
-  .@{vcu-prefix}-cascader-picker:focus .@{vcu-prefix}-cascader-input {
-    .active(@warning-color);
-  }
-}
-
-.has-error {
-  .form-control-validation(@error-color; @error-color;);
-
-  &.has-feedback .@{form-prefix-cls}-item-children:after {
-    content: '\e8a1';
-    color: @error-color;
-    animation-name: diffZoomIn2 !important;
-  }
-
-  //select
-  .@{vcu-prefix}-select {
-    &-selection {
-      border-color: @error-color;
-    }
-    &-open .@{vcu-prefix}-select-selection,
-    &-focused .@{vcu-prefix}-select-selection {
-      .active(@error-color);
-    }
-  }
-
-  .@{vcu-prefix}-select.@{vcu-prefix}-select-auto-complete {
-    .@{vcu-prefix}-input:focus {
-      border-color: @error-color;
-    }
-  }
-
-  .@{vcu-prefix}-input-group-addon .@{vcu-prefix}-select {
-    &-selection {
-      border-color: transparent;
-      box-shadow: none;
-    }
-  }
-
-  // arrow and icon
-  .@{vcu-prefix}-calendar-picker-icon:after,
-  .@{vcu-prefix}-time-picker-icon:after,
-  .@{vcu-prefix}-picker-icon:after,
-  .@{vcu-prefix}-select-arrow,
-  .@{vcu-prefix}-cascader-picker-arrow {
-    color: @error-color;
-  }
-
-  //input-number, timepicker
-  .@{vcu-prefix}-input-number,
-  .@{vcu-prefix}-time-picker-input {
-    border-color: @error-color;
-    &-focused,
-    &:focus {
-      .active(@error-color);
-    }
-    &:not([disabled]):hover {
-      border-color: @error-color;
-    }
-  }
-  .@{vcu-prefix}-mention-wrapper {
-    .@{vcu-prefix}-mention-editor {
-      &,
-      &:not([disabled]):hover {
-        border-color: @error-color;
-      }
-    }
-    &.@{vcu-prefix}-mention-active:not([disabled]) .@{vcu-prefix}-mention-editor,
-    .@{vcu-prefix}-mention-editor:not([disabled]):focus {
-      .active(@error-color);
-    }
-  }
-
-  .@{vcu-prefix}-cascader-picker:focus .@{vcu-prefix}-cascader-input {
-    .active(@error-color);
-  }
-}
-
-.is-validating {
-  &.has-feedback .@{form-prefix-cls}-item-children:after {
-    display: inline-block;
-    animation: loadingCircle 1s infinite linear;
-    content: "\e61c";
-    color: @primary-color;
-  }
-}
-
-.@{vcu-prefix}-advanced-search-form {
-  .@{form-prefix-cls}-item {
-    margin-bottom: @form-item-margin-bottom;
-
-    &-with-help {
-      margin-bottom: @form-item-margin-bottom - @font-size-base * @line-height-base - @form-help-margin-top;
-    }
-  }
-}
-
-.show-help-motion(@className, @keyframeName, @duration: @animation-duration-slow) {
-  .make-motion(@className, @keyframeName, @duration);
-  .@{className}-enter,
-  .@{className}-appear {
-    opacity: 0;
-    animation-timing-function: @ease-in-out;
-  }
-  .@{className}-leave {
-    animation-timing-function: @ease-in-out;
-  }
-}
-
-.show-help-motion(show-help, antShowHelp, 0.15s);
-
-@keyframes antShowHelpIn {
-  0% {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes antShowHelpOut {
-  to {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-}
-
-// need there different zoom animation
-// otherwise won't trigger anim
-@keyframes diffZoomIn1 {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes diffZoomIn2 {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes diffZoomIn3 {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
 }

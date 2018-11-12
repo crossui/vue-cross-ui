@@ -30,7 +30,7 @@ import { menuRouter } from './router/router';
 export default {
     data() {
         return {
-            github: ''
+            github: 'https://github.com/crossui/vue-cross-ui'
         }
     },
     computed: {
