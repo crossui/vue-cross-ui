@@ -1,6 +1,6 @@
 > 弹出窗表单验证
 
-:::demo 弹出窗表单验证
+:::demo 弹出窗表单验证,编辑时弹窗显示后使用`$nextTick`更新后执行赋值
 
 
 
@@ -8,6 +8,7 @@
 <template>
   <div>
     <v-button type="primary" @click="handleCollection">New Collection</v-button>
+    <v-button type="primary" @click="handleAssignment">Edit Collection</v-button>
     <v-modal title="New Collection" v-model="visible" width="750px" @cancel="handleCancel">
       <v-form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <v-form-item label="Name" prop="name">
@@ -87,7 +88,6 @@
         </v-form-item>
         <v-form-item>
           <v-button type="primary" @click="handleSubmit('formValidate')">Signin</v-button>
-          <v-button type="info" @click="handleAssignment">Assignment</v-button>
           <v-button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</v-button>
           <v-button @click="handleClear('formValidate')" style="margin-left: 8px">Clear</v-button>
         </v-form-item>
@@ -204,18 +204,21 @@ export default {
       })
     },
     handleAssignment() {
-      this.formValidate.name = '1111111111'
-      this.formValidate.mail = '50000@qq.com'
-      this.formValidate.city = 'beijing'
-      this.formValidate.date = moment('2018-11-09', "YYYY-MM-DD")
-      this.formValidate.time = moment()
-      this.formValidate.gender = '2'
-      this.formValidate.interest = ['a', 'b']
-      this.formValidate.desc = '测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容'
-      this.formValidate.cascader = ['zhejiang', 'hangzhou', 'xihu']
-      this.formValidate.autocomplete = 'aaa'
-      this.formValidate.rate = 2
-      this.formValidate.treeselect = 'leaf1'
+      this.visible = true
+      this.$nextTick(() =>{
+        this.formValidate.name = '1111111111'
+        this.formValidate.mail = '50000@qq.com'
+        this.formValidate.city = 'beijing'
+        this.formValidate.date = moment('2018-11-09', "YYYY-MM-DD")
+        this.formValidate.time = moment()
+        this.formValidate.gender = '2'
+        this.formValidate.interest = ['a', 'b']
+        this.formValidate.desc = '测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容'
+        this.formValidate.cascader = ['zhejiang', 'hangzhou', 'xihu']
+        this.formValidate.autocomplete = 'aaa'
+        this.formValidate.rate = 2
+        this.formValidate.treeselect = 'leaf1'
+      })
     },
     handleReset(name) {
       this.$refs[name].resetFields();

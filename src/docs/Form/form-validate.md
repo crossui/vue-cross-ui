@@ -39,6 +39,15 @@
           </v-col>
         </v-row>
       </v-form-item>
+      <v-form-item label="dateRender" prop="dateRender">
+          <v-range-picker v-model="formValidate.dateRender"></v-range-picker>
+      </v-form-item>
+      <v-form-item label="month" prop="month">
+          <v-month-picker v-model="formValidate.month"></v-month-picker>
+      </v-form-item>
+      <v-form-item label="week" prop="week">
+          <v-week-picker v-model="formValidate.week"></v-week-picker>
+      </v-form-item>
       <v-form-item label="Gender" prop="gender">
         <v-radio-group v-model="formValidate.gender">
           <v-radio value="1">A</v-radio>
@@ -142,6 +151,9 @@ export default {
         city: '',
         date: null,
         time: null,
+        dateRender:null,
+        month:null, 
+        week:null,
         gender: '',
         interest: [],
         desc: '',
@@ -166,6 +178,15 @@ export default {
         ],
         time: [
             { required: true, message: 'Please select time'}
+        ],
+        dateRender: [
+            { required: true, message: 'Please select dateRender'}
+        ],
+        month:[
+            { required: true, message: 'Please select month'}
+        ],
+        week:[
+            { required: true, message: 'Please select week'}
         ],
         gender: [
             { required: true, message: 'Please select gender', trigger: 'change' }
@@ -220,6 +241,7 @@ export default {
     },
     handleReset (name) {
         this.$refs[name].resetFields();
+        console.info(this.formValidate)
     },
     handleClear(name){
       this.$refs[name].clearValidate();
