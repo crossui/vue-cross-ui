@@ -5,17 +5,6 @@ import { getOptionProps, filterEmpty, hasProp } from '../_util/props-util'
 import Emitter from '../_util/emitter'
 function noop () {}
 
-function getCheckedValue (children) {
-  let value = null
-  let matched = false
-  children.forEach((radio) => {
-    if (radio && radio.componentOptions && radio.componentOptions.propsData.checked) {
-      value = radio.componentOptions.propsData.value
-      matched = true
-    }
-  })
-  return matched ? { value } : undefined
-}
 
 export default {
   name: 'VRadioGroup',
@@ -44,7 +33,7 @@ export default {
   data () {
     const { value, defaultValue } = this
     return {
-      stateValue: value || defaultValue,
+      stateValue: value === undefined ? defaultValue : value,
     }
   },
   model: {

@@ -38,7 +38,7 @@
         <v-row :gutter="16">
           <v-col :span="12">
             <v-form-item label="Owner" :fieldDecoratorOptions="{ rules: [{ required: true, message: 'Please select an owner' }]}">
-              <v-select placeholder="Please v-s an owner">
+              <v-select placeholder="Please v-s an owner" style="width:200px">
                 <v-select-option value="xiao">Xiaoxiao Fu</v-select-option>
                 <v-select-option value="mao">Maomao Zhou</v-select-option>
               </v-select>
@@ -46,7 +46,7 @@
           </v-col>
           <v-col :span="12">
             <v-form-item label="Type" :fieldDecoratorOptions="{ rules: [{ required: true, message: 'Please choose the type' }]}">
-              <v-select placeholder="Please choose the type">
+              <v-select placeholder="Please choose the type" style="width:200px">
                 <v-select-option value="private">Private</v-select-option>
                 <v-select-option value="public">Public</v-select-option>
               </v-select>
@@ -56,7 +56,7 @@
         <v-row :gutter="16">
           <v-col :span="12">
             <v-form-item label="Approver" :fieldDecoratorOptions="{ rules: [{ required: true, message: 'Please choose the approver' }]}">
-              <v-select placeholder="Please choose the approver">
+              <v-select placeholder="Please choose the approver" style="width:200px">
                   <v-select-option value="jack">Jack Ma</v-select-option>
                   <v-select-option value="tom">Tom Liu</v-select-option>
                 </v-select>
@@ -65,7 +65,7 @@
           <v-col :span="12">
             <v-form-item label="DateTime" :fieldDecoratorOptions="{ rules: [{ required: true, message: 'Please choose the dateTime' }]}">
               <v-date-picker
-                style="width: 100%"
+                style="width:200px"
                 :getPopupContainer="trigger => trigger.parentNode"
               ></v-date-picker>
             </v-form-item>
@@ -74,7 +74,7 @@
         <v-row :gutter="16">
           <v-col :span="24">
             <v-form-item label="Description" :fieldDecoratorOptions="{ rules: [{ required: true, message: 'please enter url description' }]}">
-              <v-textarea :rows="4" placeholder="please enter url description"></v-textarea>
+              <v-textarea :rows="4" placeholder="please enter url description" style="width:500px"></v-textarea>
             </v-form-item>
           </v-col>
         </v-row>
