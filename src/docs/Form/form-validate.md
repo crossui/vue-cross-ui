@@ -164,7 +164,8 @@ export default {
       },
       ruleValidate:{
         name: [
-            { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+            { required: true, message: 'The name cannot be empty', trigger: 'blur' },
+			{pattern: /^(?!(\s+$))/, message: "不可为纯空格"}
         ],
         mail: [
             { required: true, message: 'Mailbox cannot be empty', trigger: 'blur' },

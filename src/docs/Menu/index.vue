@@ -9,6 +9,7 @@
       <theme id="theme"></theme>
       <sider-current id="sider-current"></sider-current>
       <switch-mode id="switch-mode"></switch-mode>
+      <recursion id="recursion"></recursion>
       <api id="api"></api>
     </v-col>
     <v-col :span="4">
@@ -20,6 +21,7 @@
         <v-anchor-link href="#theme" title="主题" />
         <v-anchor-link href="#sider-current" title="只展开当前父级菜单" />
         <v-anchor-link href="#switch-mode" title="切换菜单类型" />
+        <v-anchor-link href="#recursion" title="单文件递归菜单" />
         <v-anchor-link href="#api" title="API" />
       </v-anchor>
     </v-col>
@@ -35,6 +37,7 @@ import inlineCollapsed from './inline-collapsed.md';
 import theme from './theme.md';
 import siderCurrent from './sider-current.md';
 import switchMode from './switch-mode.md';
+import recursion from './recursion.md';
 export default {
   components: {
     headerInfo,
@@ -46,6 +49,7 @@ export default {
     siderCurrent,
     switchMode,
     theme,
+	recursion
   },
   data() {
     return {
@@ -55,7 +59,4 @@ export default {
   },
 }
 </script>
-<style>
-</style>
-
 

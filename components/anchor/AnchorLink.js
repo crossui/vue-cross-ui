@@ -16,6 +16,7 @@ export default {
     }),
     inject: {
         vcuAnchor: { default: {} },
+    	vcuAnchorContext: { default: {}},
     },
 
     mounted() {
@@ -32,8 +33,14 @@ export default {
         },
     },
     methods: {
-        handleClick() {
+        handleClick(e) {
             this.vcuAnchor.scrollTo(this.href)
+	    const { scrollTo } = this.vcuAnchor
+      	    const { href, title } = this.$props
+	    if (this.vcuAnchorContext.$emit) {
+	      this.vcuAnchorContext.$emit('click', e, { title, href })
+	    }
+	    scrollTo(href)
         },
     },
     render() {

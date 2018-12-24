@@ -118,6 +118,8 @@ export default {
                 $data: this.$data,
                 scrollTo: this.handleScrollTo,
             },
+
+      vcuAnchorContext: this,
         }
     },
 

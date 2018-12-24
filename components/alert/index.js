@@ -3,7 +3,8 @@ import classNames from 'classnames'
 import BaseMixin from '../_util/BaseMixin'
 import PropTypes from '../_util/vue-types'
 import getTransitionProps from '../_util/getTransitionProps'
-import { getComponentFromProp } from '../_util/props-util'
+import { getComponentFromProp, isValidElement } from '../_util/props-util'
+import { cloneElement } from '../_util/vnode'
 function noop() { }
 export const AlertProps = {
   /**
@@ -27,6 +28,7 @@ export const AlertProps = {
   iconType: PropTypes.string,
   prefixCls: PropTypes.string,
   banner: PropTypes.bool,
+  icon: PropTypes.any,
 }
 
 export default {
@@ -68,11 +70,12 @@ export default {
     const closeText = getComponentFromProp(this, 'closeText')
     const description = getComponentFromProp(this, 'description')
     const message = getComponentFromProp(this, 'message')
+    const icon = getComponentFromProp(this, 'icon')
     // banner模式默认有 Icon
     showIcon = banner && showIcon === undefined ? true : showIcon
     // banner模式默认为警告
     type = banner && type === undefined ? 'warning' : type || 'info'
-
+	let iconTheme = 'filled'
     if (!iconType) {
       switch (type) {
         case 'success':
@@ -115,6 +118,16 @@ export default {
         {closeText || <Icon type='close' />}
       </a>
     ) : null
+	const iconNode = icon && (
+      isValidElement(icon)
+        ? cloneElement(
+          icon,
+          {
+            class: `${prefixCls}-icon`,
+          },
+        ) : <span class={`${prefixCls}-icon`}>{icon}</span>) || (
+      <Icon class={`${prefixCls}-icon`} type={iconType} theme={iconTheme} />
+	)
     const transitionProps = getTransitionProps(`${prefixCls}-slide-up`, {
       appear: false,
       afterLeave: this.animationEnd,

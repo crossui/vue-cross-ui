@@ -16,7 +16,7 @@ const ScrollNumberProps = {
   prefixCls: PropTypes.string.def('vcu-scroll-number'),
   count: PropTypes.oneOfType([PropTypes.number, PropTypes.string, null]).def(null),
   component: PropTypes.string,
-  title: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  title: PropTypes.oneOfType([PropTypes.number, PropTypes.string, null]),
 }
 
 export default {
@@ -116,6 +116,8 @@ export default {
     const newProps = {
       props: {
         ...restProps,
+      },
+      attrs: {
         title,
       },
       class: prefixCls,
