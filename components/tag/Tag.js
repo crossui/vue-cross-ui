@@ -49,10 +49,10 @@ export default {
 	  e.stopPropagation()
       e.preventDefault()
       this.$emit('close', e)
+      this.closed = true
       if (e.defaultPrevented) {
         return
       }
-      this.closed = true
     },
   },
   render() {
