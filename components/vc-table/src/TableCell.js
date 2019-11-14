@@ -75,7 +75,7 @@ export default {
     }
 
     if (column.customCell) {
-      tdProps = mergeProps(tdProps, column.customCell(record))
+      tdProps = mergeProps(tdProps, column.customCell(record, index))
     }
 
     // Fix //1202
@@ -94,7 +94,7 @@ export default {
       return null
     }
     if (column.align) {
-      tdProps.style = { textAlign: column.align }
+      tdProps.style = { ...tdProps.style, textAlign: column.align };
     }
 
     return (

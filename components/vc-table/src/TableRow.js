@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import PropTypes from '../../_util/vue-types'
 import { connect } from '../../_util/store'
 import TableCell from './TableCell'

@@ -10,6 +10,7 @@
       <fileList id="fileList"></fileList>
       <defaultFileList id="defaultFileList"></defaultFileList>
       <upload-manually id="upload-manually"></upload-manually>
+      <upload-directory id="upload-directory"></upload-directory>
       <api id="api"></api>
     </v-col>
     <v-col :span="4">
@@ -22,6 +23,7 @@
         <v-anchor-link href="#fileList" title="完全控制的上传列表" />
         <v-anchor-link href="#defaultFileList" title="已上传的文件列表" />
         <v-anchor-link href="#upload-manually" title="手动上传" />
+		<v-anchor-link href="#upload-directory" title="上传文件" />
         <v-anchor-link href="#api" title="API" />
       </v-anchor>
     </v-col>
@@ -38,6 +40,7 @@ import pictureStyle from './picture-style.md';
 import fileList from './fileList.md';
 import defaultFileList from './defaultFileList.md';
 import uploadManually from './upload-manually.md';
+import uploadDirectory from './directory.md';
 export default {
   components: {
     headerInfo,
@@ -50,6 +53,7 @@ export default {
     fileList,
     defaultFileList,
     uploadManually,
+	uploadDirectory
   },
   data() {
     return {

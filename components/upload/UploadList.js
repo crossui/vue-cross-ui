@@ -7,11 +7,15 @@ import Progress from '../progress'
 import classNames from 'classnames'
 import { UploadListProps } from './interface'
 
+const imageTypes = ['image', 'webp', 'png', 'svg', 'gif', 'jpg', 'jpeg', 'bmp', 'dpg', 'ico'];
 // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
 const previewFile = (file, callback) => {
-  const reader = new window.FileReader()
-  reader.onloadend = () => callback(reader.result)
-  reader.readAsDataURL(file)
+  if (file.type && !imageTypes.includes(file.type)) {
+    callback('');
+  }
+  const reader = new window.FileReader();
+  reader.onloadend = () => callback(reader.result);
+  reader.readAsDataURL(file);
 }
 
 const extname = (url) => {
@@ -23,14 +27,14 @@ const extname = (url) => {
   const filenameWithoutSuffix = filename.split(/#|\?/)[0]
   return (/\.[^./\\]*$/.exec(filenameWithoutSuffix) || [''])[0]
 }
-const imageTypes = ['image', 'webp', 'png', 'svg', 'gif', 'jpg', 'jpeg', 'bmp']
+
 const isImageUrl = (file) => {
   if (imageTypes.includes(file.type)) {
     return true
   }
   const url = (file.thumbUrl || file.url)
   const extension = extname(url)
-  if (/^data:image\//.test(url) || /(webp|svg|png|gif|jpg|jpeg|bmp)$/i.test(extension)) {
+  if (/^data:image\//.test(url) || /(webp|svg|png|gif|jpg|jpeg|bmp|dpg|ico)$/i.test(extension)) {
     return true
   } else if (/^data:/.test(url)) { // other file types of base64
     return false
@@ -69,7 +73,7 @@ export default {
         /*eslint-disable */
         file.thumbUrl = '';
         /*eslint -enable */
-        previewFile(file.originFileObj, (previewDataUrl) => {
+        previewFile(file.originFileObj, previewDataUrl => {
           /*eslint-disable */
           file.thumbUrl = previewDataUrl;
           /*eslint -enable todo */

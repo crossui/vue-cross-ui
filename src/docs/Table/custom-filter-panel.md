@@ -22,7 +22,7 @@
         ></v-input>
         <v-button type="primary" @click="onSearch">Search</v-button>
       </div>
-      <v-icon slot="filterIcon" type="smile" :style="{ color: this.filtered ? '#108ee9' : '#aaa' }"></v-icon>
+      <v-icon slot="filterIcon" type="search1" :style="{ color: this.filtered ? '#108ee9' : '#aaa' }"></v-icon>
     </v-table-column>
     <v-table-column
       title="Age"

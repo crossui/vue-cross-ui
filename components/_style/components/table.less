@@ -2,6 +2,7 @@
 
 @table-prefix-cls: ~"@{vcu-prefix}-table";
 @table-header-icon-color: @text-color-secondary;
+@table-header-sort-active-bg: darken(@table-header-bg, 3%);
 
 .@{table-prefix-cls}-wrapper {
   .clearfix;
@@ -16,6 +17,9 @@
     transition: opacity .3s;
   }
 
+  &-empty &-body {
+    overflow: auto !important;
+  }
   table {
     width: 100%;
     border-collapse: separate;
@@ -25,6 +29,7 @@
   }
 
   &-thead > tr > th {
+	position: relative;
     background: @table-header-bg;
     transition: background .3s ease;
     text-align: left;
@@ -39,18 +44,27 @@
 
     .@{iconfont-css-prefix}-filter,
     .@{table-prefix-cls}-filter-icon {
-      position: relative;
-      margin-left: 8px;
-      font-size: @font-size-base;
-      cursor: pointer;
+	    position: absolute;
+      top: 0;
+      right: 0;
+      width: 28px;
+      height: 100%;
       color: @table-header-icon-color;
-      transition: all .3s;
-      width: 14px;
-      font-weight: normal;
-      vertical-align: text-bottom;
-
+      font-size: @font-size-base;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+	  
+	  
       &:hover {
-        color: @text-color;
+        background: fade(@text-color,5%);
+      }
+      &::before{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -@font-size-base / 2 + 1px;
+        margin-left: -@font-size-base / 2;
       }
     }
 
@@ -218,16 +232,19 @@
     }
   }
 
+  
+
+
   &-column-sorter {
-    position: relative;
-    margin-left: 8px;
-    display: inline-block;
+    position: absolute;
+    top: 50%;
+    right: 6px;
     width: 14px;
-    height: 14px;
-    vertical-align: middle;
-    text-align: center;
-    font-weight: normal;
+    height: @font-size-lg + 1px;
+    margin-top: -(@font-size-lg + 1px) / 2;
     color: @table-header-icon-color;
+    text-align: center;
+    transition: all 0.3s;
 
     &-up,
     &-down {
@@ -241,10 +258,7 @@
         color: @primary-4;
       }
       &.on {
-        .@{iconfont-css-prefix}-caret-up,
-        .@{iconfont-css-prefix}-caret-down {
-          color: @primary-color;
-        }
+        color: @primary-color;
       }
 
       &:after {
@@ -255,6 +269,8 @@
         left: 0;
       }
     }
+
+    
 
     &-up:after {
       bottom: 0;
@@ -274,13 +290,21 @@
     }
 
     &-down {
-      margin-top: 1.5px;
+      margin-top: 4.5px;
     }
 
     .@{iconfont-css-prefix}-caret-down {
-      top: -1.5px;
+      top: -4.5px;
     }
   }
+
+  &-column-has-filters {
+    position: relative;
+    .@{table-prefix-cls}-column-sorter {
+      right: 30px !important;
+    }
+  }
+
 
   &-bordered {
     .@{table-prefix-cls}-header > table,

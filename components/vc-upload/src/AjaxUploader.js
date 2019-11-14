@@ -1,5 +1,6 @@
 import PropTypes from '../../_util/vue-types'
 import BaseMixin from '../../_util/BaseMixin'
+import partition from 'lodash/partition';
 import classNames from 'classnames'
 import defaultRequest from './request'
 import getUid from './uid'
@@ -31,9 +32,11 @@ const upLoadPropTypes = {
   customRequest: PropTypes.func,
   // onProgress: PropTypes.func,
   withCredentials: PropTypes.bool,
+  openFileDialogOnClick: PropTypes.bool,
 }
 
 const AjaxUploader = {
+  inheritAttrs: false,
   name: 'VjaxUploader',
   mixins: [BaseMixin],
   props: upLoadPropTypes,
@@ -76,7 +79,10 @@ const AjaxUploader = {
         const files = Array.prototype.slice.call(e.dataTransfer.files).filter(
           file => attrAccept(file, this.accept)
         )
-        this.uploadFiles(files)
+        this.uploadFiles(files[0]);
+        if (files[1].length) {
+          this.$emit('reject', files[1]);
+        }
       }
     },
     uploadFiles (files) {

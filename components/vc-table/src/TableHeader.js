@@ -42,7 +42,7 @@ export default {
 
   },
   inject: {
-    table: { default: {}},
+    table: { default: () => ({}) },
   },
 
   render () {

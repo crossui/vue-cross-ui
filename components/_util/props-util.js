@@ -1,5 +1,5 @@
 import isPlainObject from 'lodash/isPlainObject'
-
+import classNames from 'classnames';
 function getType (fn) {
   const match = fn && fn.toString().match(/^\s*function (\w+)/)
   return match ? match[1] : ''
@@ -44,201 +44,251 @@ const filterProps = (props, propsData = {}) => {
   })
   return res
 }
-const getSlots = (ele) => {
-  let componentOptions = ele.componentOptions || {}
+const getScopedSlots = ele => {
+  return (ele.data && ele.data.scopedSlots) || {};
+};
+const getSlots = ele => {
+  let componentOptions = ele.componentOptions || {};
   if (ele.$vnode) {
-    componentOptions = ele.$vnode.componentOptions || {}
+    componentOptions = ele.$vnode.componentOptions || {};
   }
-  const children = componentOptions.children || []
-  const slots = {}
+  const children = ele.children || componentOptions.children || [];
+  const slots = {};
   children.forEach(child => {
-    const name = (child.data && child.data.slot) || 'default'
-    slots[name] = slots[name] || []
-    slots[name].push(child)
-  })
-  return slots
-}
-const getSlotOptions = (ele) => {
-  if (ele.fnOptions) { // 函数式组件
-    return ele.fnOptions
-  }
-  let componentOptions = ele.componentOptions
+    if (!isEmptyElement(child)) {
+      const name = (child.data && child.data.slot) || 'default';
+      slots[name] = slots[name] || [];
+      slots[name].push(child);
+    }
+  });
+  return { ...slots, ...getScopedSlots(ele) };
+};
+const getSlot = (self, name = 'default', options = {}) => {
+  return (
+    (self.$scopedSlots && self.$scopedSlots[name] && self.$scopedSlots[name](options)) ||
+    self.$slots[name] ||
+    []
+  );
+};
+
+const getAllChildren = ele => {
+  let componentOptions = ele.componentOptions || {};
   if (ele.$vnode) {
-    componentOptions = ele.$vnode.componentOptions
+    componentOptions = ele.$vnode.componentOptions || {};
   }
-  return componentOptions ? componentOptions.Ctor.options || {} : {}
-}
-const getOptionProps = (instance) => {
+  return ele.children || componentOptions.children || [];
+};
+const getSlotOptions = ele => {
+  if (ele.fnOptions) {
+    // 函数式组件
+    return ele.fnOptions;
+  }
+  let componentOptions = ele.componentOptions;
+  if (ele.$vnode) {
+    componentOptions = ele.$vnode.componentOptions;
+  }
+  return componentOptions ? componentOptions.Ctor.options || {} : {};
+};
+const getOptionProps = instance => {
   if (instance.componentOptions) {
-    const componentOptions = instance.componentOptions
-    const { propsData = {}, Ctor = {}} = componentOptions
-    const props = (Ctor.options || {}).props || {}
-    const res = {}
+    const componentOptions = instance.componentOptions;
+    const { propsData = {}, Ctor = {} } = componentOptions;
+    const props = (Ctor.options || {}).props || {};
+    const res = {};
     for (const [k, v] of Object.entries(props)) {
-      const def = v.default
+      const def = v.default;
       if (def !== undefined) {
-        res[k] = typeof def === 'function' && getType(v.type) !== 'Function'
-          ? def.call(instance)
-          : def
+        res[k] =
+          typeof def === 'function' && getType(v.type) !== 'Function' ? def.call(instance) : def;
       }
     }
-    return { ...res, ...propsData }
+    return { ...res, ...propsData };
   }
-  const { $options = {}, $props = {}} = instance
-  return filterProps($props, $options.propsData)
-}
+  const { $options = {}, $props = {} } = instance;
+  return filterProps($props, $options.propsData);
+};
 
-const getComponentFromProp = (instance, prop) => {
+const getComponentFromProp = (instance, prop, options = instance, execute = true) => {
   if (instance.$createElement) {
-    const h = instance.$createElement
-    const temp = instance[prop]
+    const h = instance.$createElement;
+    const temp = instance[prop];
     if (temp !== undefined) {
-      return typeof temp === 'function' ? temp(h) : temp
+      return typeof temp === 'function' && execute ? temp(h, options) : temp;
     }
-    return instance.$slots[prop]
+    return (
+      (instance.$scopedSlots[prop] && execute && instance.$scopedSlots[prop](options)) ||
+      instance.$scopedSlots[prop] ||
+      instance.$slots[prop] ||
+      undefined
+    );
   } else {
-    const h = instance.context.$createElement
-    const temp = getPropsData(instance)[prop]
+    const h = instance.context.$createElement;
+    const temp = getPropsData(instance)[prop];
     if (temp !== undefined) {
-      return typeof temp === 'function' ? temp(h) : temp
+      return typeof temp === 'function' && execute ? temp(h, options) : temp;
     }
-    const slotsProp = []
+    const slotScope = getScopedSlots(instance)[prop];
+    if (slotScope !== undefined) {
+      return typeof slotScope === 'function' && execute ? slotScope(h, options) : slotScope;
+    }
+    const slotsProp = [];
     const componentOptions = instance.componentOptions || {};
-    (componentOptions.children || []).forEach((child) => {
+    (componentOptions.children || []).forEach(child => {
       if (child.data && child.data.slot === prop) {
+        if (child.data.attrs) {
+          delete child.data.attrs.slot;
+        }
         if (child.tag === 'template') {
-          slotsProp.push(child.children)
+          slotsProp.push(child.children);
         } else {
-          slotsProp.push(child)
+          slotsProp.push(child);
         }
       }
-    })
-    return slotsProp.length ? slotsProp : undefined
+    });
+    return slotsProp.length ? slotsProp : undefined;
   }
-}
+};
 
-const getAllProps = (ele) => {
-  let data = ele.data || {}
-  let componentOptions = ele.componentOptions || {}
+const getAllProps = ele => {
+  let data = ele.data || {};
+  let componentOptions = ele.componentOptions || {};
   if (ele.$vnode) {
-    data = ele.$vnode.data || {}
-    componentOptions = ele.$vnode.componentOptions || {}
+    data = ele.$vnode.data || {};
+    componentOptions = ele.$vnode.componentOptions || {};
   }
-  return { ...data.props, ...data.attrs, ...componentOptions.propsData }
-}
+  return { ...data.props, ...data.attrs, ...componentOptions.propsData };
+};
 
-const getPropsData = (ele) => {
-  let componentOptions = ele.componentOptions
+const getPropsData = ele => {
+  let componentOptions = ele.componentOptions;
   if (ele.$vnode) {
-    componentOptions = ele.$vnode.componentOptions
+    componentOptions = ele.$vnode.componentOptions;
   }
-  return componentOptions ? componentOptions.propsData || {} : {}
-}
+  return componentOptions ? componentOptions.propsData || {} : {};
+};
 const getValueByProp = (ele, prop) => {
-  return getPropsData(ele)[prop]
-}
+  return getPropsData(ele)[prop];
+};
 
-const getAttrs = (ele) => {
-  let data = ele.data
+const getAttrs = ele => {
+  let data = ele.data;
   if (ele.$vnode) {
-    data = ele.$vnode.data
+    data = ele.$vnode.data;
   }
-  return data ? data.attrs || {} : {}
-}
+  return data ? data.attrs || {} : {};
+};
 
-const getKey = (ele) => {
-  let key = ele.key
+const getKey = ele => {
+  let key = ele.key;
   if (ele.$vnode) {
-    key = ele.$vnode.key
+    key = ele.$vnode.key;
   }
-  return key
-}
+  return key;
+};
 
-export function getEvents (child) {
-  let events = {}
+export function getEvents(child) {
+  let events = {};
   if (child.componentOptions && child.componentOptions.listeners) {
-    events = child.componentOptions.listeners
+    events = child.componentOptions.listeners;
   } else if (child.data && child.data.on) {
-    events = child.data.on
+    events = child.data.on;
   }
-  return { ...events }
+  return { ...events };
 }
-export function getClass (ele) {
-  let data = {}
+export function getClass(ele) {
+  let data = {};
   if (ele.data) {
-    data = ele.data
+    data = ele.data;
   } else if (ele.$vnode && ele.$vnode.data) {
-    data = ele.$vnode.data
+    data = ele.$vnode.data;
   }
-  const tempCls = data.class || data.staticClass
-  let cls = {}
+  const tempCls = data.class || {};
+  const staticClass = data.staticClass;
+  let cls = {};
+  staticClass &&
+    staticClass.split(' ').forEach(c => {
+      cls[c.trim()] = true;
+    });
   if (typeof tempCls === 'string') {
-    tempCls.split(' ').forEach(c => { cls[c.trim()] = true })
+    tempCls.split(' ').forEach(c => {
+      cls[c.trim()] = true;
+    });
+  } else if (Array.isArray(tempCls)) {
+    classNames(tempCls)
+      .split(' ')
+      .forEach(c => {
+        cls[c.trim()] = true;
+      });
   } else {
-    cls = tempCls
+    cls = { ...cls, ...tempCls };
   }
-  return cls
+  return cls;
 }
-export function getStyle (ele, camel) {
-  let data = {}
+export function getStyle(ele, camel) {
+  let data = {};
   if (ele.data) {
-    data = ele.data
+    data = ele.data;
   } else if (ele.$vnode && ele.$vnode.data) {
-    data = ele.$vnode.data
+    data = ele.$vnode.data;
   }
-  let style = data.style || data.staticStyle
+  let style = data.style || data.staticStyle;
   if (typeof style === 'string') {
-    style = parseStyleText(style, camel)
-  } else if (camel && style) { // 驼峰化
-    const res = {}
-    Object.keys(style).forEach(k => (res[camelize(k)] = style[k]))
-    return res
+    style = parseStyleText(style, camel);
+  } else if (camel && style) {
+    // 驼峰化
+    const res = {};
+    Object.keys(style).forEach(k => (res[camelize(k)] = style[k]));
+    return res;
   }
-  return style
+  return style;
 }
 
-export function getComponentName (opts) {
-  return opts && (opts.Ctor.options.name || opts.tag)
+export function getComponentName(opts) {
+  return opts && (opts.Ctor.options.name || opts.tag);
 }
 
-export function isEmptyElement (ele) {
-  return !(ele.tag || ele.text.trim() !== '')
+export function isEmptyElement(c) {
+  return !(c.tag || (c.text && c.text.trim() !== ''));
 }
 
-export function filterEmpty (children = []) {
-  return children.filter(c => c.tag || (c.text && c.text.trim() !== ''))
+export function filterEmpty(children = []) {
+  return children.filter(c => !isEmptyElement(c));
 }
 const initDefaultProps = (propTypes, defaultProps) => {
   Object.keys(defaultProps).forEach(k => {
     if (propTypes[k]) {
-      propTypes[k].def && (propTypes[k] = propTypes[k].def(defaultProps[k]))
+      propTypes[k].def && (propTypes[k] = propTypes[k].def(defaultProps[k]));
     } else {
-      throw new Error(
-        `not have ${k} prop`,
-      )
+      throw new Error(`not have ${k} prop`);
     }
-  })
-  return propTypes
-}
+  });
+  return propTypes;
+};
 
-export function mergeProps () {
-  const args = [].slice.call(arguments, 0)
-  const props = {}
-  args.forEach((p, i) => {
+export function mergeProps() {
+  const args = [].slice.call(arguments, 0);
+  const props = {};
+  args.forEach((p = {}) => {
     for (const [k, v] of Object.entries(p)) {
-      props[k] = props[k] || {}
+      props[k] = props[k] || {};
       if (isPlainObject(v)) {
-        Object.assign(props[k], v)
+        Object.assign(props[k], v);
       } else {
-        props[k] = v
+        props[k] = v;
       }
     }
-  })
-  return props
+  });
+  return props;
 }
 
-function isValidElement (element) {
-  return element && element.context && element.context._isVue
+function isValidElement(element) {
+  return (
+    element &&
+    typeof element === 'object' &&
+    'componentOptions' in element &&
+    'context' in element &&
+    element.tag !== undefined
+  ); // remove text node
 }
 
 export {
@@ -257,6 +307,9 @@ export {
   isValidElement,
   camelize,
   getSlots,
+  getSlot,
   getAllProps,
-}
-export default hasProp
+  getAllChildren,
+};
+export default hasProp;
+

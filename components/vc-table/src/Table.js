@@ -63,6 +63,7 @@ export default {
     childrenColumnName: PropTypes.string,
     indentSize: PropTypes.number,
     expandRowByClick: PropTypes.bool,
+    expandIcon: PropTypes.func,
   }, {
     data: [],
     useFixedHeader: false,
@@ -167,6 +168,38 @@ export default {
     },
   },
 
+  created() {
+    ['rowClick', 'rowDoubleclick', 'rowContextmenu', 'rowMouseenter', 'rowMouseleave'].forEach(
+      name => {
+        warningOnce(
+          this.$listeners[name] === undefined,
+          `${name} is deprecated, please use customRow instead.`,
+        );
+      },
+    );
+
+    warningOnce(
+      this.getBodyWrapper === undefined,
+      'getBodyWrapper is deprecated, please use custom components instead.',
+    );
+
+    // this.columnManager = new ColumnManager(this.columns, this.$slots.default)
+
+    this.store = create({
+      currentHoverKey: null,
+      fixedColumnsHeadRowsHeight: [],
+      fixedColumnsBodyRowsHeight: {},
+    });
+
+    this.setScrollPosition('left');
+
+    this.debouncedWindowResize = debounce(this.handleWindowResize, 150);
+  },
+  provide() {
+    return {
+      table: this,
+    };
+  },
   mounted () {
     this.$nextTick(() => {
       if (this.columnManager.isAnyColumnsFixed()) {
@@ -174,6 +207,12 @@ export default {
         this.resizeEvent = addEventListener(
           window, 'resize', this.debouncedWindowResize
         )
+      }
+      if (this.ref_headTable) {
+        this.ref_headTable.scrollLeft = 0;
+      }
+      if (this.ref_bodyTable) {
+        this.ref_bodyTable.scrollLeft = 0;
       }
     })
   },
@@ -356,7 +395,11 @@ export default {
         event.preventDefault()
         const wd = event.deltaY
         const target = event.target
-        const { bodyTable, fixedColumnsBodyLeft, fixedColumnsBodyRight } = this
+	const {
+          ref_bodyTable: bodyTable,
+          ref_fixedColumnsBodyLeft: fixedColumnsBodyLeft,
+          ref_fixedColumnsBodyRight: fixedColumnsBodyRight,
+        } = this;
         let scrollTop = 0
 
         if (this.lastScrollTop) {

@@ -13,6 +13,9 @@ import { initDefaultProps, getOptionProps } from '../_util/props-util'
 import { cloneElement } from '../_util/vnode'
 import BaseMixin from '../_util/BaseMixin'
 
+function stopPropagation(e) {
+  e.stopPropagation();
+}
 export default {
   mixins: [BaseMixin],
   name: 'FilterMenu',
@@ -76,6 +79,9 @@ export default {
     // },
   },
   methods: {
+    getDropdownVisible() {
+      return this.neverShown ? false : this.sVisible;
+    },
     setNeverShown  (column) {
       const rootNode = this.$el
       const filterBelongToScrollBody = !!closest(rootNode, `.vcu-table-scroll`)
@@ -111,6 +117,10 @@ export default {
     handleConfirm  () {
       this.setVisible(false)
       this.confirmFilter2()
+      this.$forceUpdate();
+      this.$nextTick(() => {
+        this.confirmFilter;
+      });
     },
 
     onVisibleChange  (visible) {
@@ -128,11 +138,12 @@ export default {
 
     renderMenuItem (item) {
       const { column } = this
+      const { sSelectedKeys: selectedKeys } = this.$data;
       const multiple = ('filterMultiple' in column) ? column.filterMultiple : true
       const input = multiple ? (
-        <Checkbox checked={this.sSelectedKeys.indexOf(item.value.toString()) >= 0} />
+        <Checkbox checked={selectedKeys && selectedKeys.indexOf(item.value.toString()) >= 0} />
       ) : (
-        <Radio checked={this.sSelectedKeys.indexOf(item.value.toString()) >= 0} />
+        <Radio checked={selectedKeys && selectedKeys.indexOf(item.value.toString()) >= 0} />
       )
 
       return (
@@ -167,11 +178,12 @@ export default {
     },
 
     handleMenuItemClick (info) {
+      const { sSelectedKeys: selectedKeys } = this.$data;
       if (!info.keyPath || info.keyPath.length <= 1) {
         return
       }
       const keyPathOfSelectedItem = this.sKeyPathOfSelectedItem
-      if (this.sSelectedKeys.indexOf(info.key) >= 0) {
+      if (selectedKeys && selectedKeys.indexOf(info.key) >= 0) {
         // deselect SubMenu child
         delete keyPathOfSelectedItem[info.key]
       } else {
@@ -182,21 +194,37 @@ export default {
     },
 
     renderFilterIcon () {
-      const { column, locale, prefixCls, selectedKeys } = this
-      const filterd = selectedKeys.length > 0
-      let filterIcon = column.filterIcon
+      const { column, locale, prefixCls, selectedKeys } = this;
+      const filtered = selectedKeys && selectedKeys.length > 0;
+      let filterIcon = column.filterIcon;
       if (typeof filterIcon === 'function') {
-        filterIcon = filterIcon(filterd)
+        filterIcon = filterIcon(filtered, column);
       }
-      const dropdownSelectedClass = filterd ? `${prefixCls}-selected` : ''
+      const dropdownIconClass = classNames({
+        [`${prefixCls}-selected`]: filtered,
+        [`${prefixCls}-open`]: this.getDropdownVisible(),
+      });
 
-      return filterIcon ? cloneElement(filterIcon, {
-        attrs: {
-          title: locale.filterTitle,
-        },
-        class: classNames(`${prefixCls}-icon`, filterIcon.className),
-      }) : <Icon title={locale.filterTitle} type='filter' class={dropdownSelectedClass} />
-    },
+      return filterIcon ? (
+        cloneElement(filterIcon, {
+          attrs: {
+            title: locale.filterTitle,
+          },
+          on: {
+            click: stopPropagation,
+          },
+          class: classNames(`${prefixCls}-icon`, dropdownIconClass),
+        })
+      ) : (
+        <Icon
+          title={locale.filterTitle}
+          type="filter"
+          theme="filled"
+          class={dropdownIconClass}
+          onClick={stopPropagation}
+        />
+      );
+     },
   },
 
   render () {
@@ -216,11 +244,12 @@ export default {
         clearFilters: this.handleClearFilters,
         filters: column.filters,
         getPopupContainer: (triggerNode) => triggerNode.parentNode,
+	column,
       })
     }
 
     const menus = filterDropdown ? (
-      <FilterDropdownMenuWrapper>
+      <FilterDropdownMenuWrapper class={`${prefixCls}-dropdown`}>
         {filterDropdown}
       </FilterDropdownMenuWrapper>
     ) : (
@@ -257,6 +286,7 @@ export default {
     return (
       <Dropdown
         trigger={['click']}
+	placement="bottomRight"
         visible={this.neverShown ? false : this.sVisible}
         onVisibleChange={this.onVisibleChange}
         getPopupContainer={getPopupContainer}

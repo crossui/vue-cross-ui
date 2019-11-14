@@ -38,6 +38,7 @@ const uploadProps = {
 export default {
   name: 'Upload',
   mixins: [BaseMixin],
+  inheritAttrs: false,
   props: initDefaultProps(uploadProps, {
     componentTag: 'span',
     prefixCls: 'rc-upload',
@@ -53,6 +54,7 @@ export default {
     multiple: false,
     beforeUpload: empty,
     withCredentials: false,
+    
   }),
   data () {
     return {

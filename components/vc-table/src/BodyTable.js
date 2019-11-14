@@ -18,7 +18,7 @@ export default {
     isAnyColumnsFixed: PropTypes.bool,
   },
   inject: {
-    table: { default: {}},
+    table: { default: () => ({}) },
   },
   mounted () {
     this.updateTableRef()

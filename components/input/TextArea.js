@@ -55,6 +55,9 @@ export default {
       }
       this.nextFrameActionId = onNextFrame(this.resizeTextarea)
     },
+	autosize(val){
+		this.resizeTextarea()
+	}
   },
   mounted () {
     this.$nextTick(() => {

@@ -1,12 +1,6 @@
-
 import VcTable from '../vc-table'
 import classNames from 'classnames'
-import Pagination from '../pagination'
-import Icon from '../icon'
-import Spin from '../spin'
-import LocaleReceiver from '../locale-provider/LocaleReceiver'
-import defaultLocale from '../locale-provider/default'
-import warning from '../_util/warning'
+import shallowEqual from 'shallowequal';
 import FilterDropdown from './filterDropdown'
 import createStore from './createStore'
 import SelectionBox from './SelectionBox'
@@ -15,11 +9,23 @@ import Column from './Column'
 import ColumnGroup from './ColumnGroup'
 import createBodyRow from './createBodyRow'
 import { flatArray, treeMap, flatFilter } from './util'
-import { initDefaultProps, mergeProps, getOptionProps } from '../_util/props-util'
-import BaseMixin from '../_util/BaseMixin'
 import {
-  TableProps,
-} from './interface'
+  initDefaultProps,
+  mergeProps,
+  getOptionProps,
+  isValidElement,
+  filterEmpty,
+  getAllProps,
+  getComponentFromProp,
+} from '../_util/props-util';
+import BaseMixin from '../_util/BaseMixin'
+import { TableProps } from './interface';
+import Pagination from '../pagination'
+import Icon from '../icon'
+import Spin from '../spin'
+import LocaleReceiver from '../locale-provider/LocaleReceiver'
+import defaultLocale from '../locale-provider/default'
+import warning from '../_util/warning'
 
 function noop () {
 }
@@ -40,6 +46,7 @@ const defaultPagination = {
   onShowSizeChange: noop,
 }
 
+const ROW_SELECTION_COLUMN_WIDTH = '62px';
 /**
  * Avoid creating new object, so that parent component's shouldComponentUpdate
  * can works appropriately。
@@ -63,6 +70,7 @@ export default {
     locale: {},
     rowKey: 'key',
     showHeader: true,
+    sortDirections: ['ascend', 'descend'],
   }),
 
   // CheckboxPropsCache: {
@@ -74,6 +82,11 @@ export default {
 
   data () {
     // this.columns = props.columns || normalizeColumns(props.children)
+    const props = getOptionProps(this);
+    warning(
+      !props.expandedRowRender || !('scroll' in props),
+      '`expandedRowRender` and `scroll` are not compatible. Please use one of them at one time.',
+    );
 
     this.createComponents(this.components)
     this.CheckboxPropsCache = {}
@@ -107,18 +120,19 @@ export default {
       deep: true,
     },
     rowSelection: {
-      handler (val) {
-        if (val &&
-          'selectedRowKeys' in val) {
+      handler(val, oldVal) {
+        if (val && 'selectedRowKeys' in val) {
           this.store.setState({
             selectedRowKeys: val.selectedRowKeys || [],
-          })
-          const { rowSelection } = this
-          if (rowSelection && (
-            val.getCheckboxProps !== rowSelection.getCheckboxProps
-          )) {
-            this.CheckboxPropsCache = {}
+          });
+          const { rowSelection } = this;
+          if (rowSelection && val.getCheckboxProps !== rowSelection.getCheckboxProps) {
+            this.CheckboxPropsCache = {};
           }
+        } else if (oldVal && !val) {
+          this.store.setState({
+            selectedRowKeys: [],
+          });
         }
       },
       deep: true,
@@ -179,15 +193,28 @@ export default {
         .map((record, rowIndex) => this.getRecordKey(record, rowIndex))
     },
 
-    getDefaultPagination (props) {
-      const pagination = props.pagination || {}
+    getDefaultPagination(props) {
+      const pagination = typeof props.pagination === 'object' ? props.pagination : {};
+      let current;
+      if ('current' in pagination) {
+        current = pagination.current;
+      } else if ('defaultCurrent' in pagination) {
+        current = pagination.defaultCurrent;
+      }
+      let pageSize;
+      if ('pageSize' in pagination) {
+        pageSize = pagination.pageSize;
+      } else if ('defaultPageSize' in pagination) {
+        pageSize = pagination.defaultPageSize;
+      }
       return this.hasPagination(props)
         ? {
-          ...defaultPagination,
-          ...pagination,
-          current: pagination.defaultCurrent || pagination.current || 1,
-          pageSize: pagination.defaultPageSize || pagination.pageSize || 10,
-        } : {}
+            ...defaultPagination,
+            ...pagination,
+            current: current || 1,
+            pageSize: pageSize || 10,
+          }
+        : {};
     },
 
     onRow  (record, index) {
@@ -308,8 +335,8 @@ export default {
       }
     },
 
-    getSorterFn () {
-      const { sSortOrder: sortOrder, sSortColumn: sortColumn } = this
+    getSorterFn (state) {
+      const { sSortOrder: sortOrder, sSortColumn: sortColumn } = state || this.$data;
       if (!sortOrder || !sortColumn ||
           typeof sortColumn.sorter !== 'function') {
         return
@@ -323,35 +350,53 @@ export default {
         return 0
       }
     },
-
-    toggleSortOrder (order, column) {
-      let { sSortOrder: sortOrder, sSortColumn: sortColumn } = this
+    isSameColumn(a, b) {
+      if (a && b && a.key && a.key === b.key) {
+        return true;
+      }
+      return (
+        a === b ||
+        shallowEqual(a, b, (value, other) => {
+          if (typeof value === 'function' && typeof other === 'function') {
+            return value === other || value.toString() === other.toString();
+          }
+        })
+      );
+    },
+    toggleSortOrder (column) {
+      if (!column.sorter) {
+        return;
+      }
+      const sortDirections = column.sortDirections || this.sortDirections;
+      const { sSortOrder: sortOrder, sSortColumn: sortColumn } = this;
       // 只同时允许一列进行排序，否则会导致排序顺序的逻辑问题
-      const isSortColumn = this.isSortColumn(column)
-      if (!isSortColumn) { // 当前列未排序
-        sortOrder = order
-        sortColumn = column
-      } else { // 当前列已排序
-        if (sortOrder === order) { // 切换为未排序状态
-          sortOrder = undefined
-          sortColumn = null
-        } else { // 切换为排序状态
-          sortOrder = order
-        }
+      let newSortOrder;
+      // 切换另一列时，丢弃 sortOrder 的状态
+      if (this.isSameColumn(sortColumn, column) && sortOrder !== undefined) {
+        // 按照sortDirections的内容依次切换排序状态
+        const methodIndex = sortDirections.indexOf(sortOrder) + 1;
+        newSortOrder =
+          methodIndex === sortDirections.length ? undefined : sortDirections[methodIndex];
+      } else {
+        newSortOrder = sortDirections[0];
       }
       const newState = {
-        sSortOrder: sortOrder,
-        sSortColumn: sortColumn,
-      }
+        sSortOrder: newSortOrder,
+        sSortColumn: newSortOrder ? column : null,
+      };
 
       // Controlled
       if (this.getSortOrderColumns().length === 0) {
-        this.setState(newState)
+        this.setState(newState);
       }
-      this.$emit('change', ...this.prepareParamsArguments({
-        ...this.$data,
-        ...newState,
-      }))
+      this.$emit(
+        'change',
+        ...this.prepareParamsArguments({
+          ...this.$data,
+          ...newState,
+        }),
+      );
+
     },
 
     handleFilter (column, nextFilters) {
@@ -424,7 +469,7 @@ export default {
       let selectedRowKeys = this.store.getState().selectedRowKeys.concat(defaultSelection)
       const key = this.getRecordKey(record, rowIndex)
       const pivot = this.$data.pivot
-      const rows = this.getFlatCurrentPageData()
+      const rows = this.getFlatCurrentPageData(this.$props.childrenColumnName)
       let realIndex = rowIndex
       if (this.$props.expandedRowRender) {
         realIndex = rows.findIndex(row => this.getRecordKey(row, rowIndex) === key)
@@ -487,10 +532,9 @@ export default {
     handleRadioSelect  (record, rowIndex, e) {
       const checked = e.target.checked
       const nativeEvent = e.nativeEvent
-      const defaultSelection = this.store.getState().selectionDirty ? [] : this.getDefaultSelection()
-      let selectedRowKeys = this.store.getState().selectedRowKeys.concat(defaultSelection)
+      
       const key = this.getRecordKey(record, rowIndex)
-      selectedRowKeys = [key]
+      const selectedRowKeys = [key];
       this.store.setState({
         selectionDirty: true,
       })
@@ -504,7 +548,7 @@ export default {
     },
 
     handleSelectRow  (selectionKey, index, onSelectFunc) {
-      const data = this.getFlatCurrentPageData()
+      const data = this.getFlatCurrentPageData(this.$props.childrenColumnName)
       const defaultSelection = this.store.getState().selectionDirty ? [] : this.getDefaultSelection()
       const selectedRowKeys = this.store.getState().selectedRowKeys.concat(defaultSelection)
       const changeableRowKeys = data
@@ -648,11 +692,17 @@ export default {
       return this.$el
     },
 
+    generatePopupContainerFunc() {
+      const { scroll } = this.$props;
+
+      // Use undefined to let rc component use default logic.
+      return scroll ? this.getPopupContainer : undefined;
+    },
     renderRowSelection (locale) {
-      const { prefixCls, rowSelection } = this
+      const { prefixCls, rowSelection, childrenColumnName } = this
       const columns = this.columns.concat()
       if (rowSelection) {
-        const data = this.getFlatCurrentPageData().filter((item, index) => {
+        const data = this.getFlatCurrentPageData(childrenColumnName).filter((item, index) => {
           if (rowSelection.getCheckboxProps) {
             return !this.getCheckboxPropsByItem(item, index).props.disabled
           }
@@ -666,7 +716,7 @@ export default {
           customRender: this.renderSelectionBox(rowSelection.type),
           className: selectionColumnClass,
           fixed: rowSelection.fixed,
-          width: rowSelection.columnWidth,
+          width: rowSelection.columnWidth || ROW_SELECTION_COLUMN_WIDTH,
           title: rowSelection.columnTitle,
         }
         if (rowSelection.type !== 'radio') {
@@ -683,7 +733,7 @@ export default {
               onSelect={this.handleSelectRow}
               selections={rowSelection.selections}
               hideDefaultSelections={rowSelection.hideDefaultSelections}
-              getPopupContainer={this.getPopupContainer}
+              getPopupContainer={this.generatePopupContainerFunc()}
             />
           )
         }
@@ -723,14 +773,16 @@ export default {
 
     renderColumnsDropdown (columns, locale) {
       const { prefixCls, dropdownPrefixCls } = this
-      const { sSortOrder: sortOrder } = this
-      return treeMap(columns, (originColumn, i) => {
-        const column = { ...originColumn }
-        const key = this.getColumnKey(column, i)
-        let filterDropdown
-        let sortButton
+      const { sSortOrder: sortOrder, sFilters: filters } = this
+      return treeMap(columns, (column, i) => {
+        const key = this.getColumnKey(column, i);
+        let filterDropdown;
+        let sortButton;
+        let customHeaderCell = column.customHeaderCell;
+        const title = this.renderColumnTitle(column.title);
+        const isSortColumn = this.isSortColumn(column);
         if ((column.filters && column.filters.length > 0) || column.filterDropdown) {
-          const colFilters = this.sFilters[key] || []
+          const colFilters = key in filters ? filters[key] : [];
           filterDropdown = (
             <FilterDropdown
               _propsSymbol={Symbol()}
@@ -740,52 +792,86 @@ export default {
               confirmFilter={this.handleFilter}
               prefixCls={`${prefixCls}-filter`}
               dropdownPrefixCls={dropdownPrefixCls || 'vcu-dropdown'}
-              getPopupContainer={this.getPopupContainer}
+              getPopupContainer={this.generatePopupContainerFunc()}
+              key="filter-dropdown"
             />
-          )
+          );
         }
         if (column.sorter) {
-          const isSortColumn = this.isSortColumn(column)
-          if (isSortColumn) {
-            column.className = classNames(column.className, {
-              [`${prefixCls}-column-sort`]: sortOrder,
-            })
-          }
-          const isAscend = isSortColumn && sortOrder === 'ascend'
-          const isDescend = isSortColumn && sortOrder === 'descend'
+          const sortDirections = column.sortDirections || this.sortDirections;
+          const isAscend = isSortColumn && sortOrder === 'ascend';
+          const isDescend = isSortColumn && sortOrder === 'descend';
+          const ascend = sortDirections.indexOf('ascend') !== -1 && (
+            <Icon
+              class={`${prefixCls}-column-sorter-up ${isAscend ? 'on' : 'off'}`}
+              type="up"
+              key="up"
+            />
+          );
+
+          const descend = sortDirections.indexOf('descend') !== -1 && (
+            <Icon
+              class={`${prefixCls}-column-sorter-down ${isDescend ? 'on' : 'off'}`}
+              type="down"
+              key="down"
+            />
+          );
+
           sortButton = (
-            <div class={`${prefixCls}-column-sorter`}>
-              <span
-                class={`${prefixCls}-column-sorter-up ${isAscend ? 'on' : 'off'}`}
-                title='↑'
-                onClick={() => this.toggleSortOrder('ascend', column)}
-              >
-                <Icon type='caret-up' />
-              </span>
-              <span
-                class={`${prefixCls}-column-sorter-down ${isDescend ? 'on' : 'off'}`}
-                title='↓'
-                onClick={() => this.toggleSortOrder('descend', column)}
-              >
-                <Icon type='caret-down' />
-              </span>
+            <div title={locale.sortTitle} class={`${prefixCls}-column-sorter`} key="sorter">
+              {ascend}
+              {descend}
             </div>
-          )
+          );
+          customHeaderCell = col => {
+            let colProps = {};
+            // Get original first
+            if (column.customHeaderCell) {
+              colProps = {
+                ...column.customHeaderCell(col),
+              };
+            }
+            colProps.on = colProps.on || {};
+            // Add sorter logic
+            const onHeaderCellClick = colProps.on.click;
+            colProps.on.click = (...args) => {
+              this.toggleSortOrder(column);
+              if (onHeaderCellClick) {
+                onHeaderCellClick(...args);
+              }
+            };
+            return colProps;
+          };
         }
-        column.title = (
-          <span key={key}>
-            {column.title}
-            {sortButton}
-            {filterDropdown}
-          </span>
-        )
-
-        if (sortButton || filterDropdown) {
-          column.className = classNames(`${prefixCls}-column-has-filters`, column.className)
-        }
-
-        return column
-      })
+        return {
+          ...column,
+          className: classNames(column.className, {
+            [`${prefixCls}-column-has-actions`]: sortButton || filterDropdown,
+            [`${prefixCls}-column-has-filters`]: filterDropdown,
+            [`${prefixCls}-column-has-sorters`]: sortButton,
+            [`${prefixCls}-column-sort`]: isSortColumn && sortOrder,
+          }),
+          title: [
+            <div key="title" class={sortButton ? `${prefixCls}-column-sorters` : undefined}>
+              {title}
+              {sortButton}
+            </div>,
+            filterDropdown,
+          ],
+          customHeaderCell,
+        };
+      });
+    },
+    renderColumnTitle(title) {
+      const { sFilters: filters, sSortOrder: sortOrder } = this.$data;
+      // https://github.com/ant-design/ant-design/issues/11246#issuecomment-405009167
+      if (title instanceof Function) {
+        return title({
+          filters,
+          sortOrder,
+        });
+      }
+      return title;
     },
 
     handleShowSizeChange  (current, pageSize) {
@@ -854,7 +940,10 @@ export default {
         sorter.field = state.sSortColumn.dataIndex
         sorter.columnKey = this.getColumnKey(state.sSortColumn)
       }
-      return [pagination, filters, sorter]
+      const extra = {
+        currentDataSource: this.getLocalData(state),
+      };
+      return [pagination, filters, sorter, extra]
     },
 
     findColumn (myKey) {
@@ -894,11 +983,11 @@ export default {
     },
 
     getFlatData () {
-      return flatArray(this.getLocalData())
+      return flatArray(this.getLocalData(null, false))
     },
 
-    getFlatCurrentPageData () {
-      return flatArray(this.getCurrentPageData())
+    getFlatCurrentPageData (childrenColumnName) {
+      return flatArray(this.getCurrentPageData(), childrenColumnName)
     },
 
     recursiveSort (data, sorterFn) {
@@ -909,33 +998,38 @@ export default {
       } : item))
     },
 
-    getLocalData () {
-      const { dataSource, sFilters: filters } = this
-      let data = dataSource || []
+    getLocalData (state, filter = true) {
+      const currentState = state || this.$data;
+      const { sFilters: filters } = currentState;
+      const { dataSource } = this.$props;
+      let data = dataSource || [];
       // 优化本地排序
-      data = data.slice(0)
-      const sorterFn = this.getSorterFn()
+      data = data.slice(0);
+      const sorterFn = this.getSorterFn(currentState);
       if (sorterFn) {
-        data = this.recursiveSort(data, sorterFn)
+        data = this.recursiveSort(data, sorterFn);
       }
       // 筛选
-      if (filters) {
-        Object.keys(filters).forEach((columnKey) => {
-          const col = this.findColumn(columnKey)
+      if (filter && filters) {
+        Object.keys(filters).forEach(columnKey => {
+          const col = this.findColumn(columnKey);
           if (!col) {
-            return
+            return;
           }
-          const values = filters[columnKey] || []
+          const values = filters[columnKey] || [];
           if (values.length === 0) {
-            return
+            return;
           }
-          const onFilter = col.onFilter
-          data = onFilter ? data.filter(record => {
-            return values.some(v => onFilter(v, record))
-          }) : data
-        })
+          const onFilter = col.onFilter;
+          data = onFilter
+            ? data.filter(record => {
+                return values.some(v => onFilter(v, record));
+              })
+            : data;
+        });
       }
-      return data
+      return data;
+
     },
 
     createComponents (components = {}, prevComponents) {
@@ -959,6 +1053,8 @@ export default {
       const data = this.getCurrentPageData()
       const expandIconAsCell = this.expandedRowRender && this.expandIconAsCell !== false
 
+      const mergedLocale = { ...contextLocale, ...locale };
+      
       const classString = classNames({
         [`${prefixCls}-${this.size}`]: true,
         [`${prefixCls}-bordered`]: this.bordered,
@@ -966,8 +1062,8 @@ export default {
         [`${prefixCls}-without-column-header`]: !showHeader,
       })
 
-      let columns = this.renderRowSelection(locale)
-      columns = this.renderColumnsDropdown(columns, locale)
+      let columns = this.renderRowSelection(mergedLocale)
+      columns = this.renderColumnsDropdown(columns, mergedLocale)
       columns = columns.map((column, i) => {
         const newColumn = { ...column }
         newColumn.key = this.getColumnKey(newColumn, i)
@@ -981,7 +1077,7 @@ export default {
         key: 'table',
         props: {
           ...restProps,
-          customRow: this.onRow,
+          customRow: (record, index) => this.onRow(record, index),
           components: this.customComponents,
           prefixCls,
           data,
@@ -989,7 +1085,7 @@ export default {
           showHeader,
           expandIconColumnIndex,
           expandIconAsCell,
-          emptyText: !(loading.props && loading.props.spinning) && locale.emptyText,
+          emptyText: !(loading.props && loading.props.spinning) && mergedLocale.emptyText,
         },
         on: this.$listeners,
         class: classString,
