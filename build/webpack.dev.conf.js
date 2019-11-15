@@ -14,9 +14,23 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
+//获取本机local ip
+const getIPAdress = function() {
+    var interfaces = require('os').networkInterfaces();
+    for (var devName in interfaces) {
+        var iface = interfaces[devName];
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                return alias.address;
+            }
+        }
+    }
+}
+
 const devWebpackConfig = merge(baseWebpackConfig, {
     entry: {
-        app: ["babel-polyfill", "./src/main.js"]    //'./src/main.js'
+        app: ["babel-polyfill", "./src/main.js"] //'./src/main.js'
     },
     module: {
         rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -35,7 +49,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         hot: true,
         contentBase: false, // since we use CopyWebpackPlugin.
         compress: true,
-        host: HOST || config.dev.host,
+        host: getIPAdress(), //HOST || config.dev.host,
         port: PORT || config.dev.port,
         open: config.dev.autoOpenBrowser,
         overlay: config.dev.errorOverlay ? { warnings: false, errors: true } : false,
@@ -80,7 +94,7 @@ module.exports = new Promise((resolve, reject) => {
         } else {
             // publish the new Port, necessary for e2e tests
             process.env.PORT = port
-            // add port to devServer config
+                // add port to devServer config
             devWebpackConfig.devServer.port = port
 
             // Add FriendlyErrorsPlugin

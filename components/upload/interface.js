@@ -69,17 +69,15 @@ export const UploadProps = {
   listType: PropsTypes.oneOf(['text', 'picture', 'picture-card']),
   // className: PropsTypes.string,
   // onPreview: PropsTypes.func,
-  remove: PropsTypes.func,
+  // onRemove: PropsTypes.func,
   supportServerRender: PropsTypes.bool,
   // style: PropsTypes.object,
   disabled: PropsTypes.bool,
   prefixCls: PropsTypes.string,
   customRequest: PropsTypes.func,
   withCredentials: PropsTypes.bool,
-  openFileDialogOnClick: PropsTypes.bool,
   locale: UploadLocale,
   height: PropsTypes.number,
-  id: PropsTypes.string
 }
 
 export const UploadState = {

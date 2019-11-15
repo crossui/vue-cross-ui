@@ -70,7 +70,7 @@ const IframeUploader = {
       // http://stackoverflow.com/questions/12830058/ie8-input-type-file-get-files
       const file = this.file = {
         uid: getUid(),
-        name: target.value && target.value.substring(target.value.lastIndexOf('\\') + 1, target.value.length),
+        name: target.value,
       }
       this.startUpload()
       const { $props: props } = this

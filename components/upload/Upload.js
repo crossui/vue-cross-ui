@@ -1,7 +1,6 @@
 
 import classNames from 'classnames'
 import uniqBy from 'lodash/uniqBy'
-import findIndex from 'lodash/findIndex';
 import VcUpload from '../vc-upload'
 import BaseMixin from '../_util/BaseMixin'
 import { getOptionProps, initDefaultProps, hasProp } from '../_util/props-util'
@@ -49,22 +48,17 @@ export default {
   },
   methods: {
     onStart (file) {
-      const targetItem = fileToObject(file);
-      targetItem.status = 'uploading';
-      const nextFileList = this.sFileList.concat();
-      const fileIndex = findIndex(nextFileList, ({ uid }) => uid === targetItem.uid);
-      if (fileIndex === -1) {
-        nextFileList.push(targetItem);
-      } else {
-        nextFileList[fileIndex] = targetItem;
-      }
+      const nextFileList = this.sFileList.concat()
+      const targetItem = fileToObject(file)
+      targetItem.status = 'uploading'
+      nextFileList.push(targetItem)
       this.onChange({
         file: targetItem,
         fileList: nextFileList,
-      });
+      })
       // fix ie progress
       if (!window.FormData) {
-        this.autoUpdateProgress(0, targetItem);
+        this.autoUpdateProgress(0, targetItem)
       }
     },
     autoUpdateProgress (_, file) {
@@ -129,35 +123,26 @@ export default {
         fileList,
       })
     },
-    onReject(fileList) {
-      this.$emit('reject', fileList);
-    },
     handleRemove (file) {
-     const { remove } = this;
-      const { status } = file;
-      file.status = 'removed'; // eslint-disable-line
-
-      Promise.resolve(typeof remove === 'function' ? remove(file) : remove).then(ret => {
+      Promise.resolve(this.$emit('remove', file)).then(ret => {
         // Prevent removing file
         if (ret === false) {
-          file.status = status;
-          return;
+          return
         }
 
-        const removedFileList = removeFileItem(file, this.sFileList);
+        const removedFileList = removeFileItem(file, this.sFileList)
         if (removedFileList) {
           this.onChange({
             file,
             fileList: removedFileList,
-          });
+          })
         }
-      });
+      })
     },
     handleManualRemove (file) {
-      if (this.$refs.uploadRef) {
-         this.$refs.uploadRef.abort(file);
-      }
-      this.handleRemove(file);
+      this.$refs.uploadRef.abort(file)
+      file.status = 'removed' // eslint-disable-line
+      this.handleRemove(file)
     },
     onChange (info) {
       if (!hasProp(this, 'fileList')) {
@@ -237,7 +222,6 @@ export default {
         error: this.onError,
         progress: this.onProgress,
         success: this.onSuccess,
-	reject: this.onReject,
       },
       ref: 'uploadRef',
       class: `${prefixCls}-btn`,
