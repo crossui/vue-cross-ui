@@ -82,6 +82,13 @@ export const menuRouter = [{
                 title: 'Layout 布局',
                 component: () =>
                     import ('@/docs/Layout/index.vue')
+            },
+            {
+                path: 'Split',
+                name: 'Split',
+                title: 'Split 面板分割',
+                component: () =>
+                    import ('@/docs/Split/index.vue')
             }
         ]
     },

@@ -1,31 +1,29 @@
 
 <template>
-  <div class="back-demo">
-    <v-textarea
-      placeholder="Autosize height with minimum and maximum number of lines"
-      :autosize="{ minRows: minRow, maxRows: maxRow }"
-    />
-	<v-button type="primary" @click="handleChage">Primary</v-button>
+  <div class="back-demo demo-split">
+    <Split v-model="split1">
+      <div slot="left" class="demo-split-pane">Left Pane</div>
+      <div slot="right" class="demo-split-pane">Right Pane</div>
+    </Split>
   </div>
 </template>
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      minRow: 3,
-	  maxRow: 6
-    }
+      split1: 0.5
+    };
   },
-  methods: {
-    handleChage () {
-      this.minRow = 10
-	  this.maxRow = 20
-	  console.info(this.minRow,this.maxRow)
-    },
-  },
-}
+  methods: {}
+};
 </script>
 <style lang="less" scoped>
-
+.demo-split {
+  height: 200px;
+  border: 1px solid #dcdee2;
+}
+.demo-split-pane {
+  padding: 10px;
+}
 </style>

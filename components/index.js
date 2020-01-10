@@ -112,6 +112,8 @@ import { default as Scrollbar } from './Scrollbar'
 
 import { default as VStuff } from './stuffselect'
 
+import { default as Split } from './split'
+
 const components = [
     Affix,
     Alert,
@@ -204,7 +206,8 @@ const components = [
     Drawer,
     FormView,
     Scrollbar,
-    VStuff
+    VStuff,
+    Split
 ]
 
 const install = function(Vue) {
@@ -283,7 +286,8 @@ export {
     Drawer,
     FormView,
     Scrollbar,
-    VStuff
+    VStuff,
+    Split
 }
 
 export default {
