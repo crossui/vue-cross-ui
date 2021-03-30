@@ -1,76 +1,87 @@
-
-import * as moment from 'moment'
-import omit from 'lodash/omit'
-import MonthCalendar from '../vc-calendar/src/MonthCalendar'
-import VcDatePicker from '../vc-calendar/src/Picker'
-import classNames from 'classnames'
-import Icon from '../icon'
-import interopDefault from '../_util/interopDefault'
-import BaseMixin from '../_util/BaseMixin'
-import Emitter from '../_util/emitter'
-import { hasProp, getOptionProps, initDefaultProps, mergeProps } from '../_util/props-util'
+import * as moment from 'moment';
+import omit from 'lodash/omit';
+import MonthCalendar from '../vc-calendar/src/MonthCalendar';
+import VcDatePicker from '../vc-calendar/src/Picker';
+import classNames from 'classnames';
+import Icon from '../icon';
+import { ConfigConsumerProps } from '../config-provider/configConsumerProps';
+import interopDefault from '../_util/interopDefault';
+import BaseMixin from '../_util/BaseMixin';
+import {
+  hasProp,
+  getOptionProps,
+  initDefaultProps,
+  mergeProps,
+  getComponentFromProp,
+  isValidElement,
+  getListeners,
+} from '../_util/props-util';
+import { cloneElement } from '../_util/vnode';
+import { formatDate } from './utils';
 
 // export const PickerProps = {
 //   value?: moment.Moment;
 //   prefixCls: string;
 // }
-function noop() { }
+function noop() {}
 export default function createPicker(TheCalendar, props) {
   return {
-    // static defaultProps = {
-    //   prefixCls: 'vcu-calendar',
-    //   allowClear: true,
-    //   showToday: true,
-    // };
-
-    // private input: any;
     props: initDefaultProps(props, {
-      prefixCls: 'vcu-calendar',
       allowClear: true,
       showToday: true,
     }),
-    mixins: [BaseMixin, Emitter],
+    mixins: [BaseMixin],
     model: {
       prop: 'value',
       event: 'change',
     },
+    inject: {
+      configProvider: { default: () => ConfigConsumerProps },
+    },
     data() {
-      const value = this.value || this.defaultValue
+      const value = this.value || this.defaultValue;
       if (value && !interopDefault(moment).isMoment(value)) {
         throw new Error(
-          'The value/defaultValue of DatePicker or MonthPicker must be ' +
-          'a moment object',
-        )
+          'The value/defaultValue of DatePicker or MonthPicker must be ' + 'a moment object',
+        );
       }
       return {
         sValue: value,
         showDate: value,
-      }
+        _open: !!this.open,
+      };
     },
     watch: {
+      open(val) {
+        const props = getOptionProps(this);
+        const state = {};
+        state._open = val;
+        if ('value' in props && !val && props.value !== this.showDate) {
+          state.showDate = props.value;
+        }
+        this.setState(state);
+      },
       value(val) {
-        this.setState({
-          sValue: val,
-          showDate: val,
-        })
-		this.dispatch('VFormItem', 'on-form-change', val);
+        const state = {};
+        state.sValue = val;
+        if (val !== this.sValue) {
+          state.showDate = val;
+        }
+        this.setState(state);
+      },
+      _open(val, oldVal) {
+        this.$nextTick(() => {
+          if (!hasProp(this, 'open') && oldVal && !val) {
+            this.focus();
+          }
+        });
       },
     },
     methods: {
-      renderFooter(...args) {
-        const { prefixCls, $scopedSlots, $slots } = this
-        const renderExtraFooter = this.renderExtraFooter || $scopedSlots.renderExtraFooter || $slots.renderExtraFooter
-        return renderExtraFooter ? (
-          <div class={`${prefixCls}-footer-extra`}>
-            {typeof renderExtraFooter === 'function' ? renderExtraFooter(...args) : renderExtraFooter}
-          </div>
-        ) : null
-      },
-
       clearSelection(e) {
-        e.preventDefault()
-        e.stopPropagation()
-        this.handleChange(null)
+        e.preventDefault();
+        e.stopPropagation();
+        this.handleChange(null);
       },
 
       handleChange(value) {
@@ -78,61 +89,89 @@ export default function createPicker(TheCalendar, props) {
           this.setState({
             sValue: value,
             showDate: value,
-          })
+          });
         }
-        this.$emit('change', value, (value && value.format(this.format)) || '')
+        this.$emit('change', value, formatDate(value, this.format));
       },
 
       handleCalendarChange(value) {
-        this.setState({ showDate: value })
+        this.setState({ showDate: value });
       },
-
+      handleOpenChange(open) {
+        const props = getOptionProps(this);
+        if (!('open' in props)) {
+          this.setState({ _open: open });
+        }
+        this.$emit('openChange', open);
+      },
       focus() {
-        this.$refs.input.focus()
+        this.$refs.input.focus();
       },
 
       blur() {
-        this.$refs.input.blur()
+        this.$refs.input.blur();
       },
-      onMouseEnter (e) {
-        this.$emit('mouseenter', e)
+      renderFooter(...args) {
+        const { $scopedSlots, $slots, _prefixCls: prefixCls } = this;
+        const renderExtraFooter =
+          this.renderExtraFooter || $scopedSlots.renderExtraFooter || $slots.renderExtraFooter;
+        return renderExtraFooter ? (
+          <div class={`${prefixCls}-footer-extra`}>
+            {typeof renderExtraFooter === 'function'
+              ? renderExtraFooter(...args)
+              : renderExtraFooter}
+          </div>
+        ) : null;
       },
-      onMouseLeave (e) {
-        this.$emit('mouseleave', e)
+      onMouseEnter(e) {
+        this.$emit('mouseenter', e);
+      },
+      onMouseLeave(e) {
+        this.$emit('mouseleave', e);
       },
     },
 
     render() {
-      const { sValue: value, showDate, $listeners, $scopedSlots } = this
-      const { panelChange = noop, focus = noop, blur = noop, ok = noop } = $listeners
-      const props = getOptionProps(this)
-      const { prefixCls, locale, localeCode } = props
-      const dateRender = props.dateRender || $scopedSlots.dateRender
-      const monthCellContentRender = props.monthCellContentRender || $scopedSlots.monthCellContentRender
-      const placeholder = ('placeholder' in props)
-        ? props.placeholder : locale.lang.placeholder
+      const { $scopedSlots } = this;
+      const { sValue: value, showDate, _open: open } = this.$data;
+      let suffixIcon = getComponentFromProp(this, 'suffixIcon');
+      suffixIcon = Array.isArray(suffixIcon) ? suffixIcon[0] : suffixIcon;
+      const listeners = getListeners(this);
+      const { panelChange = noop, focus = noop, blur = noop, ok = noop } = listeners;
+      const props = getOptionProps(this);
 
-      const disabledTime = props.showTime ? props.disabledTime : null
+      const { prefixCls: customizePrefixCls, locale, localeCode, inputReadOnly } = props;
+      const getPrefixCls = this.configProvider.getPrefixCls;
+      const prefixCls = getPrefixCls('calendar', customizePrefixCls);
+      this._prefixCls = prefixCls;
+
+      const dateRender = props.dateRender || $scopedSlots.dateRender;
+      const monthCellContentRender =
+        props.monthCellContentRender || $scopedSlots.monthCellContentRender;
+      const placeholder = 'placeholder' in props ? props.placeholder : locale.lang.placeholder;
+
+      const disabledTime = props.showTime ? props.disabledTime : null;
 
       const calendarClassName = classNames({
         [`${prefixCls}-time`]: props.showTime,
         [`${prefixCls}-month`]: MonthCalendar === TheCalendar,
-      })
+      });
 
       if (value && localeCode) {
-        value.locale(localeCode)
+        value.locale(localeCode);
       }
 
-      const pickerProps = { props: {}, on: {} }
-      const calendarProps = { props: {}, on: {} }
+      const pickerProps = { props: {}, on: {} };
+      const calendarProps = { props: {}, on: {} };
+      const pickerStyle = {};
       if (props.showTime) {
-        // fix //1902
-        calendarProps.on.select = this.handleChange
+        calendarProps.on.select = this.handleChange;
+        pickerStyle.minWidth = '195px';
       } else {
-        pickerProps.on.change = this.handleChange
+        pickerProps.on.change = this.handleChange;
       }
       if ('mode' in props) {
-        calendarProps.props.mode = props.mode
+        calendarProps.props.mode = props.mode;
       }
       const theCalendarProps = mergeProps(calendarProps, {
         props: {
@@ -149,45 +188,55 @@ export default function createPicker(TheCalendar, props) {
           monthCellContentRender,
           renderFooter: this.renderFooter,
           value: showDate,
+          inputReadOnly,
         },
         on: {
-          ok: ok,
-          panelChange: panelChange,
+          ok,
+          panelChange,
           change: this.handleCalendarChange,
         },
         class: calendarClassName,
         scopedSlots: $scopedSlots,
-      })
-      const calendar = (
-        <TheCalendar
-          {...theCalendarProps}
-        />
-      )
+      });
+      const calendar = <TheCalendar {...theCalendarProps} />;
 
-      const clearIcon = (!props.disabled && props.allowClear && value) ? (
-        <Icon
-          type='close-circle-fill'
-          class={`${prefixCls}-picker-clear`}
-          onClick={this.clearSelection}
-        />
-      ) : null
+      const clearIcon =
+        !props.disabled && props.allowClear && value ? (
+          <Icon
+            type="close-circle"
+            class={`${prefixCls}-picker-clear`}
+            onClick={this.clearSelection}
+            theme="filled"
+          />
+        ) : null;
+
+      const inputIcon = (suffixIcon &&
+        (isValidElement(suffixIcon) ? (
+          cloneElement(suffixIcon, {
+            class: `${prefixCls}-picker-icon`,
+          })
+        ) : (
+          <span class={`${prefixCls}-picker-icon`}>{suffixIcon}</span>
+        ))) || <Icon type="calendar" class={`${prefixCls}-picker-icon`} />;
 
       const input = ({ value: inputValue }) => (
         <div>
           <input
-            ref='input'
+            ref="input"
             disabled={props.disabled}
             onFocus={focus}
             onBlur={blur}
             readOnly
-            value={(inputValue && inputValue.format(props.format)) || ''}
+            value={formatDate(inputValue, this.format)}
             placeholder={placeholder}
             class={props.pickerInputClass}
+            tabIndex={props.tabIndex}
+            name={this.name}
           />
           {clearIcon}
-          <span class={`${prefixCls}-picker-icon`} />
+          {inputIcon}
         </div>
-      )
+      );
       const vcDatePickerProps = {
         props: {
           ...props,
@@ -197,27 +246,27 @@ export default function createPicker(TheCalendar, props) {
           prefixCls: `${prefixCls}-picker-container`,
         },
         on: {
-          ...omit($listeners, 'change'),
+          ...omit(listeners, 'change'),
           ...pickerProps.on,
+          open,
+          onOpenChange: this.handleOpenChange,
         },
         style: props.popupStyle,
-      }
+        scopedSlots: { default: input, ...$scopedSlots },
+      };
       return (
         <span
           class={props.pickerClass}
-        // tabIndex={props.disabled ? -1 : 0}
-        // onFocus={focus}
-        // onBlur={blur}
+          style={pickerStyle}
+          // tabIndex={props.disabled ? -1 : 0}
+          // onFocus={focus}
+          // onBlur={blur}
           onMouseenter={this.onMouseEnter}
           onMouseleave={this.onMouseLeave}
         >
-          <VcDatePicker
-            {...vcDatePickerProps}
-          >
-            {input}
-          </VcDatePicker>
+          <VcDatePicker {...vcDatePickerProps} />
         </span>
-      )
+      );
     },
-  }
+  };
 }

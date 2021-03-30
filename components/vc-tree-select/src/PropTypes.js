@@ -1,109 +1,42 @@
-import PropTypes from '../../_util/vue-types'
-import { SHOW_ALL, SHOW_PARENT, SHOW_CHILD } from './strategies'
+import PropTypes from '../../_util/vue-types';
+import { isLabelInValue } from './util';
 
-function nonEmptyStringType (props, propsName) {
-  const value = props[propsName]
-  if (typeof value !== 'string' || !value) {
-    return new Error() // Just a flag, so don't need message.
-  }
+const internalValProp = PropTypes.oneOfType([PropTypes.string, PropTypes.number]);
+
+export function genArrProps(propType) {
+  return PropTypes.oneOfType([propType, PropTypes.arrayOf(propType)]);
 }
 
-function valueType (props, propName, componentName) {
-  const labelInValueShape = PropTypes.shape({
-    value: nonEmptyStringType,
-    label: PropTypes.node,
-  })
-  if (props.labelInValue) {
-    const validate = PropTypes.oneOfType([
-      PropTypes.arrayOf(labelInValueShape),
-      labelInValueShape,
-    ])
-    const error = validate(...arguments)
-    if (error) {
+/**
+ * Origin code check `multiple` is true when `treeCheckStrictly` & `labelInValue`.
+ * But in process logic is already cover to array.
+ * Check array is not necessary. Let's simplify this check logic.
+ */
+export function valueProp(...args) {
+  const [props, propName, Component] = args;
+
+  if (isLabelInValue(props)) {
+    const err = genArrProps(
+      PropTypes.shape({
+        label: PropTypes.node,
+        value: internalValProp,
+      }).loose,
+    )(...args);
+    if (err) {
       return new Error(
-        `Invalid prop \`${propName}\` supplied to \`${componentName}\`, ` +
-        `when \`labelInValue\` is \`true\`, \`${propName}\` should in ` +
-        `shape of \`{ value: string, label?: string }\`.`
-      )
+        `Invalid prop \`${propName}\` supplied to \`${Component}\`. ` +
+          `You should use { label: string, value: string | number } or [{ label: string, value: string | number }] instead.`,
+      );
     }
-  } else if (props.treeCheckable && props.treeCheckStrictly) {
-    const validate = PropTypes.oneOfType([
-      PropTypes.arrayOf(labelInValueShape),
-      labelInValueShape,
-    ])
-    const error = validate(...arguments)
-    if (error) {
-      return new Error(
-        `Invalid prop \`${propName}\` supplied to \`${componentName}\`, ` +
-        `when \`treeCheckable\` and \`treeCheckStrictly\` are \`true\`, ` +
-        `\`${propName}\` should in shape of \`{ value: string, label?: string }\`.`
-      )
-    }
-  } else if (props.multiple && props[propName] === '') {
+    return null;
+  }
+
+  const err = genArrProps(internalValProp)(...args);
+  if (err) {
     return new Error(
-      `Invalid prop \`${propName}\` of type \`string\` supplied to \`${componentName}\`, ` +
-      `expected \`array\` when \`multiple\` is \`true\`.`
-    )
-  } else {
-    const validate = PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
-      PropTypes.string,
-    ])
-    return validate(...arguments)
+      `Invalid prop \`${propName}\` supplied to \`${Component}\`. ` +
+        `You should use string or [string] instead.`,
+    );
   }
-}
-
-export const SelectPropTypes = {
-  // className: PropTypes.string,
-  prefixCls: PropTypes.string,
-  multiple: PropTypes.bool,
-  filterTreeNode: PropTypes.any,
-  showSearch: PropTypes.bool,
-  disabled: PropTypes.bool,
-  showArrow: PropTypes.bool,
-  allowClear: PropTypes.bool,
-  defaultOpen: PropTypes.bool,
-  open: PropTypes.bool,
-  transitionName: PropTypes.string,
-  animation: PropTypes.string,
-  choiceTransitionName: PropTypes.string,
-  // onClick: PropTypes.func,
-  // onChange: PropTypes.func,
-  // onSelect: PropTypes.func,
-  // onDeselect: PropTypes.func,
-  // onSearch: PropTypes.func,
-  searchPlaceholder: PropTypes.string,
-  placeholder: PropTypes.any,
-  inputValue: PropTypes.any,
-  value: PropTypes.any,
-  defaultValue: PropTypes.any,
-  label: PropTypes.any, // vnode
-  defaultLabel: PropTypes.any,
-  labelInValue: PropTypes.bool,
-  dropdownClassName: PropTypes.string,
-  dropdownStyle: PropTypes.object,
-  dropdownPopupAlign: PropTypes.object,
-  dropdownVisibleChange: PropTypes.func,
-  maxTagTextLength: PropTypes.number,
-  showCheckedStrategy: PropTypes.oneOf([
-    SHOW_ALL, SHOW_PARENT, SHOW_CHILD,
-  ]),
-  treeCheckStrictly: PropTypes.bool,
-  treeIcon: PropTypes.bool,
-  treeLine: PropTypes.bool,
-  treeDefaultExpandAll: PropTypes.bool,
-  treeCheckable: PropTypes.any, // bool vnode
-  treeNodeLabelProp: PropTypes.string,
-  treeNodeFilterProp: PropTypes.string,
-  treeData: PropTypes.array,
-  treeDataSimpleMode: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.object,
-  ]),
-  loadData: PropTypes.func,
-  dropdownMatchSelectWidth: PropTypes.bool,
-  notFoundContent: PropTypes.any,
-  children: PropTypes.any,
-  autoFocus: PropTypes.bool,
-  getPopupContainer: PropTypes.func,
+  return null;
 }

@@ -1,3 +1,10 @@
-import Badge from './Badge'
+import Badge from './Badge';
+import Base from '../base';
 
-export default Badge
+/* istanbul ignore next */
+Badge.install = function(Vue) {
+  Vue.use(Base);
+  Vue.component(Badge.name, Badge);
+};
+
+export default Badge;

@@ -1,30 +1,18 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
-import { home, menuRouter, routers } from './router';
-import NProgress from 'nprogress'
-Vue.use(VueRouter);
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import { menuRouter } from './router';
 
+Vue.use(VueRouter)
+//NavigationDuplicated的可能解决方案
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 // 路由配置
 const RouterConfig = {
-    //mode: 'history',
-    routes: routers
+  //mode: 'history',
+  routes: menuRouter
 };
 
-export const router = new VueRouter(RouterConfig);
-
-
-router.beforeEach((to, from, next) => {
-    NProgress.start()
-    if (to.path == "/") {
-        next({
-            name: 'getting-started'
-        });
-    } else {
-        next();
-    }
-});
-
-router.afterEach((to) => {
-    NProgress.done()
-    window.scrollTo(0, 0);
-});
+const router = new VueRouter(RouterConfig)
+export default router

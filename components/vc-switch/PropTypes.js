@@ -1,4 +1,4 @@
-import PropTypes from '../_util/vue-types'
+import PropTypes from '../_util/vue-types';
 
 export const switchPropTypes = {
   prefixCls: PropTypes.string,
@@ -8,8 +8,9 @@ export const switchPropTypes = {
   // onChange: PropTypes.func,
   // onMouseUp: PropTypes.func,
   // onClick: PropTypes.func,
-  tabIndex: PropTypes.number,
+  tabIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   checked: PropTypes.bool.def(false),
   defaultChecked: PropTypes.bool.def(false),
   autoFocus: PropTypes.bool.def(false),
-}
+  loadingIcon: PropTypes.any,
+};

@@ -1,14 +1,12 @@
-import CalendarLocale from '../../vc-calendar/src/locale/pt_PT'
-import TimePickerLocale from '../../time-picker/locale/pt_PT'
+import CalendarLocale from '../../vc-calendar/src/locale/pt_PT';
+import TimePickerLocale from '../../time-picker/locale/pt_PT';
 
 // Merge into a locale object
 const locale = {
   lang: {
     ...CalendarLocale,
     placeholder: 'Data',
-    rangePlaceholder: [
-      'Data inicial', 'Data final',
-    ],
+    rangePlaceholder: ['Data inicial', 'Data final'],
     today: 'Hoje',
     now: 'Agora',
     backToToday: 'Hoje',
@@ -40,10 +38,7 @@ const locale = {
     ...TimePickerLocale,
     placeholder: 'Hora',
   },
-}
+};
 
-// All settings at:
-// /o
-// cale/example.json
 
-export default locale
+export default locale;

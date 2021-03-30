@@ -1,9 +1,7 @@
-import warning from 'warning'
+import warning, { resetWarned } from '../vc-util/warning';
 
-const warned = {}
-export default (valid, message, throwError) => {
-  if (!valid && !warned[message]) {
-    warning(false, message)
-    warned[message] = true
-  }
-}
+export { resetWarned };
+
+export default (valid, component, message = '') => {
+  warning(valid, `[${component}] ${message}`);
+};

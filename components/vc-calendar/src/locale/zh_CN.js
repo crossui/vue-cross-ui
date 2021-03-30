@@ -5,6 +5,7 @@ export default {
   ok: '确定',
   timeSelect: '选择时间',
   dateSelect: '选择日期',
+  weekSelect: '选择周',
   clear: '清除',
   month: '月',
   year: '年',
@@ -23,4 +24,4 @@ export default {
   nextDecade: '下一年代',
   previousCentury: '上一世纪',
   nextCentury: '下一世纪',
-}
+};

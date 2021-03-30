@@ -1,52 +1,54 @@
-import isPlainObject from 'lodash/isPlainObject'
+import isPlainObject from 'lodash/isPlainObject';
 import classNames from 'classnames';
-function getType (fn) {
-  const match = fn && fn.toString().match(/^\s*function (\w+)/)
-  return match ? match[1] : ''
+function getType(fn) {
+  const match = fn && fn.toString().match(/^\s*function (\w+)/);
+  return match ? match[1] : '';
 }
 
-const camelizeRE = /-(\w)/g
-const camelize = (str) => {
-  return str.replace(camelizeRE, (_, c) => c ? c.toUpperCase() : '')
-}
+const camelizeRE = /-(\w)/g;
+const camelize = str => {
+  return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ''));
+};
 const parseStyleText = (cssText = '', camel) => {
-  const res = {}
-  const listDelimiter = /;(?![^(]*\))/g
-  const propertyDelimiter = /:(.+)/
-  cssText.split(listDelimiter).forEach(function (item) {
+  const res = {};
+  const listDelimiter = /;(?![^(]*\))/g;
+  const propertyDelimiter = /:(.+)/;
+  cssText.split(listDelimiter).forEach(function(item) {
     if (item) {
-      const tmp = item.split(propertyDelimiter)
+      const tmp = item.split(propertyDelimiter);
       if (tmp.length > 1) {
-        const k = camel ? camelize(tmp[0].trim()) : tmp[0].trim()
-        res[k] = tmp[1].trim()
+        const k = camel ? camelize(tmp[0].trim()) : tmp[0].trim();
+        res[k] = tmp[1].trim();
       }
     }
-  })
-  return res
-}
+  });
+  return res;
+};
 
 const hasProp = (instance, prop) => {
-  const $options = instance.$options || {}
-  const propsData = $options.propsData || {}
-  return prop in propsData
-}
+  const $options = instance.$options || {};
+  const propsData = $options.propsData || {};
+  return prop in propsData;
+};
 const slotHasProp = (slot, prop) => {
-  const $options = slot.componentOptions || {}
-  const propsData = $options.propsData || {}
-  return prop in propsData
-}
+  const $options = slot.componentOptions || {};
+  const propsData = $options.propsData || {};
+  return prop in propsData;
+};
 const filterProps = (props, propsData = {}) => {
-  const res = {}
-  Object.keys(props).forEach((k) => {
+  const res = {};
+  Object.keys(props).forEach(k => {
     if (k in propsData || props[k] !== undefined) {
-      res[k] = props[k]
+      res[k] = props[k];
     }
-  })
-  return res
-}
+  });
+  return res;
+};
+
 const getScopedSlots = ele => {
   return (ele.data && ele.data.scopedSlots) || {};
 };
+
 const getSlots = ele => {
   let componentOptions = ele.componentOptions || {};
   if (ele.$vnode) {
@@ -195,6 +197,20 @@ export function getEvents(child) {
   }
   return { ...events };
 }
+
+// 获取 xxx.native 或者 原生标签 事件
+export function getDataEvents(child) {
+  let events = {};
+  if (child.data && child.data.on) {
+    events = child.data.on;
+  }
+  return { ...events };
+}
+
+// use getListeners instead this.$listeners
+export function getListeners(context) {
+  return (context.$vnode ? context.$vnode.componentOptions.listeners : context.$listeners) || {};
+}
 export function getClass(ele) {
   let data = {};
   if (ele.data) {
@@ -249,6 +265,10 @@ export function getComponentName(opts) {
 
 export function isEmptyElement(c) {
   return !(c.tag || (c.text && c.text.trim() !== ''));
+}
+
+export function isStringElement(c) {
+  return !c.tag;
 }
 
 export function filterEmpty(children = []) {
@@ -312,4 +332,3 @@ export {
   getAllChildren,
 };
 export default hasProp;
-

@@ -1,24 +1,18 @@
-import CalendarLocale from '../../vc-calendar/src/locale/zh_CN'
-import TimePickerLocale from '../../time-picker/locale/zh_CN'
+import CalendarLocale from '../../vc-calendar/src/locale/zh_CN';
+import TimePickerLocaleOption from '../../time-picker/locale/zh_CN';
 
 const locale = {
   lang: {
     placeholder: '请选择日期',
-    rangePlaceholder: [
-      '开始日期', '结束日期',
-    ],
+    rangePlaceholder: ['开始日期', '结束日期'],
     ...CalendarLocale,
   },
   timePickerLocale: {
-    ...TimePickerLocale,
-  },
-}
+    ...TimePickerLocaleOption,
+  }
+};
 
-// should add whitespace between char in Button
-locale.lang.ok = '确 定'
+locale.lang.ok = '确 定';
 
-// All settings at:
-// /
-// o cale/example.json
 
-export default locale
+export default locale;

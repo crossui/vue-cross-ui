@@ -1,53 +1,54 @@
-export function noop () {
+import isMobile from './utils/isMobile';
+
+export function noop() {}
+
+export function getKeyFromChildrenIndex(child, menuEventKey, index) {
+  const prefix = menuEventKey || '';
+  return child.key === undefined ? `${prefix}item_${index}` : child.key;
 }
 
-export function getKeyFromChildrenIndex (child, menuEventKey, index) {
-  const prefix = menuEventKey || ''
-  return child.key === undefined ? `${prefix}item_${index}` : child.key
+export function getMenuIdFromSubMenuEventKey(eventKey) {
+  return `${eventKey}-menu-`;
 }
 
-export function getMenuIdFromSubMenuEventKey (eventKey) {
-  return `${eventKey}-menu-`
-}
-
-export function loopMenuItem (children, cb) {
-  let index = -1
-  children.forEach((c) => {
-    index++
+export function loopMenuItem(children, cb) {
+  let index = -1;
+  children.forEach(c => {
+    index++;
     if (c && c.type && c.type.isMenuItemGroup) {
-      c.$slots.default.forEach((c2) => {
-        index++
-        c.componentOptions && cb(c2, index)
-      })
+      c.$slots.default.forEach(c2 => {
+        index++;
+        c.componentOptions && cb(c2, index);
+      });
     } else {
-      c.componentOptions && cb(c, index)
+      c.componentOptions && cb(c, index);
     }
-  })
+  });
 }
 
-export function loopMenuItemRecursively (children, keys, ret) {
+export function loopMenuItemRecursively(children, keys, ret) {
   if (!children || ret.find) {
-    return
+    return;
   }
-  children.forEach((c) => {
+  children.forEach(c => {
     if (ret.find) {
-      return
+      return;
     }
     if (c.data && c.data.slot && c.data.slot !== 'default') {
-      return
+      return;
     }
     if (c && c.componentOptions) {
-      const options = c.componentOptions.Ctor.options
+      const options = c.componentOptions.Ctor.options;
       if (!options || !(options.isSubMenu || options.isMenuItem || options.isMenuItemGroup)) {
-        return
+        return;
       }
       if (keys.indexOf(c.key) !== -1) {
-        ret.find = true
+        ret.find = true;
       } else if (c.componentOptions.children) {
-        loopMenuItemRecursively(c.componentOptions.children, keys, ret)
+        loopMenuItemRecursively(c.componentOptions.children, keys, ret);
       }
     }
-  })
+  });
 }
 
 export const menuAllProps = {
@@ -77,6 +78,7 @@ export const menuAllProps = {
     'rootPrefixCls',
     'eventKey',
     'active',
+    'popupAlign',
     'popupOffset',
     'isOpen',
     'renderMenuItem',
@@ -87,6 +89,8 @@ export const menuAllProps = {
     'isSelected',
     'store',
     'activeKey',
+    'builtinPlacements',
+    'overflowedIndicator',
 
     // the following keys found need to be removed from test regression
     'attribute',
@@ -95,6 +99,8 @@ export const menuAllProps = {
     'inlineCollapsed',
     'menu',
     'theme',
+    'itemIcon',
+    'expandIcon',
   ],
   on: [
     'select',
@@ -106,4 +112,26 @@ export const menuAllProps = {
     'titleMouseleave',
     'titleClick',
   ],
-}
+};
+
+// getBoundingClientRect return the full precision value, which is
+// not the same behavior as on chrome. Set the precision to 6 to
+// unify their behavior
+export const getWidth = elem => {
+  let width =
+    elem && typeof elem.getBoundingClientRect === 'function' && elem.getBoundingClientRect().width;
+  if (width) {
+    width = +width.toFixed(6);
+  }
+  return width || 0;
+};
+
+export const setStyle = (elem, styleProperty, value) => {
+  if (elem && typeof elem.style === 'object') {
+    elem.style[styleProperty] = value;
+  }
+};
+
+export const isMobileDevice = () => {
+  return isMobile.any;
+};

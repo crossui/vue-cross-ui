@@ -1,3 +1,4 @@
-import Slider from './slider'
+// base react-slick 0.23.2
+import Slider from './slider';
 
-export default Slider
+export default Slider;

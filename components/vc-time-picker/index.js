@@ -1,2 +1,2 @@
-// based on rc-time-picker 3.3.1
-export { default } from './TimePicker'
+// based on rc-time-picker 3.7.3
+export { default } from './TimePicker';

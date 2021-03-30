@@ -1,3 +1,10 @@
-import Avatar from './Avatar'
+import Avatar from './Avatar';
+import Base from '../base';
 
-export default Avatar
+/* istanbul ignore next */
+Avatar.install = function(Vue) {
+  Vue.use(Base);
+  Vue.component(Avatar.name, Avatar);
+};
+
+export default Avatar;

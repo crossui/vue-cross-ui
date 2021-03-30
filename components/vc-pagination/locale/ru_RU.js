@@ -1,6 +1,6 @@
 export default {
   // Options.jsx
-  items_per_page: '/странице',
+  items_per_page: '/ стр.',
   jump_to: 'Перейти',
   jump_to_confirm: 'подтвердить',
   page: '',
@@ -12,4 +12,4 @@ export default {
   next_5: 'Следующие 5',
   prev_3: 'Предыдущие 3',
   next_3: 'Следующие 3',
-}
+};

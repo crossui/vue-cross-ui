@@ -1,4 +1,4 @@
-import PropTypes from '../../_util/vue-types'
+import PropTypes from '../../_util/vue-types';
 
 export const defaultProps = {
   // className: '',
@@ -10,16 +10,21 @@ export const defaultProps = {
   // style: {},
   trailColor: '#D9D9D9',
   trailWidth: 1,
-}
+};
+const mixedType = PropTypes.oneOfType([PropTypes.number, PropTypes.string]);
 
 export const propTypes = {
   // className: PropTypes.string,
-  percent: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  percent: PropTypes.oneOfType([mixedType, PropTypes.arrayOf(mixedType)]),
   prefixCls: PropTypes.string,
-  strokeColor: PropTypes.string,
+  strokeColor: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])),
+    PropTypes.object,
+  ]),
   strokeLinecap: PropTypes.oneOf(['butt', 'round', 'square']),
-  strokeWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  strokeWidth: mixedType,
   // style: PropTypes.object,
   trailColor: PropTypes.string,
-  trailWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-}
+  trailWidth: mixedType,
+};

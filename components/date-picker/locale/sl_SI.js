@@ -1,4 +1,4 @@
-import TimePickerLocale from '../../time-picker/locale/sl_SI'
+import TimePickerLocale from '../../time-picker/locale/sl_SI';
 
 // Merge into a locale object
 const locale = {
@@ -35,9 +35,7 @@ const locale = {
   timePickerLocale: {
     ...TimePickerLocale,
   },
-}
+};
 
-// All settings at:
-// /ocale/example.json
 
-export default locale
+export default locale;

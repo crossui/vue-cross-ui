@@ -1,7 +1,10 @@
-// rc-tree-select 1.12.13 tag
 // export this package's api
-import TreeSelect from './src'
+// base 2.9.3
+import Vue from 'vue';
+import TreeSelect from './src';
+import ref from 'vue-ref';
 
-export default TreeSelect
+Vue.use(ref, { name: 'vcu-ref' });
+export default TreeSelect;
 
-export { TreeNode, SHOW_ALL, SHOW_PARENT, SHOW_CHILD } from './src'
+export { TreeNode, SHOW_ALL, SHOW_PARENT, SHOW_CHILD } from './src';

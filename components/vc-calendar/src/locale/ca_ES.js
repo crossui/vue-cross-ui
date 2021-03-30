@@ -1,7 +1,7 @@
 export default {
-  today: 'Avcu',
+  today: 'Avui',
   now: 'Ara',
-  backToToday: 'Tornar a avcu',
+  backToToday: 'Tornar a avui',
   ok: 'Acceptar',
   clear: 'Netejar',
   month: 'Mes',
@@ -24,4 +24,4 @@ export default {
   nextDecade: 'Dècada següent',
   previousCentury: 'Segle anterior',
   nextCentury: 'Segle següent',
-}
+};

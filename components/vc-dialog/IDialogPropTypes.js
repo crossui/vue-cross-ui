@@ -1,6 +1,6 @@
-import PropTypes from '../_util/vue-types'
+import PropTypes from '../_util/vue-types';
 
-function IDialogPropTypes () {
+function IDialogPropTypes() {
   return {
     keyboard: PropTypes.bool,
     mask: PropTypes.bool,
@@ -31,10 +31,14 @@ function IDialogPropTypes () {
     bodyProps: PropTypes.any,
     maskProps: PropTypes.any,
     wrapProps: PropTypes.any,
-    getContainer: PropTypes.func,
-    dialogStyle: PropTypes.object.def({}),
-    dialogClass: PropTypes.object.def({}),
-  }
+    getContainer: PropTypes.any,
+    dialogStyle: PropTypes.object.def(() => ({})),
+    dialogClass: PropTypes.string.def(''),
+    closeIcon: PropTypes.any,
+    forceRender: PropTypes.bool,
+    getOpenCount: PropTypes.func,
+    focusTriggerAfterClose: PropTypes.bool,
+  };
 }
 
-export default IDialogPropTypes
+export default IDialogPropTypes;

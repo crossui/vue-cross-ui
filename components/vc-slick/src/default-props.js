@@ -1,4 +1,4 @@
-import PropTypes from '../../_util/vue-types'
+import PropTypes from '../../_util/vue-types';
 
 const defaultProps = {
   accessibility: PropTypes.bool.def(true),
@@ -31,7 +31,7 @@ const defaultProps = {
   pauseOnFocus: PropTypes.bool.def(false),
   // hover是否暂停
   pauseOnHover: PropTypes.bool.def(true),
-  responsive: PropTypes.any.def(null),
+  responsive: PropTypes.array,
   rows: PropTypes.number.def(1),
   rtl: PropTypes.bool.def(false),
   slide: PropTypes.string.def('div'),
@@ -51,6 +51,6 @@ const defaultProps = {
   waitForAnimate: PropTypes.bool.def(true),
   children: PropTypes.array,
   __propsSymbol__: PropTypes.any,
-}
+};
 
-export default defaultProps
+export default defaultProps;

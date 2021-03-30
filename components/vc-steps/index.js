@@ -1,8 +1,8 @@
-// base rc-steps 3.1.1
-import Steps from './Steps'
-import Step from './Step'
+// base rc-steps 3.5.0
+import Steps from './Steps';
+import Step from './Step';
 
-Steps.Step = Step
+Steps.Step = Step;
 
-export { Step }
-export default Steps
+export { Step };
+export default Steps;

@@ -6,8 +6,9 @@ export default {
   clear: 'Clear',
   month: 'Month',
   year: 'Year',
-  timeSelect: 'Select time',
-  dateSelect: 'Select date',
+  timeSelect: 'select time',
+  dateSelect: 'select date',
+  weekSelect: 'Choose a week',
   monthSelect: 'Choose a month',
   yearSelect: 'Choose a year',
   decadeSelect: 'Choose a decade',
@@ -24,4 +25,4 @@ export default {
   nextDecade: 'Next decade',
   previousCentury: 'Last century',
   nextCentury: 'Next century',
-}
+};

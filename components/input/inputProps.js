@@ -1,27 +1,18 @@
-import PropTypes from '../_util/vue-types'
+import PropTypes from '../_util/vue-types';
 export default {
-  prefixCls: {
-    default: 'vcu-input',
-    type: String,
-  },
-  defaultValue: [String, Number],
-  value: [String, Number],
+  prefixCls: PropTypes.string,
+  inputPrefixCls: PropTypes.string,
+  defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   placeholder: [String, Number],
   type: {
     default: 'text',
     type: String,
   },
   name: String,
-  size: {
-    validator (value) {
-      return ['small', 'large', 'default'].includes(value)
-    },
-  },
-  disabled: {
-    default: false,
-    type: Boolean,
-  },
-  readOnly: Boolean,
+  size: PropTypes.oneOf(['small', 'large', 'default']),
+  disabled: PropTypes.bool,
+  readOnly: PropTypes.bool,
   addonBefore: PropTypes.any,
   addonAfter: PropTypes.any,
   // onPressEnter?: React.FormEventHandler<any>;
@@ -32,6 +23,14 @@ export default {
   // onBlur?: React.FormEventHandler<any>;
   prefix: PropTypes.any,
   suffix: PropTypes.any,
-  spellCheck: Boolean,
+  // spellCheck: Boolean,
   autoFocus: Boolean,
-}
+  allowClear: Boolean,
+  lazy: {
+    default: true,
+    type: Boolean,
+  },
+  maxLength: PropTypes.number,
+  loading: PropTypes.bool,
+  className: PropTypes.string,
+};

@@ -1,33 +1,28 @@
-import PropTypes from '../../_util/vue-types'
-import Touchable from '../../vc-m-feedback'
+import PropTypes from '../../_util/vue-types';
+import Touchable from '../../vc-m-feedback';
+import { getListeners } from '../../_util/props-util';
 
 const InputHandler = {
+  name: 'InputHandler',
   props: {
     prefixCls: PropTypes.string,
     disabled: PropTypes.bool,
   },
-  render () {
-    const { prefixCls, disabled } = this.$props
+  render() {
+    const { prefixCls, disabled } = this.$props;
     const touchableProps = {
       props: {
         disabled,
         activeClassName: `${prefixCls}-handler-active`,
       },
-      on: this.$listeners,
-    }
-    const spanProps = {
-      attrs: this.$attrs,
-    }
+      on: getListeners(this),
+    };
     return (
-      <Touchable
-        {...touchableProps}
-      >
-        <span {...spanProps}>
-          {this.$slots.default}
-        </span>
+      <Touchable {...touchableProps}>
+        <span>{this.$slots.default}</span>
       </Touchable>
-    )
+    );
   },
-}
+};
 
-export default InputHandler
+export default InputHandler;
