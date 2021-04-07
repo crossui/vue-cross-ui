@@ -1,14 +1,20 @@
 <template>
   <div>
-    <v-button type="primary">Primary</v-button>
-    <v-button type="info">info</v-button>
-    <v-button type="success">success</v-button>
-    <v-button type="warning">warning</v-button>
-    <v-button type="danger">Danger</v-button>
-    <br />
-    <br />
-    <v-button type="link">link</v-button>
-    <v-button>Default</v-button>
-    <v-button type="dashed">Dashed</v-button>
+    <v-select default-value="jack" style="width: 120px" @change="handleChange" scrollChoose>
+      <v-select-option value="jack"> Jack </v-select-option>
+      <v-select-option value="lucy"> Lucy </v-select-option>
+      <v-select-option value="disabled" disabled> Disabled </v-select-option>
+      <v-select-option value="Yiminghe"> yiminghe </v-select-option>
+    </v-select>
   </div>
 </template>
+<script>
+export default {
+  mounted() {},
+  methods: {
+    handleChange(value) {
+      console.log(`selected ${value}`);
+    },
+  },
+};
+</script>

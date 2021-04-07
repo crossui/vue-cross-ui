@@ -42,6 +42,7 @@ const AbstractSelectProps = () => ({
   autoClearSearchValue: PropTypes.bool,
   dropdownRender: PropTypes.func,
   loading: PropTypes.bool,
+  scrollChoose: PropTypes.bool,
 });
 const Value = PropTypes.shape({
   key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -176,7 +177,7 @@ const Select = {
       showArrow,
       ...restProps
     } = getOptionProps(this);
-
+    
     const getPrefixCls = this.configProvider.getPrefixCls;
     const renderEmpty = this.configProvider.renderEmpty;
     const prefixCls = getPrefixCls('select', customizePrefixCls);

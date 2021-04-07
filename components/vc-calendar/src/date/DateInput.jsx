@@ -2,7 +2,7 @@ import PropTypes from '../../../_util/vue-types';
 import BaseMixin from '../../../_util/BaseMixin';
 import { getComponentFromProp } from '../../../_util/props-util';
 import moment from 'moment';
-import { formatDate } from '../util';
+import { formatDate, dateSplicing } from '../util';
 import KeyCode from '../../../_util/KeyCode';
 
 let cachedSelectionStart;
@@ -39,6 +39,7 @@ const DateInput = {
       str: formatDate(selectedValue, this.format),
       invalid: false,
       hasFocus: false,
+      inputStr: ""
     };
   },
   watch: {
@@ -93,27 +94,41 @@ const DateInput = {
       const { str: oldStr = '' } = this;
       if (e.isComposing || composing || oldStr === str) return;
 
+      const reg = /(?!-)^[0-9\-]+$/
       const { disabledDate, format, selectedValue } = this.$props;
 
-      // 没有内容，合法并直接退出
-      if (!str) {
+      // 没有内容，不合法并直接退出
+      if (!str || !reg.test(str)) {
         this.__emit('change', null);
         this.setState({
           invalid: false,
-          str,
+          str: "",
         });
         return;
       }
 
-      // 不合法直接退出
-      const parsed = moment(str, format, true);
-      if (!parsed.isValid()) {
+      if (str.length <= oldStr.length) {
         this.setState({
           invalid: true,
           str,
         });
         return;
       }
+
+
+      this.inputStr = dateSplicing(str)
+      this.inputStr
+      // 不合法直接退出
+      const parsed = moment(this.inputStr, format, true);
+      if (!parsed.isValid()) {
+        this.setState({
+          invalid: true,
+          str: this.inputStr,
+        });
+        return;
+      }
+
+
       const value = this.value.clone();
       value
         .year(parsed.year())
@@ -123,10 +138,11 @@ const DateInput = {
         .minute(parsed.minute())
         .second(parsed.second());
 
+
       if (!value || (disabledDate && disabledDate(value))) {
         this.setState({
           invalid: true,
-          str,
+          str: this.inputStr,
         });
         return;
       }
@@ -134,7 +150,7 @@ const DateInput = {
       if (selectedValue !== value || (selectedValue && value && !selectedValue.isSame(value))) {
         this.setState({
           invalid: false,
-          str,
+          str: this.inputStr,
         });
         this.__emit('change', value);
       }
@@ -143,6 +159,7 @@ const DateInput = {
       this.setState({ hasFocus: true });
     },
     onBlur() {
+      this.checkDateTime()
       this.setState((prevState, prevProps) => ({
         hasFocus: false,
         str: formatDate(prevProps.value, prevProps.format),
@@ -154,9 +171,17 @@ const DateInput = {
       if (keyCode === KeyCode.ENTER) {
         const validateDate = !disabledDate || !disabledDate(value);
         if (validateDate) {
+          this.checkDateTime()
           this.__emit('select', value.clone());
         }
         event.preventDefault();
+      }
+    },
+    checkDateTime() {
+      if (this.inputStr != moment(this.value).format("YYYY-MM-DD")) {
+        let _str = moment(moment(this.inputStr).format("YYYY-MM-DD"))
+        if (_str.isValid())
+          this.__emit('change', _str);
       }
     },
     getRootDOMNode() {

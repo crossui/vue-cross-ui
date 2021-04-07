@@ -7,6 +7,7 @@ export const SelectPropTypes = {
   // children: PropTypes.any,
   showSearch: PropTypes.bool,
   disabled: PropTypes.bool,
+  scrollChoose: PropTypes.bool,
   allowClear: PropTypes.bool,
   showArrow: PropTypes.bool,
   tags: PropTypes.bool,

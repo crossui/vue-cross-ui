@@ -111,3 +111,39 @@ export function formatDate(value, format) {
 
   return value.format(format);
 }
+
+export function dateSplicing(value) {
+  if (value == undefined || value.length < 4) return value
+  const date = value.split("")
+  //month
+  if (date[4] != "-") {
+    date[4] = "-"
+  } else {
+    if (parseInt(date[5]) > 1) {
+      date[6] = date[5]
+      date[5] = "0"
+      date[7] = "-"
+    } else if (parseInt(date[6]) > 2 && parseInt(date[5]) != 0) {
+      date[8] = date[6]
+      date[7] = "-"
+      date[6] = date[5]
+      date[5] = "0"
+    }
+  }
+
+  //date
+  if (date[7] && date[7] != "-") {
+    if (parseInt(date[8]) > 3) {
+      date[9] = date[7]
+      date[8] = "0"
+    } else {
+      date[8] = date[7]
+    }
+    date[7] = "-"
+  } else if (date[8] && parseInt(date[8]) > 3) {
+    date[9] = date[8]
+    date[8] = "0"
+  }
+
+  return date.join("")
+}

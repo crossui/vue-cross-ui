@@ -1,3 +1,4 @@
+import { forIn, findIndex, indexOf } from 'lodash';
 import KeyCode from '../_util/KeyCode';
 import PropTypes from '../_util/vue-types';
 import classnames from 'classnames';
@@ -65,7 +66,7 @@ function isHidden(node) {
 }
 
 function chaining(...fns) {
-  return function(...args) {
+  return function (...args) {
     // eslint-disable-line
     // eslint-disable-line
     for (let i = 0; i < fns.length; i++) {
@@ -146,10 +147,10 @@ const Select = {
       _value: this.getValueFromProps(props, true), // true: use default value
       _inputValue: props.combobox
         ? this.getInputValueForCombobox(
-            props,
-            optionsInfo,
-            true, // use default value
-          )
+          props,
+          optionsInfo,
+          true, // use default value
+        )
         : '',
       _open: props.defaultOpen,
       _optionsInfo: optionsInfo,
@@ -159,7 +160,7 @@ const Select = {
     };
     return {
       ...state,
-      _mirrorInputValue: state._inputValue, 
+      _mirrorInputValue: state._inputValue,
       ...this.getDerivedState(props, state),
     };
   },
@@ -1260,7 +1261,7 @@ const Select = {
         warning(
           getSlotOptions(child).isSelectOption,
           'the children of `Select` should be `Select.Option` or `Select.OptGroup`, ' +
-            `instead of \`${getSlotOptions(child).name || getSlotOptions(child)}\`.`,
+          `instead of \`${getSlotOptions(child).name || getSlotOptions(child)}\`.`,
         );
 
         const childValue = getValuePropValue(child);
@@ -1532,7 +1533,22 @@ const Select = {
       }
       return null;
     },
-
+    selectScrollChoose() {
+      const state = this.$data;
+      if (!this.disabled && this.scrollChoose && isSingleMode(this.$props)) {
+        const { _value: value, _optionsInfo: options } = state;
+        let _optionKeys = []
+        forIn(options, (v, k) => {
+          if (v.disabled == undefined)
+            _optionKeys.push(v.value)
+        });
+        let index = indexOf(_optionKeys, value[0])
+        index = index + 1 < _optionKeys.length ? ++index : 0
+        this.fireChange(new Array(_optionKeys[index]));
+        this.fireSelect(_optionKeys[index]);
+        this.setInputValue("", false);
+      }
+    },
     selectionRefClick() {
       //e.stopPropagation();
       if (!this.disabled) {
@@ -1688,6 +1704,7 @@ const Select = {
           onBlur={this.selectionRefBlur}
           onFocus={this.selectionRefFocus}
           onClick={this.selectionRefClick}
+          onMousewheel={this.selectScrollChoose}
           onKeydown={isMultipleOrTagsOrCombobox(props) ? noop : this.onKeyDown}
         >
           <div {...selectionProps}>
