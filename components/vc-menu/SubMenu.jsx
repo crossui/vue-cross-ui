@@ -71,6 +71,8 @@ const SubMenu = {
     itemIcon: PropTypes.any,
     expandIcon: PropTypes.any,
     subMenuKey: PropTypes.string,
+    isFirstClickOpen: PropTypes.bool,
+    firstClick: PropTypes.bool,
   },
   mixins: [BaseMixin],
   isSubMenu: true,
@@ -176,6 +178,8 @@ const SubMenu = {
     },
 
     onPopupVisibleChange(visible) {
+      const { isFirstClickOpen } = this.$props;
+      if (isFirstClickOpen && !this.firstClick) return;
       this.triggerOpenChange(visible, visible ? 'mouseenter' : 'mouseleave');
     },
 
@@ -217,6 +221,9 @@ const SubMenu = {
         key,
         domEvent,
       });
+      if (this.isFirstClickOpen) {
+        this.$emit("firstClickChange", true, "mouseEnter")
+      }
     },
 
     onTitleMouseLeave(e) {
@@ -230,9 +237,20 @@ const SubMenu = {
         key: eventKey,
         domEvent: e,
       });
+      if (this.isFirstClickOpen) {
+        this.$emit("firstClickChange", false, "mouseLeave")
+      }
     },
 
     onTitleClick(e) {
+      if (this.isFirstClickOpen) {
+        this.$emit("firstClickChange", true)
+        this.$nextTick(() => {
+          this.onPopupVisibleChange(true)
+        })
+      }
+
+
       const { triggerSubMenuAction, eventKey, isOpen, store } = this.$props;
       this.__emit('titleClick', {
         key: eventKey,
@@ -281,15 +299,6 @@ const SubMenu = {
       };
     },
 
-    // triggerOpenChange (open, type) {
-    //   const key = this.$props.eventKey
-    //   this.__emit('openChange', {
-    //     key,
-    //     item: this,
-    //     trigger: type,
-    //     open,
-    //   })
-    // },
     triggerOpenChange(open, type) {
       const key = this.$props.eventKey;
       const openChange = () => {
@@ -305,8 +314,12 @@ const SubMenu = {
         this.mouseenterTimeout = requestAnimationTimeout(() => {
           openChange();
         }, 0);
+
       } else {
         openChange();
+        if (this.isFirstClickOpen) {
+          this.$emit("firstClickChange", false, "mouseLeave")
+        }
       }
     },
 
@@ -507,7 +520,7 @@ const SubMenu = {
     const popupClassName = props.mode === 'inline' ? '' : props.popupClassName;
     const liProps = {
       on: { ...omit(getListeners(this), ['click']), ...mouseEvents },
-      class: className,
+      class: className
     };
 
     return (
@@ -517,9 +530,8 @@ const SubMenu = {
         {!isInlineMode && (
           <Trigger
             prefixCls={prefixCls}
-            popupClassName={`${prefixCls}-popup ${rootPrefixCls}-${
-              parentMenu.theme
-            } ${popupClassName || ''}`}
+            popupClassName={`${prefixCls}-popup ${rootPrefixCls}-${parentMenu.theme
+              } ${popupClassName || ''}`}
             getPopupContainer={getPopupContainer}
             builtinPlacements={placements}
             builtinPlacements={Object.assign({}, placements, props.builtinPlacements)}
@@ -531,8 +543,8 @@ const SubMenu = {
             mouseLeaveDelay={props.subMenuCloseDelay}
             onPopupVisibleChange={this.onPopupVisibleChange}
             forceRender={props.forceSubMenuRender}
-            // popupTransitionName='rc-menu-open-slide-up'
-            // popupAnimation={transitionProps}
+          // popupTransitionName='rc-menu-open-slide-up'
+          // popupAnimation={transitionProps}
           >
             <template slot="popup">{children}</template>
             {title}

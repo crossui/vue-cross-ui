@@ -119,6 +119,7 @@ const SubPopupMenu = {
       expandIcon: PropTypes.any,
       overflowedIndicator: PropTypes.any,
       children: PropTypes.any.def([]),
+      isFirstClickOpen: PropTypes.bool,
       __propsSymbol__: PropTypes.any, // mock componentWillReceiveProps
     },
     {
@@ -133,6 +134,12 @@ const SubPopupMenu = {
   ),
 
   mixins: [BaseMixin],
+  data() {
+    return {
+      firstClick: false,
+      firstClickTimeout: null
+    }
+  },
   created() {
     const props = getOptionProps(this);
     this.prevProps = { ...props };
@@ -221,6 +228,23 @@ const SubPopupMenu = {
 
     onDestroy(key) {
       this.__emit('destroy', key);
+    },
+
+    onFirstClickChange(val, type) {
+      if (type) {
+        if (type == "mouseEnter") {
+          window.clearTimeout(this.firstClickTimeout)
+        } else {
+          this.firstClickTimeout = window.setTimeout(() => {
+            const { openKeys } = this.$props
+            if (openKeys == undefined || (openKeys && openKeys.length == 0)) {
+              this.firstClick = val;
+            }
+          }, 2000)
+        }
+      } else {
+        this.firstClick = val;
+      }
     },
 
     getFlatInstanceArray() {
@@ -332,6 +356,8 @@ const SubPopupMenu = {
           subMenuCloseDelay: props.subMenuCloseDelay,
           forceSubMenuRender: props.forceSubMenuRender,
           builtinPlacements: props.builtinPlacements,
+          isFirstClickOpen: props.isFirstClickOpen,
+          firstClick: this.firstClick,
           itemIcon: this.getIcon(child, 'itemIcon') || this.getIcon(this, 'itemIcon'),
           expandIcon: this.getIcon(child, 'expandIcon') || this.getIcon(this, 'expandIcon'),
           ...extraProps,
@@ -346,6 +372,7 @@ const SubPopupMenu = {
           deselect: this.onDeselect,
           // destroy: this.onDestroy,
           select: this.onSelect,
+          firstClickChange: this.onFirstClickChange
         },
       };
       if (props.mode === 'inline' || isMobileDevice()) {
@@ -364,7 +391,7 @@ const SubPopupMenu = {
         selectedKeys: state.selectedKeys,
         triggerSubMenuAction: this.triggerSubMenuAction,
         isRootMenu: false,
-        subMenuKey,
+        subMenuKey
       };
       return this.renderCommonMenuItem(c, i, extraProps);
     },

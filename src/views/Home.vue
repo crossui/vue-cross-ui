@@ -1,20 +1,33 @@
 <template>
-  <div>
-    <v-select default-value="jack" style="width: 120px" @change="handleChange" scrollChoose>
-      <v-select-option value="jack"> Jack </v-select-option>
-      <v-select-option value="lucy"> Lucy </v-select-option>
-      <v-select-option value="disabled" disabled> Disabled </v-select-option>
-      <v-select-option value="Yiminghe"> yiminghe </v-select-option>
-    </v-select>
+  <div ref="domRef" class="dom-ref-wrap">
+    <div v-for="(item, index) in 100" :key="index">{{ item }}</div>
   </div>
 </template>
 <script>
 export default {
-  mounted() {},
+  data() {
+    return {};
+  },
+  mounted() {
+    this.init();
+  },
   methods: {
-    handleChange(value) {
-      console.log(`selected ${value}`);
+    init() {
+      let dom = this.$refs.domRef
+      console.info(dom)
+      dom.addEventListener("scroll",()=>{
+        console.info(dom.scrollTop)
+      }, false)
     },
   },
 };
 </script>
+<style lang="less" scoped>
+.dom-ref-wrap {
+  margin: 20px;
+  background: #fff;
+  border: 1px solid red;
+  max-height: 100px;
+  overflow-y: scroll;
+}
+</style>
