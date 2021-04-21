@@ -1,33 +1,32 @@
 <template>
-  <div ref="domRef" class="dom-ref-wrap">
-    <div v-for="(item, index) in 100" :key="index">{{ item }}</div>
+  <div>
+    <v-card class="mt-100">
+      <v-menu mode="horizontal" isFirstClickOpen>
+        <template v-for="item in menuList">
+          <v-sub-menu :key="item.name">
+            <span slot="title">
+              {{ item.meta.title }}
+            </span>
+            <template v-for="subItem in item.children">
+              <v-menu-item :key="subItem.name"> {{subItem.meta.title}} </v-menu-item>
+            </template>
+          </v-sub-menu>
+        </template>
+      </v-menu>
+    </v-card>
   </div>
 </template>
 <script>
+import menuList from "./menu.json";
 export default {
   data() {
-    return {};
+    return {
+      menuList,
+      selectedKeys: [],
+      openKeys: ["patient-book-register"],
+      current: "patient-book-register",
+    };
   },
-  mounted() {
-    this.init();
-  },
-  methods: {
-    init() {
-      let dom = this.$refs.domRef
-      console.info(dom)
-      dom.addEventListener("scroll",()=>{
-        console.info(dom.scrollTop)
-      }, false)
-    },
-  },
+  methods: {},
 };
 </script>
-<style lang="less" scoped>
-.dom-ref-wrap {
-  margin: 20px;
-  background: #fff;
-  border: 1px solid red;
-  max-height: 100px;
-  overflow-y: scroll;
-}
-</style>

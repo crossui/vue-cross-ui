@@ -232,9 +232,8 @@ const SubPopupMenu = {
 
     onFirstClickChange(val, type) {
       if (type) {
-        if (type == "mouseEnter") {
-          window.clearTimeout(this.firstClickTimeout)
-        } else {
+        window.clearTimeout(this.firstClickTimeout)
+        if (type == "mouseLeave") {
           this.firstClickTimeout = window.setTimeout(() => {
             const { openKeys } = this.$props
             if (openKeys == undefined || (openKeys && openKeys.length == 0)) {

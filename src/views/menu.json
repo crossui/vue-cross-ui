@@ -1,0 +1,1201 @@
+[{
+	"path": "/archives",
+	"iconfont": "icondangan",
+	"name": "archives",
+	"meta": {
+		"title": "门诊档案管理"
+	},
+	"component": {
+		"name": "appMain",
+		"components": {
+			"commonHeader": {
+				"name": "commonHeader",
+				"props": {},
+				"components": {
+					"sideMenu": {
+						"components": {
+							"sub-menu": {
+								"staticRenderFns": [],
+								"_compiled": true,
+								"functional": true,
+								"__file": "src/components/layout/main/components/SubMenu.vue",
+								"_Ctor": {}
+							}
+						},
+						"props": {
+							"menuList": {
+								"required": true
+							},
+							"menuMode": {
+								"default": "inline"
+							}
+						},
+						"computed": {},
+						"methods": {},
+						"watch": {},
+						"staticRenderFns": [],
+						"_compiled": true,
+						"_scopeId": "data-v-9c16f984",
+						"beforeCreate": [null],
+						"beforeDestroy": [null],
+						"__file": "src/components/layout/main/components/sideMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-5c1f7980",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonHeader.vue",
+				"_Ctor": {}
+			},
+			"sideMenu": {
+				"components": {
+					"sub-menu": {
+						"staticRenderFns": [],
+						"_compiled": true,
+						"functional": true,
+						"__file": "src/components/layout/main/components/SubMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"props": {
+					"menuList": {
+						"required": true
+					},
+					"menuMode": {
+						"default": "inline"
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-9c16f984",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/sideMenu.vue",
+				"_Ctor": {}
+			},
+			"commonMenu": {
+				"props": {
+					"menuList": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-617db05c",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonMenu.vue"
+			},
+			"TagsNav": {
+				"props": {
+					"value": {},
+					"list": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/tagsNav.vue",
+				"_Ctor": {}
+			},
+			"iframes": {
+				"props": {},
+				"computed": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-47cff317",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/iframes.vue",
+				"_Ctor": {}
+			}
+		},
+		"computed": {},
+		"watch": {},
+		"methods": {},
+		"staticRenderFns": [],
+		"_compiled": true,
+		"_scopeId": "data-v-784874a1",
+		"beforeCreate": [null],
+		"beforeDestroy": [null],
+		"__file": "src/components/layout/main/index.vue",
+		"_Ctor": {}
+	},
+	"children": [{
+		"path": "patient-mading-card",
+		"name": "patient-mading-card",
+		"meta": {
+			"title": "门诊病人建卡登记"
+		}
+	}, {
+		"path": "patient-information-change",
+		"name": "patient-information-change",
+		"meta": {
+			"title": "病人基本信息修改"
+		}
+	}, {
+		"path": "patient-book-register",
+		"name": "patient-book-register",
+		"meta": {
+			"title": "病人预约信息登记"
+		}
+	}, {
+		"path": "patient-payment-change",
+		"name": "patient-payment-change",
+		"meta": {
+			"title": "门诊病人费别修改"
+		}
+	}, {
+		"path": "medical-card-operation",
+		"name": "medical-card-operation",
+		"meta": {
+			"title": "就诊卡综合操作"
+		}
+	}, {
+		"path": "medical-card-query",
+		"name": "medical-card-query",
+		"meta": {
+			"title": "就诊卡信息查询"
+		}
+	}, {
+		"path": "inhospital-card-reclaim",
+		"name": "inhospital-card-reclaim",
+		"meta": {
+			"title": "院内作废卡回收"
+		}
+	}, {
+		"path": "medicalbook-money-operation",
+		"name": "medicalbook-money-operation",
+		"meta": {
+			"title": "门诊病历本费补收退"
+		}
+	}, {
+		"path": "outhospital-card-register",
+		"name": "outhospital-card-register",
+		"meta": {
+			"title": "院外卡登记入库"
+		}
+	}]
+}, {
+	"path": "/advance",
+	"iconfont": "iconiconset0325",
+	"name": "advance",
+	"meta": {
+		"title": "门诊预交金管理"
+	},
+	"component": {
+		"name": "appMain",
+		"components": {
+			"commonHeader": {
+				"name": "commonHeader",
+				"props": {},
+				"components": {
+					"sideMenu": {
+						"components": {
+							"sub-menu": {
+								"staticRenderFns": [],
+								"_compiled": true,
+								"functional": true,
+								"__file": "src/components/layout/main/components/SubMenu.vue",
+								"_Ctor": {}
+							}
+						},
+						"props": {
+							"menuList": {
+								"required": true
+							},
+							"menuMode": {
+								"default": "inline"
+							}
+						},
+						"computed": {},
+						"methods": {},
+						"watch": {},
+						"staticRenderFns": [],
+						"_compiled": true,
+						"_scopeId": "data-v-9c16f984",
+						"beforeCreate": [null],
+						"beforeDestroy": [null],
+						"__file": "src/components/layout/main/components/sideMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-5c1f7980",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonHeader.vue",
+				"_Ctor": {}
+			},
+			"sideMenu": {
+				"components": {
+					"sub-menu": {
+						"staticRenderFns": [],
+						"_compiled": true,
+						"functional": true,
+						"__file": "src/components/layout/main/components/SubMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"props": {
+					"menuList": {
+						"required": true
+					},
+					"menuMode": {
+						"default": "inline"
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-9c16f984",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/sideMenu.vue",
+				"_Ctor": {}
+			},
+			"commonMenu": {
+				"props": {
+					"menuList": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-617db05c",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonMenu.vue"
+			},
+			"TagsNav": {
+				"props": {
+					"value": {},
+					"list": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/tagsNav.vue",
+				"_Ctor": {}
+			},
+			"iframes": {
+				"props": {},
+				"computed": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-47cff317",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/iframes.vue",
+				"_Ctor": {}
+			}
+		},
+		"computed": {},
+		"watch": {},
+		"methods": {},
+		"staticRenderFns": [],
+		"_compiled": true,
+		"_scopeId": "data-v-784874a1",
+		"beforeCreate": [null],
+		"beforeDestroy": [null],
+		"__file": "src/components/layout/main/index.vue",
+		"_Ctor": {}
+	},
+	"children": [{
+		"path": "outpatient-advance-receivables",
+		"name": "outpatient-advance-receivables",
+		"meta": {
+			"title": "门诊预交金收款"
+		}
+	}, {
+		"path": "outpatient-advance-refund",
+		"name": "outpatient-advance-refund",
+		"meta": {
+			"title": "门诊预交金退款"
+		}
+	}, {
+		"path": "outpatient-account-maintenance",
+		"name": "outpatient-account-maintenance",
+		"meta": {
+			"title": "门诊病人账户维护"
+		}
+	}, {
+		"path": "outpatient-guarantee-management",
+		"name": "outpatient-guarantee-management",
+		"meta": {
+			"title": " 门诊预交金担保管理"
+		}
+	}, {
+		"path": "outpatient-guarantee-setting",
+		"name": "outpatient-guarantee-setting",
+		"meta": {
+			"title": "门诊预交金担保设置"
+		}
+	}, {
+		"path": "outpatient-arrears-management",
+		"name": "outpatient-arrears-management",
+		"meta": {
+			"title": "门诊预交金欠费管理"
+		}
+	}, {
+		"path": "advance-deposit-collect",
+		"name": "advance-deposit-collect",
+		"meta": {
+			"title": "收床位预交金"
+		}
+	}, {
+		"path": "advance-deposit-retreat",
+		"name": "advance-deposit-retreat",
+		"meta": {
+			"title": "退床位预交金"
+		}
+	}, {
+		"path": "advance-electronic-voucher",
+		"name": "advance-electronic-voucher",
+		"meta": {
+			"title": "门诊预交金电子凭证综合操作"
+		}
+	}]
+}, {
+	"path": "/cost",
+	"iconfont": "iconfeiyong",
+	"name": "cost",
+	"meta": {
+		"title": "门诊费用管理"
+	},
+	"component": {
+		"name": "appMain",
+		"components": {
+			"commonHeader": {
+				"name": "commonHeader",
+				"props": {},
+				"components": {
+					"sideMenu": {
+						"components": {
+							"sub-menu": {
+								"staticRenderFns": [],
+								"_compiled": true,
+								"functional": true,
+								"__file": "src/components/layout/main/components/SubMenu.vue",
+								"_Ctor": {}
+							}
+						},
+						"props": {
+							"menuList": {
+								"required": true
+							},
+							"menuMode": {
+								"default": "inline"
+							}
+						},
+						"computed": {},
+						"methods": {},
+						"watch": {},
+						"staticRenderFns": [],
+						"_compiled": true,
+						"_scopeId": "data-v-9c16f984",
+						"beforeCreate": [null],
+						"beforeDestroy": [null],
+						"__file": "src/components/layout/main/components/sideMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-5c1f7980",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonHeader.vue",
+				"_Ctor": {}
+			},
+			"sideMenu": {
+				"components": {
+					"sub-menu": {
+						"staticRenderFns": [],
+						"_compiled": true,
+						"functional": true,
+						"__file": "src/components/layout/main/components/SubMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"props": {
+					"menuList": {
+						"required": true
+					},
+					"menuMode": {
+						"default": "inline"
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-9c16f984",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/sideMenu.vue",
+				"_Ctor": {}
+			},
+			"commonMenu": {
+				"props": {
+					"menuList": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-617db05c",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonMenu.vue"
+			},
+			"TagsNav": {
+				"props": {
+					"value": {},
+					"list": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/tagsNav.vue",
+				"_Ctor": {}
+			},
+			"iframes": {
+				"props": {},
+				"computed": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-47cff317",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/iframes.vue",
+				"_Ctor": {}
+			}
+		},
+		"computed": {},
+		"watch": {},
+		"methods": {},
+		"staticRenderFns": [],
+		"_compiled": true,
+		"_scopeId": "data-v-784874a1",
+		"beforeCreate": [null],
+		"beforeDestroy": [null],
+		"__file": "src/components/layout/main/index.vue",
+		"_Ctor": {}
+	},
+	"children": [{
+		"path": "outpatient-fee-settlement",
+		"name": "outpatient-fee-settlement",
+		"meta": {
+			"title": "门诊病人费用结算"
+		}
+	}, {
+		"path": "invoice-synthesis-manage",
+		"name": "invoice-synthesis-manage",
+		"meta": {
+			"title": "门诊发票综合处理"
+		}
+	}, {
+		"path": "outpatient-cancel-settlement",
+		"name": "outpatient-cancel-settlement",
+		"meta": {
+			"title": "门诊病人取消结算"
+		}
+	}, {
+		"path": "cost-refund-confirm",
+		"name": "cost-refund-confirm",
+		"meta": {
+			"title": "门诊费用退费确认"
+		}
+	}, {
+		"path": "cost-correct-manage",
+		"name": "cost-correct-manage",
+		"meta": {
+			"title": "门诊费用更正处理"
+		}
+	}, {
+		"path": "cost-preferential-manage",
+		"name": "cost-preferential-manage",
+		"meta": {
+			"title": "门诊费用优惠处理"
+		}
+	}, {
+		"path": "cost-breaks-manage",
+		"name": "cost-breaks-manage",
+		"meta": {
+			"title": "门诊费用减免处理"
+		}
+	}, {
+		"path": "package-advance-charge",
+		"name": "package-advance-charge",
+		"meta": {
+			"title": "门诊套餐项目预收费"
+		}
+	}, {
+		"path": "package-synthesis-manage",
+		"name": "package-synthesis-manage",
+		"meta": {
+			"title": "门诊套餐项目综合处理"
+		}
+	}, {
+		"path": "unbookkept-expense-approval",
+		"name": "unbookkept-expense-approval",
+		"meta": {
+			"title": "未记账费用减免审批"
+		}
+	}]
+}, {
+	"path": "/synthesize",
+	"iconfont": "iconyewuguanli",
+	"name": "synthesize",
+	"meta": {
+		"title": "综合管理"
+	},
+	"component": {
+		"name": "appMain",
+		"components": {
+			"commonHeader": {
+				"name": "commonHeader",
+				"props": {},
+				"components": {
+					"sideMenu": {
+						"components": {
+							"sub-menu": {
+								"staticRenderFns": [],
+								"_compiled": true,
+								"functional": true,
+								"__file": "src/components/layout/main/components/SubMenu.vue",
+								"_Ctor": {}
+							}
+						},
+						"props": {
+							"menuList": {
+								"required": true
+							},
+							"menuMode": {
+								"default": "inline"
+							}
+						},
+						"computed": {},
+						"methods": {},
+						"watch": {},
+						"staticRenderFns": [],
+						"_compiled": true,
+						"_scopeId": "data-v-9c16f984",
+						"beforeCreate": [null],
+						"beforeDestroy": [null],
+						"__file": "src/components/layout/main/components/sideMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-5c1f7980",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonHeader.vue",
+				"_Ctor": {}
+			},
+			"sideMenu": {
+				"components": {
+					"sub-menu": {
+						"staticRenderFns": [],
+						"_compiled": true,
+						"functional": true,
+						"__file": "src/components/layout/main/components/SubMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"props": {
+					"menuList": {
+						"required": true
+					},
+					"menuMode": {
+						"default": "inline"
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-9c16f984",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/sideMenu.vue",
+				"_Ctor": {}
+			},
+			"commonMenu": {
+				"props": {
+					"menuList": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-617db05c",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonMenu.vue"
+			},
+			"TagsNav": {
+				"props": {
+					"value": {},
+					"list": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/tagsNav.vue",
+				"_Ctor": {}
+			},
+			"iframes": {
+				"props": {},
+				"computed": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-47cff317",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/iframes.vue",
+				"_Ctor": {}
+			}
+		},
+		"computed": {},
+		"watch": {},
+		"methods": {},
+		"staticRenderFns": [],
+		"_compiled": true,
+		"_scopeId": "data-v-784874a1",
+		"beforeCreate": [null],
+		"beforeDestroy": [null],
+		"__file": "src/components/layout/main/index.vue",
+		"_Ctor": {}
+	},
+	"children": [{
+		"path": "project-sequence-set",
+		"name": "project-sequence-set",
+		"meta": {
+			"title": "核算项目次序设置"
+		}
+	}, {
+		"path": "cashier-checkout",
+		"name": "cashier-checkout",
+		"meta": {
+			"title": "收费员结账"
+		}
+	}, {
+		"path": "cashier-synthesize-query",
+		"name": "cashier-synthesize-query",
+		"meta": {
+			"title": "收费员综合查询"
+		}
+	}, {
+		"path": "cashier-checkout-confirm",
+		"name": "cashier-checkout-confirm",
+		"meta": {
+			"title": "收费员结账确认"
+		}
+	}, {
+		"path": "paper-receive-management",
+		"name": "paper-receive-management",
+		"meta": {
+			"title": "门诊票据领用管理"
+		}
+	}, {
+		"path": "medical-card-receive",
+		"name": "medical-card-receive",
+		"meta": {
+			"title": "就诊卡领用管理"
+		}
+	}, {
+		"path": "current-paper-invalid",
+		"name": "current-paper-invalid",
+		"meta": {
+			"title": "门诊当前票据作废"
+		}
+	}, {
+		"path": "business-synthesize-handle",
+		"name": "business-synthesize-handle",
+		"meta": {
+			"title": "门诊业务综合处理"
+		}
+	}, {
+		"path": "unified-pay-operation",
+		"name": "unified-pay-operation",
+		"meta": {
+			"title": "门诊统一支付平台综合操作"
+		}
+	}, {
+		"path": "e-invoice-operation",
+		"name": "e-invoice-operation",
+		"meta": {
+			"title": "门诊电子发票综合操作"
+		}
+	}]
+}, {
+	"path": "/query",
+	"iconfont": "iconquery1",
+	"name": "query",
+	"meta": {
+		"title": "查询"
+	},
+	"component": {
+		"name": "appMain",
+		"components": {
+			"commonHeader": {
+				"name": "commonHeader",
+				"props": {},
+				"components": {
+					"sideMenu": {
+						"components": {
+							"sub-menu": {
+								"staticRenderFns": [],
+								"_compiled": true,
+								"functional": true,
+								"__file": "src/components/layout/main/components/SubMenu.vue",
+								"_Ctor": {}
+							}
+						},
+						"props": {
+							"menuList": {
+								"required": true
+							},
+							"menuMode": {
+								"default": "inline"
+							}
+						},
+						"computed": {},
+						"methods": {},
+						"watch": {},
+						"staticRenderFns": [],
+						"_compiled": true,
+						"_scopeId": "data-v-9c16f984",
+						"beforeCreate": [null],
+						"beforeDestroy": [null],
+						"__file": "src/components/layout/main/components/sideMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-5c1f7980",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonHeader.vue",
+				"_Ctor": {}
+			},
+			"sideMenu": {
+				"components": {
+					"sub-menu": {
+						"staticRenderFns": [],
+						"_compiled": true,
+						"functional": true,
+						"__file": "src/components/layout/main/components/SubMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"props": {
+					"menuList": {
+						"required": true
+					},
+					"menuMode": {
+						"default": "inline"
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-9c16f984",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/sideMenu.vue",
+				"_Ctor": {}
+			},
+			"commonMenu": {
+				"props": {
+					"menuList": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-617db05c",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonMenu.vue"
+			},
+			"TagsNav": {
+				"props": {
+					"value": {},
+					"list": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/tagsNav.vue",
+				"_Ctor": {}
+			},
+			"iframes": {
+				"props": {},
+				"computed": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-47cff317",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/iframes.vue",
+				"_Ctor": {}
+			}
+		},
+		"computed": {},
+		"watch": {},
+		"methods": {},
+		"staticRenderFns": [],
+		"_compiled": true,
+		"_scopeId": "data-v-784874a1",
+		"beforeCreate": [null],
+		"beforeDestroy": [null],
+		"__file": "src/components/layout/main/index.vue",
+		"_Ctor": {}
+	},
+	"children": [{
+		"path": "patient-info-query",
+		"name": "patient-info-query",
+		"meta": {
+			"title": "门诊病人信息查询"
+		}
+	}, {
+		"path": "amend-info-query",
+		"name": "amend-info-query",
+		"meta": {
+			"title": "费别修改信息查询"
+		}
+	}, {
+		"path": "card-reportingLoss-query",
+		"name": "card-reportingLoss-query",
+		"meta": {
+			"title": "病人就诊卡挂失查询"
+		}
+	}, {
+		"path": "settlement-situation-query",
+		"name": "settlement-situation-query",
+		"meta": {
+			"title": "门诊结算情况查询"
+		}
+	}, {
+		"path": "patient-money-query",
+		"name": "patient-money-query",
+		"meta": {
+			"title": "门诊病人预交金查询"
+		}
+	}, {
+		"path": "day-listing-query",
+		"name": "day-listing-query",
+		"meta": {
+			"title": "门诊日清单查询"
+		}
+	}, {
+		"path": "healthCare-account-query",
+		"name": "healthCare-account-query",
+		"meta": {
+			"title": "门诊病人医保账户查询"
+		}
+	}, {
+		"path": "pay-situation-query",
+		"name": "pay-situation-query",
+		"meta": {
+			"title": "门诊医保支付情况查询"
+		}
+	}, {
+		"path": "charge-directory-query",
+		"name": "charge-directory-query",
+		"meta": {
+			"title": "医保收费对应目录查询"
+		}
+	}, {
+		"path": "paper-use-query",
+		"name": "paper-use-query",
+		"meta": {
+			"title": "门诊票据使用情况查询"
+		}
+	}, {
+		"path": "work-amount-statistical",
+		"name": "work-amount-statistical",
+		"meta": {
+			"title": "收费人员工作量统计"
+		}
+	}, {
+		"path": "amend-log-query",
+		"name": "amend-log-query",
+		"meta": {
+			"title": "病人信息修改日志查询"
+		}
+	}, {
+		"path": "patient-synthesize-query",
+		"name": "patient-synthesize-query",
+		"meta": {
+			"title": "门诊病人综合查询"
+		}
+	}, {
+		"path": "patient-cost-query",
+		"name": "patient-cost-query",
+		"meta": {
+			"title": "门诊病人费用查询"
+		}
+	}, {
+		"path": "tollman-cheque-query",
+		"name": "tollman-cheque-query",
+		"meta": {
+			"title": "收费员结账查询"
+		}
+	}, {
+		"path": "electronic-invoice-query",
+		"name": "electronic-invoice-query",
+		"meta": {
+			"title": "门诊电子发票综合查询"
+		}
+	}]
+}, {
+	"path": "/audit",
+	"iconfont": "iconhedui",
+	"name": "audit",
+	"meta": {
+		"title": "门诊稽核管理"
+	},
+	"component": {
+		"name": "appMain",
+		"components": {
+			"commonHeader": {
+				"name": "commonHeader",
+				"props": {},
+				"components": {
+					"sideMenu": {
+						"components": {
+							"sub-menu": {
+								"staticRenderFns": [],
+								"_compiled": true,
+								"functional": true,
+								"__file": "src/components/layout/main/components/SubMenu.vue",
+								"_Ctor": {}
+							}
+						},
+						"props": {
+							"menuList": {
+								"required": true
+							},
+							"menuMode": {
+								"default": "inline"
+							}
+						},
+						"computed": {},
+						"methods": {},
+						"watch": {},
+						"staticRenderFns": [],
+						"_compiled": true,
+						"_scopeId": "data-v-9c16f984",
+						"beforeCreate": [null],
+						"beforeDestroy": [null],
+						"__file": "src/components/layout/main/components/sideMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-5c1f7980",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonHeader.vue",
+				"_Ctor": {}
+			},
+			"sideMenu": {
+				"components": {
+					"sub-menu": {
+						"staticRenderFns": [],
+						"_compiled": true,
+						"functional": true,
+						"__file": "src/components/layout/main/components/SubMenu.vue",
+						"_Ctor": {}
+					}
+				},
+				"props": {
+					"menuList": {
+						"required": true
+					},
+					"menuMode": {
+						"default": "inline"
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-9c16f984",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/sideMenu.vue",
+				"_Ctor": {}
+			},
+			"commonMenu": {
+				"props": {
+					"menuList": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"methods": {},
+				"watch": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-617db05c",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/commonMenu.vue"
+			},
+			"TagsNav": {
+				"props": {
+					"value": {},
+					"list": {
+						"required": true
+					}
+				},
+				"computed": {},
+				"watch": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/tagsNav.vue",
+				"_Ctor": {}
+			},
+			"iframes": {
+				"props": {},
+				"computed": {},
+				"methods": {},
+				"staticRenderFns": [],
+				"_compiled": true,
+				"_scopeId": "data-v-47cff317",
+				"beforeCreate": [null],
+				"beforeDestroy": [null],
+				"__file": "src/components/layout/main/components/iframes.vue",
+				"_Ctor": {}
+			}
+		},
+		"computed": {},
+		"watch": {},
+		"methods": {},
+		"staticRenderFns": [],
+		"_compiled": true,
+		"_scopeId": "data-v-784874a1",
+		"beforeCreate": [null],
+		"beforeDestroy": [null],
+		"__file": "src/components/layout/main/index.vue",
+		"_Ctor": {}
+	},
+	"children": [{
+		"path": "paper-use-audit",
+		"name": "paper-use-audit",
+		"meta": {
+			"title": "门诊票据使用稽核"
+		}
+	}, {
+		"path": "charge-project-audit",
+		"name": "charge-project-audit",
+		"meta": {
+			"title": "门诊收费项目稽核"
+		}
+	}, {
+		"path": "cash-income-audit",
+		"name": "cash-income-audit",
+		"meta": {
+			"title": "门诊现金收入稽核"
+		}
+	}, {
+		"path": "charge-payment-audit",
+		"name": "charge-payment-audit",
+		"meta": {
+			"title": "门诊收费缴款稽核"
+		}
+	}]
+}]
