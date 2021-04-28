@@ -38,6 +38,9 @@ function IDialogPropTypes() {
     forceRender: PropTypes.bool,
     getOpenCount: PropTypes.func,
     focusTriggerAfterClose: PropTypes.bool,
+    draggable: PropTypes.bool,
+    resizer: PropTypes.bool,
+    minimize: PropTypes.bool,
   };
 }
 

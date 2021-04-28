@@ -31,7 +31,6 @@ export default {
       `The property 'iconType' is deprecated. Use the property 'icon' instead.`,
     );
     const icon = props.icon ? props.icon : iconType;
-    const okType = props.okType || 'primary';
     const prefixCls = props.prefixCls || 'vcu-modal';
     const contentPrefixCls = `${prefixCls}-confirm`;
     // 默认为 true，保持向下兼容
@@ -47,6 +46,12 @@ export default {
     const autoFocusButton = props.autoFocusButton === null ? false : props.autoFocusButton || 'ok';
     const transitionName = props.transitionName || 'zoom';
     const maskTransitionName = props.maskTransitionName || 'fade';
+    let okType = props.okType || 'primary';
+    let cancelType = undefined;
+    if (autoFocusButton == "cancel") {
+      okType = undefined;
+      cancelType = "primary"
+    }
 
     const classString = classNames(
       contentPrefixCls,
@@ -57,6 +62,7 @@ export default {
 
     const cancelButton = okCancel && (
       <ActionButton
+        type={cancelType}
         actionFn={onCancel}
         closeModal={close}
         autoFocus={autoFocusButton === 'cancel'}

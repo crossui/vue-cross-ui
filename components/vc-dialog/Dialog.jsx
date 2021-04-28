@@ -2,15 +2,18 @@ import { getComponentFromProp, initDefaultProps } from '../_util/props-util';
 import KeyCode from '../_util/KeyCode';
 import contains from '../vc-util/Dom/contains';
 import LazyRenderBox from './LazyRenderBox';
+import ResizerWrap from './ResizerWrap';
 import BaseMixin from '../_util/BaseMixin';
 import getTransitionProps from '../_util/getTransitionProps';
 import switchScrollingEffect from '../_util/switchScrollingEffect';
 import getDialogPropTypes from './IDialogPropTypes';
+import Icon from '../icon';
+import classNames from 'classnames';
 const IDialogPropTypes = getDialogPropTypes();
 
 let uuid = 0;
 
-function noop() {}
+function noop() { }
 function getScroll(w, top) {
   let ret = w[`page${top ? 'Y' : 'X'}Offset`];
   const method = `scroll${top ? 'Top' : 'Left'}`;
@@ -63,6 +66,9 @@ export default {
   data() {
     return {
       destroyPopup: false,
+      dragData: {},
+      dragStatus: false,
+      minimizeStatus: false
     };
   },
 
@@ -180,7 +186,7 @@ export default {
       if (Date.now() - this.openTime < 300) {
         return;
       }
-      if (e.target === e.currentTarget && !this.dialogMouseDown) {
+      if (e.target === e.currentTarget && !this.dialogMouseDown && !this.minimizeStatus) {
         this.close(e);
       }
     },
@@ -206,6 +212,34 @@ export default {
         }
       }
     },
+    handleDragMousedown(e) {
+      if (!this.$props.draggable) return;
+      const { title, prefixCls } = this;
+      if (title) {
+        if (!e.target.classList.contains(`${prefixCls}-title`)) return
+      } else {
+        if (!e.target.classList.contains(`${prefixCls}-body`)) return
+      }
+      const dom = this.$refs.content;
+      this.dragData.x = e.pageX - dom.offsetLeft;
+      this.dragData.y = e.pageY - dom.offsetTop;
+      this.dragStatus = true;
+    },
+    handleDragMousemove(e) {
+      if (!this.dragStatus) return
+      const dom = this.$refs.content;
+      dom.style.left = e.pageX - this.dragData.x + "px";
+      dom.style.top = e.pageY - this.dragData.y + "px";
+    },
+    handleDragMouseup(e) {
+      if (!this.dragStatus) return
+      this.dragData = {}
+      this.dragStatus = false;
+    },
+    handleMini() {
+      this.minimizeStatus = !this.minimizeStatus;
+      this.__emit('mini', this.minimizeStatus);
+    },
     getDialogElement() {
       const {
         closable,
@@ -220,8 +254,14 @@ export default {
         forceRender,
         dialogStyle,
         dialogClass,
+        minimizeStatus,
+        handleDragMousedown,
+        handleDragMousemove,
+        handleDragMouseup
       } = this;
+      const { draggable, resizer, minimize } = this.$props;
       const dest = { ...dialogStyle };
+      const miniShowStyle = { display: minimizeStatus ? 'none' : undefined }
       if (width !== undefined) {
         dest.width = typeof width === 'number' ? `${width}px` : width;
       }
@@ -232,21 +272,44 @@ export default {
       let footer;
       if (tempFooter) {
         footer = (
-          <div key="footer" class={`${prefixCls}-footer`} ref="footer">
+          <div key="footer" class={`${prefixCls}-footer`} ref="footer" style={miniShowStyle}>
             {tempFooter}
           </div>
         );
       }
-
       let header;
       if (title) {
+        const className = classNames({
+          [`${prefixCls}-header`]: true,
+          [`${prefixCls}-draggable`]: draggable,
+        });
+        const titleClassName = classNames({
+          [`${prefixCls}-title`]: true,
+          [`${prefixCls}-title-mini`]: minimizeStatus,
+        });
         header = (
-          <div key="header" class={`${prefixCls}-header`} ref="header">
-            <div class={`${prefixCls}-title`} id={this.titleId}>
+          <div key="header" class={className} ref="header">
+            <div class={titleClassName} id={this.titleId}>
               {title}
             </div>
           </div>
         );
+      }
+
+      let mini;
+      if (minimize) {
+        const miniIconType = minimizeStatus ? "border" : "minus"
+        mini = (
+          <button
+            type="button"
+            key="mini"
+            onClick={this.handleMini}
+            aria-label="Mini"
+            class={`${prefixCls}-mini`}
+          >
+            <Icon type={miniIconType} class={`${prefixCls}-mini-x`} />
+          </button>
+        )
       }
 
       let closer;
@@ -265,12 +328,31 @@ export default {
         );
       }
 
+      let resizerDom;
+      if (resizer) {
+        const ResizerProps = {
+          props: {
+            prefixCls
+          }
+        }
+        resizerDom = (
+          <ResizerWrap {...ResizerProps} style={miniShowStyle} />
+        )
+      }
+
       const style = dest;
       const sentinelStyle = { width: 0, height: 0, overflow: 'hidden' };
       const cls = {
         [prefixCls]: true,
       };
       const transitionName = this.getTransitionName();
+      const contentClassName = classNames({
+        [`${prefixCls}-content`]: true,
+        [`${prefixCls}-content-draggable`]: draggable && !title,
+      });
+
+      if (minimizeStatus) style.width = "320px";
+
       const dialogElement = (
         <LazyRenderBox
           v-show={visible}
@@ -283,13 +365,17 @@ export default {
           onMousedown={this.onDialogMouseDown}
         >
           <div tabIndex={0} ref="sentinelStart" style={sentinelStyle} aria-hidden="true" />
-          <div class={`${prefixCls}-content`}>
-            {closer}
+          <div class={contentClassName} ref="content" onMousedown={handleDragMousedown} onMousemove={handleDragMousemove} onMouseup={handleDragMouseup}>
+            <div class={`${prefixCls}-icon-btn`}>
+              {mini}
+              {closer}
+            </div>
             {header}
-            <div key="body" class={`${prefixCls}-body`} style={bodyStyle} ref="body" {...bodyProps}>
+            <div key="body" class={`${prefixCls}-body`} style={bodyStyle} ref="body" {...bodyProps} style={miniShowStyle}>
               {this.$slots.default}
             </div>
             {footer}
+            {resizerDom}
           </div>
           <div tabIndex={0} ref="sentinelEnd" style={sentinelStyle} aria-hidden="true" />
         </LazyRenderBox>
@@ -320,7 +406,7 @@ export default {
     getMaskElement() {
       const props = this.$props;
       let maskElement;
-      if (props.mask) {
+      if (props.mask && !this.minimizeStatus) {
         const maskTransition = this.getMaskTransitionName();
         maskElement = (
           <LazyRenderBox
@@ -417,24 +503,43 @@ export default {
     if (visible) {
       style.display = null;
     }
-    return (
-      <div class={`${prefixCls}-root`}>
-        {this.getMaskElement()}
-        <div
-          tabIndex={-1}
-          onKeydown={this.onKeydown}
-          class={`${prefixCls}-wrap ${wrapClassName || ''}`}
-          ref="wrap"
-          onClick={maskClosable ? this.onMaskClick : noop}
-          onMouseup={maskClosable ? this.onMaskMouseUp : noop}
-          role="dialog"
-          aria-labelledby={title ? this.titleId : null}
-          style={style}
-          {...wrapProps}
-        >
+    let modalWrap;
+    if (this.minimizeStatus) {
+      const props = this.$props;
+
+      const miniStyle = {
+        top: document.body.offsetHeight - 300 + 'px',
+        right: '50px'
+      }
+      if (props.zIndex !== undefined) {
+        miniStyle.zIndex = props.zIndex;
+      }
+      modalWrap = (
+        <div class={`${prefixCls}-mini-wrap ${wrapClassName || ''}`} style={miniStyle}>
           {this.getDialogElement()}
         </div>
-      </div>
-    );
+      )
+    } else {
+      modalWrap = (
+        <div class={`${prefixCls}-root`}>
+          {this.getMaskElement()}
+          <div
+            tabIndex={-1}
+            onKeydown={this.onKeydown}
+            class={`${prefixCls}-wrap ${wrapClassName || ''}`}
+            ref="wrap"
+            onClick={maskClosable ? this.onMaskClick : noop}
+            onMouseup={maskClosable ? this.onMaskMouseUp : noop}
+            role="dialog"
+            aria-labelledby={title ? this.titleId : null}
+            style={style}
+            {...wrapProps}
+          >
+            {this.getDialogElement()}
+          </div>
+        </div>
+      );
+    }
+    return modalWrap;
   },
 };

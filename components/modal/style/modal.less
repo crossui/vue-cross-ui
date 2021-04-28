@@ -1,129 +1,190 @@
-@dialog-prefix-cls: ~'@{vcu-prefix}-modal';
-@table-prefix-cls: ~'@{vcu-prefix}-table';
-@modal-footer-padding-vertical: 10px;
+@dialog-prefix-cls              :~'@{vcu-prefix}-modal';
+@table-prefix-cls               :~'@{vcu-prefix}-table';
+@modal-footer-padding-vertical  : 10px;
 @modal-footer-padding-horizontal: 16px;
 
 .@{dialog-prefix-cls} {
   .reset-component;
 
-  position: relative;
-  top: 100px;
-  width: auto;
-  margin: 0 auto;
+  position      : relative;
+  top           : 100px;
+  width         : auto;
+  margin        : 0 auto;
   padding-bottom: 24px;
   pointer-events: none;
 
   &-wrap {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: @zindex-modal;
-    overflow: auto;
-    outline: 0;
+    position                  : fixed;
+    top                       : 0;
+    right                     : 0;
+    bottom                    : 0;
+    left                      : 0;
+    z-index                   : @zindex-modal;
+    overflow                  : auto;
+    outline                   : 0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &-mini-wrap {
+    position                  : fixed;
+    z-index                   : @zindex-modal;
+    outline                   : 0;
     -webkit-overflow-scrolling: touch;
   }
 
   &-title {
-    margin: 0;
-    color: @modal-heading-color;
+    margin     : 0;
+    color      : @modal-heading-color;
     font-weight: 500;
-    font-size: @font-size-lg;
+    font-size  : @font-size-lg;
     line-height: 22px;
-    word-wrap: break-word;
+    word-wrap  : break-word;
+  }
+
+  &-title-mini {
+    overflow     : hidden;
+    width        : 150px;
+    white-space  : nowrap;
+    text-overflow: ellipsis;
   }
 
   &-content {
-    position: relative;
+    position        : relative;
     background-color: @component-background;
-    background-clip: padding-box;
-    border: 0;
-    border-radius: @border-radius-base;
-    box-shadow: @shadow-2;
-    pointer-events: auto;
+    background-clip : padding-box;
+    border          : 0;
+    border-radius   : @border-radius-base;
+    box-shadow      : @shadow-2;
+    pointer-events  : auto;
   }
 
-  &-close {
+  &-content-draggable {
+    cursor: move;
+
+    .@{dialog-prefix-cls}-confirm-body-wrapper {
+      cursor: default;
+    }
+  }
+
+  &-icon-btn {
     position: absolute;
-    top: 0;
-    right: 0;
-    z-index: @zindex-popup-close;
-    padding: 0;
-    color: @text-color-secondary;
-    font-weight: 700;
-    line-height: 1;
+    top     : 0;
+    right   : 0;
+    z-index : @zindex-popup-close;
+  }
+
+  &-close,
+  &-mini {
+    padding        : 0;
+    color          : @text-color-secondary;
+    font-weight    : 700;
+    line-height    : 1;
     text-decoration: none;
-    background: transparent;
-    border: 0;
-    outline: 0;
-    cursor: pointer;
-    transition: color 0.3s;
+    background     : transparent;
+    border         : 0;
+    outline        : 0;
+    cursor         : pointer;
+    transition     : color 0.3s;
 
     &-x {
-      display: block;
-      width: 56px;
-      height: 56px;
-      font-size: @font-size-lg;
-      font-style: normal;
-      line-height: 56px;
-      text-align: center;
+      display       : block;
+      width         : 56px;
+      height        : 56px;
+      font-size     : @font-size-lg;
+      font-style    : normal;
+      line-height   : 56px;
+      text-align    : center;
       text-transform: none;
       text-rendering: auto;
     }
 
     &:focus,
     &:hover {
-      color: @icon-color-hover;
+      color          : @icon-color-hover;
       text-decoration: none;
     }
   }
 
   &-header {
-    padding: 16px 24px;
-    color: @text-color;
-    background: @modal-header-bg;
+    padding      : 16px 24px;
+    color        : @text-color;
+    background   : @modal-header-bg;
     border-bottom: @border-width-base @border-style-base @modal-header-border-color-split;
     border-radius: @border-radius-base @border-radius-base 0 0;
   }
 
+  &-draggable {
+    cursor: move;
+  }
+
   &-body {
-    padding: @modal-body-padding;
-    font-size: @font-size-base;
+    padding    : @modal-body-padding;
+    font-size  : @font-size-base;
     line-height: @line-height-base;
-    word-wrap: break-word;
+    word-wrap  : break-word;
   }
 
   &-footer {
-    padding: @modal-footer-padding-vertical @modal-footer-padding-horizontal;
-    text-align: right;
-    background: @modal-footer-bg;
-    border-top: @border-width-base @border-style-base @modal-footer-border-color-split;
+    padding      : @modal-footer-padding-vertical @modal-footer-padding-horizontal;
+    text-align   : right;
+    background   : @modal-footer-bg;
+    border-top   : @border-width-base @border-style-base @modal-footer-border-color-split;
     border-radius: 0 0 @border-radius-base @border-radius-base;
-    button + button {
+
+    button+button {
       margin-bottom: 0;
-      margin-left: 8px;
+      margin-left  : 8px;
+    }
+  }
+
+  &-resizer {
+    display   : block;
+    overflow  : hidden;
+    position  : absolute;
+    width     : 12px;
+    height    : 12px;
+    right     : 0;
+    bottom    : 0;
+    z-index   : 9999;
+    background: transparent;
+    cursor    : se-resize;
+
+    &::after {
+      display      : block;
+      position     : absolute;
+      content      : "";
+      background   : transparent;
+      left         : 0;
+      top          : 0;
+      width        : 0;
+      height       : 0;
+      border-bottom: 10px solid #ddd;
+      border-left  : 10px solid transparent;
+    }
+
+    &.clicked::after {
+      border-bottom: 10px solid @primary-color;
     }
   }
 
   &.zoom-enter,
   &.zoom-appear {
-    transform: none; // reset scale avoid mousePosition bug
-    opacity: 0;
+    transform         : none; // reset scale avoid mousePosition bug
+    opacity           : 0;
     animation-duration: @animation-duration-slow;
-    user-select: none; 
+    user-select       : none;
   }
 
   &-mask {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: @zindex-modal-mask;
-    height: 100%;
+    position        : fixed;
+    top             : 0;
+    right           : 0;
+    bottom          : 0;
+    left            : 0;
+    z-index         : @zindex-modal-mask;
+    height          : 100%;
     background-color: @modal-mask-bg;
-    filter: ~'alpha(opacity=50)';
+    filter          : ~'alpha(opacity=50)';
 
     &-hidden {
       display: none;
@@ -137,17 +198,19 @@
 
 .@{dialog-prefix-cls}-centered {
   text-align: center;
+
   &::before {
-    display: inline-block;
-    width: 0;
-    height: 100%;
+    display       : inline-block;
+    width         : 0;
+    height        : 100%;
     vertical-align: middle;
-    content: '';
+    content       : '';
   }
+
   .@{dialog-prefix-cls} {
-    top: 0;
-    display: inline-block;
-    text-align: left;
+    top           : 0;
+    display       : inline-block;
+    text-align    : left;
     vertical-align: middle;
   }
 }
@@ -155,8 +218,9 @@
 @media (max-width: @screen-sm-max) {
   .@{dialog-prefix-cls} {
     max-width: calc(100vw - 16px);
-    margin: 8px auto;
+    margin   : 8px auto;
   }
+
   .@{dialog-prefix-cls}-centered {
     .@{dialog-prefix-cls} {
       flex: 1;

@@ -35,7 +35,7 @@ if (typeof window !== 'undefined' && window.document && window.document.document
   addEventListener(document.documentElement, 'click', getClickPosition, true);
 }
 
-function noop() {}
+function noop() { }
 const modalProps = (defaultProps = {}) => {
   const props = {
     prefixCls: PropTypes.string,
@@ -84,6 +84,9 @@ const modalProps = (defaultProps = {}) => {
     keyboard: PropTypes.bool,
     wrapProps: PropTypes.object,
     focusTriggerAfterClose: PropTypes.bool,
+    draggable: PropTypes.bool,
+    resizer: PropTypes.bool,
+    minimize: PropTypes.bool,
   };
   return initDefaultProps(props, defaultProps);
 };
@@ -104,6 +107,7 @@ export default {
     confirmLoading: false,
     visible: false,
     okType: 'primary',
+    draggable: true
   }),
   data() {
     return {
@@ -129,7 +133,9 @@ export default {
       this.$emit('cancel', e);
       this.$emit('change', false);
     },
-
+    handleMini(val) {
+      this.$emit("mini", val)
+    },
     handleOk(e) {
       this.$emit('ok', e);
     },
@@ -205,6 +211,7 @@ export default {
       on: {
         ...getListeners(this),
         close: this.handleCancel,
+        mini: this.handleMini
       },
       class: getClass(this),
       style: getStyle(this),
