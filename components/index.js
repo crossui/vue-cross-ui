@@ -130,6 +130,8 @@ import { default as PageHeader } from './page-header';
 
 import { default as Space } from './space';
 
+import { default as areaData } from './area-data';
+
 const components = [
   Base,
   Affix,
@@ -220,6 +222,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 export {
   Base,
   version,
+  areaData,
   install,
   message,
   notification,
@@ -290,5 +293,6 @@ export {
 
 export default {
   version,
+  areaData,
   install,
 };
