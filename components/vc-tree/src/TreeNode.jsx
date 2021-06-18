@@ -4,8 +4,23 @@ import { getNodeChildren, mapChildren, warnOnlyTreeNode } from './util';
 import { initDefaultProps, filterEmpty, getComponentFromProp } from '../../_util/props-util';
 import BaseMixin from '../../_util/BaseMixin';
 import getTransitionProps from '../../_util/getTransitionProps';
+import Trigger from '../../vc-trigger';
+import Menu from '../../menu';
+import Icon from '../../icon';
+import { cloneDeep } from "lodash";
 
-function noop() {}
+const BUILT_IN_PLACEMENTS = {
+  bottomRight: {
+    points: ['tr', 'br'],
+    offset: [60, 4],
+    overflow: {
+      adjustX: 1,
+      adjustY: 1,
+    },
+  },
+};
+
+function noop() { }
 const ICON_OPEN = 'open';
 const ICON_CLOSE = 'close';
 
@@ -54,6 +69,7 @@ const TreeNode = {
   data() {
     return {
       dragNodeHighlight: false,
+      contextMenuDisplay: false,
     };
   },
   inject: {
@@ -151,6 +167,13 @@ const TreeNode = {
         vcTree: { onNodeContextMenu },
       } = this;
       onNodeContextMenu(e, this);
+      //右键菜单
+      const {
+        vcTree: { contextMenu }
+      } = this;
+      if (contextMenu) {
+        this.contextMenuDisplay = true;
+      }
     },
 
     onDragStart(e) {
@@ -518,6 +541,115 @@ const TreeNode = {
 
       return <transition {...animProps}>{$children}</transition>;
     },
+
+    handlePopupVisibleChange(popupVisible) {
+      this.contextMenuDisplay = popupVisible
+    },
+
+    handleContextMenuClick(e) {
+      this.handlePopupVisibleChange(false)
+      const {
+        vcTree: { onNodeContextMenuClick },
+        title
+      } = this;
+      e.title = title;
+      onNodeContextMenuClick(e, this);
+    },
+
+    renderContextMenuIcon(item) {
+      return (
+        item.icon && item.icon != ""
+          ?
+          item.iconType && item.iconType == "iconfont"
+            ?
+            <i class={`iconfont ${item.icon}`}></i>
+            :
+            <Icon type={item.icon} />
+          :
+          null
+      )
+    },
+
+    renderContextMenu() {
+      if (!this.contextMenuDisplay) {
+        return null
+      }
+      const { vcTree: { prefixCls, contextMenu }, $props, eventKey, handlePopupVisibleChange, handleContextMenuClick } = this
+      const {
+        ...restProps
+      } = $props;
+      const disabled = this.isDisabled()
+      if (contextMenu.disabled || !contextMenu.options || contextMenu.options.length == 0) return null;
+      let _options = cloneDeep(contextMenu.options)
+      _options = contextMenu.visibleMethod(_options, eventKey)
+      const menus = (
+        <Menu onClick={handleContextMenuClick}>
+          {_options.map((item, index) => {
+            {
+              return (
+                item.children && item.children.length
+                  ?
+                  item.visible == undefined || !item.visible ?
+                    <Menu.SubMenu key={item.key || index} popupClassName={contextMenu.className}>
+                      <span slot="title">{this.renderContextMenuIcon(item)}<span>{item.title}</span></span>
+                      {
+                        item.children.map((subitem, subindex) => {
+                          return (
+                            item.visible == undefined || !item.visible
+                              ?
+                              <Menu.Item key={subitem.key || subindex}>
+                                {this.renderContextMenuIcon(subitem)}
+                                <span>{subitem.title}</span>
+                              </Menu.Item>
+                              :
+                              null
+                          )
+                        })
+                      }
+                    </Menu.SubMenu>
+                    :
+                    null
+                  :
+                  item.visible == undefined || !item.visible
+                    ?
+                    <Menu.Item key={item.key || index} disabled={item.disabled}>
+                      {this.renderContextMenuIcon(item)}
+                      <span>{item.title}</span>
+                    </Menu.Item>
+                    :
+                    null
+              )
+            }
+          })}
+        </Menu>
+      );
+
+      const triggerProps = {
+        props: {
+          ...restProps,
+          popupPlacement: 'bottomRight',
+          popupTransitionName: "slide-up",
+          builtinPlacements: BUILT_IN_PLACEMENTS,
+          action: disabled ? [] : ['contextmenu'],
+          zIndex: contextMenu.zIndex,
+          popupVisible: disabled ? false : this.contextMenuDisplay,
+          prefixCls: `${prefixCls}-context-menus`,
+        },
+        on: {
+          popupVisibleChange: handlePopupVisibleChange,
+        },
+        ref: 'trigger',
+      };
+
+      return (
+        <Trigger {...triggerProps}>
+          <span class={`${prefixCls}-context-trigger`}></span>
+          <template slot="popup">
+            <div class={contextMenu.className}>{menus}</div>
+          </template>
+        </Trigger>
+      )
+    }
   },
 
   render(h) {
@@ -560,6 +692,7 @@ const TreeNode = {
         {this.renderSwitcher()}
         {this.renderCheckbox()}
         {this.renderSelector(h)}
+        {this.renderContextMenu()}
         {this.renderChildren()}
       </li>
     );

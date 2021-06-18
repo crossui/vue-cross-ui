@@ -71,6 +71,7 @@ function TreeProps() {
      */
     replaceFields: PropTypes.object,
     blockNode: PropTypes.bool,
+    contextMenu: PropTypes.object,
   };
 }
 

@@ -30,7 +30,7 @@ import {
 function getWatch(keys = []) {
   const watch = {};
   keys.forEach(k => {
-    watch[k] = function() {
+    watch[k] = function () {
       this.needSyncKeys[k] = true;
     };
   });
@@ -65,6 +65,7 @@ const Tree = {
       checkedKeys: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
       defaultSelectedKeys: PropTypes.array,
       selectedKeys: PropTypes.array,
+      contextMenu: PropTypes.object,
       // onClick: PropTypes.func,
       // onDoubleClick: PropTypes.func,
       // onExpand: PropTypes.func,
@@ -557,9 +558,9 @@ const Tree = {
         const loadPromise = this.onNodeLoad(treeNode);
         return loadPromise
           ? loadPromise.then(() => {
-              // [Legacy] Refresh logic
-              this.setUncontrolledState({ _expandedKeys: expandedKeys });
-            })
+            // [Legacy] Refresh logic
+            this.setUncontrolledState({ _expandedKeys: expandedKeys });
+          })
           : null;
       }
 
@@ -577,6 +578,10 @@ const Tree = {
     onNodeContextMenu(event, node) {
       event.preventDefault();
       this.__emit('rightClick', { event, node });
+    },
+
+    onNodeContextMenuClick(selectoption, node) {
+      this.__emit('contextMenuClick', { selectoption, node });
     },
 
     /**
@@ -659,7 +664,6 @@ const Tree = {
   render() {
     const { _treeNode: treeNode } = this.$data;
     const { prefixCls, focusable, showLine, tabIndex = 0 } = this.$props;
-
     return (
       <ul
         class={classNames(prefixCls, {

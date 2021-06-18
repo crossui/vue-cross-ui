@@ -68,7 +68,8 @@
     "vue-ref": "^2.0.0",
     "vue-template-compiler": "^2.6.11",
     "warning": "^4.0.0",
-    "webpack-cli": "^4.5.0"
+    "webpack-cli": "^4.5.0",
+    "xe-utils": "^3.3.0"
   },
   "eslintConfig": {
     "root": true,
