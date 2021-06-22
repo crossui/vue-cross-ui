@@ -24,6 +24,7 @@ const AbstractSelectProps = () => ({
   showSearch: PropTypes.bool,
   allowClear: PropTypes.bool,
   disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
   tabIndex: PropTypes.number,
   placeholder: PropTypes.any,
   defaultActiveFirstOption: PropTypes.bool,
@@ -121,8 +122,8 @@ const Select = {
       this.$props.mode !== 'combobox',
       'Select',
       'The combobox mode of Select is deprecated,' +
-        'it will be removed in next major version,' +
-        'please use AutoComplete instead',
+      'it will be removed in next major version,' +
+      'please use AutoComplete instead',
     );
   },
   methods: {
@@ -174,10 +175,11 @@ const Select = {
       mode,
       options,
       getPopupContainer,
+      disabled,
+      readonly,
       showArrow,
       ...restProps
     } = getOptionProps(this);
-    
     const getPrefixCls = this.configProvider.getPrefixCls;
     const renderEmpty = this.configProvider.renderEmpty;
     const prefixCls = getPrefixCls('select', customizePrefixCls);
@@ -225,8 +227,8 @@ const Select = {
       (isValidElement(clearIcon)
         ? cloneElement(clearIcon, { class: `${prefixCls}-clear-icon` })
         : clearIcon)) || (
-      <Icon type="close-circle" theme="filled" class={`${prefixCls}-clear-icon`} />
-    );
+        <Icon type="close-circle" theme="filled" class={`${prefixCls}-clear-icon`} />
+      );
 
     const finalMenuItemSelectedIcon = (menuItemSelectedIcon &&
       (isValidElement(menuItemSelectedIcon)
@@ -243,19 +245,21 @@ const Select = {
         ...rest,
         ...modeConfig,
         prefixCls,
+        disabled: disabled || readonly ? true : false,
+        readonly,
         optionLabelProp: optionLabelProp || 'children',
         notFoundContent: this.getNotFoundContent(renderEmpty),
         maxTagPlaceholder: getComponentFromProp(this, 'maxTagPlaceholder'),
         placeholder: getComponentFromProp(this, 'placeholder'),
         children: options
           ? options.map(option => {
-              const { key, label = option.title, on, class: cls, style, ...restOption } = option;
-              return (
-                <Option key={key} {...{ props: restOption, on, class: cls, style }}>
-                  {label}
-                </Option>
-              );
-            })
+            const { key, label = option.title, on, class: cls, style, ...restOption } = option;
+            return (
+              <Option key={key} {...{ props: restOption, on, class: cls, style }}>
+                {label}
+              </Option>
+            );
+          })
           : filterEmpty(this.$slots.default),
         __propsSymbol__: Symbol(),
         dropdownRender: getComponentFromProp(this, 'dropdownRender', {}, false),
@@ -270,7 +274,7 @@ const Select = {
 };
 
 /* istanbul ignore next */
-Select.install = function(Vue) {
+Select.install = function (Vue) {
   Vue.use(Base);
   Vue.component(Select.name, Select);
   Vue.component(Select.Option.name, Select.Option);

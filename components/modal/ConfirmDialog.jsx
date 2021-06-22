@@ -43,7 +43,7 @@ export default {
     const runtimeLocale = getConfirmLocale();
     const okText = props.okText || (okCancel ? runtimeLocale.okText : runtimeLocale.justOkText);
     const cancelText = props.cancelText || runtimeLocale.cancelText;
-    const autoFocusButton = props.autoFocusButton === null ? false : props.autoFocusButton || 'ok';
+    const autoFocusButton = props.autoFocusButton ? props.autoFocusButton : false;  //props.autoFocusButton === null ? false : props.autoFocusButton || 'ok';
     const transitionName = props.transitionName || 'zoom';
     const maskTransitionName = props.maskTransitionName || 'fade';
     let okType = props.okType || 'primary';

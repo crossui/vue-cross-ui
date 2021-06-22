@@ -105,6 +105,7 @@ const Select = {
     autoClearSearchValue: PropTypes.bool.def(true),
     tabIndex: PropTypes.any.def(0),
     dropdownRender: PropTypes.func.def(menu => menu),
+    readonly: PropTypes.bool.def(false),
     // onChange: noop,
     // onFocus: noop,
     // onBlur: noop,
@@ -1589,7 +1590,7 @@ const Select = {
     // Default set showArrow to true if not set (not set directly in defaultProps to handle multiple case)
     const { showArrow = true } = props;
     const state = this.$data;
-    const { disabled, prefixCls, loading } = props;
+    const { disabled, prefixCls, loading, readonly } = props;
     const ctrlNode = this.renderTopControlNode();
     const { _open: open, _inputValue: inputValue, _value: value } = this.$data;
     if (open) {
@@ -1638,6 +1639,7 @@ const Select = {
       [`${prefixCls}-focused`]: open || !!this._focused,
       [`${prefixCls}-combobox`]: isCombobox(props),
       [`${prefixCls}-disabled`]: disabled,
+      [`${prefixCls}-readonly`]: readonly,
       [`${prefixCls}-enabled`]: !disabled,
       [`${prefixCls}-allow-clear`]: !!props.allowClear,
       [`${prefixCls}-no-arrow`]: !showArrow,

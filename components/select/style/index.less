@@ -5,28 +5,30 @@
 @select-prefix-cls: ~'@{vcu-prefix}-select';
 
 .selection__clear() {
-  position: absolute;
-  top: 50%;
-  right: @control-padding-horizontal - 1px;
-  z-index: 1;
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  margin-top: -6px;
-  color: @disabled-color;
-  font-size: @font-size-sm;
-  font-style: normal;
-  line-height: 12px;
-  text-align: center;
+  position      : absolute;
+  top           : 50%;
+  right         : @control-padding-horizontal - 1px;
+  z-index       : 1;
+  display       : inline-block;
+  width         : 12px;
+  height        : 12px;
+  margin-top    : -6px;
+  color         : @disabled-color;
+  font-size     : @font-size-sm;
+  font-style    : normal;
+  line-height   : 12px;
+  text-align    : center;
   text-transform: none;
-  background: @component-background;
-  cursor: pointer;
-  opacity: 0;
-  transition: color 0.3s ease, opacity 0.15s ease;
+  background    : @component-background;
+  cursor        : pointer;
+  opacity       : 0;
+  transition    : color 0.3s ease, opacity 0.15s ease;
   text-rendering: auto;
+
   &::before {
     display: block;
   }
+
   &:hover {
     color: @text-color-secondary;
   }
@@ -36,18 +38,18 @@
   .reset-component;
 
   position: relative;
-  display: inline-block;
-  outline: 0;
+  display : inline-block;
+  outline : 0;
 
   ul,
   ol {
-    margin: 0;
-    padding: 0;
+    margin    : 0;
+    padding   : 0;
     list-style: none;
   }
 
-  > ul > li > a {
-    padding: 0;
+  >ul>li>a {
+    padding         : 0;
     background-color: @component-background;
   }
 
@@ -55,13 +57,13 @@
   &-arrow {
     .iconfont-mixin();
 
-    position: absolute;
-    top: 50%;
-    right: @control-padding-horizontal - 1px;
-    margin-top: -@font-size-sm / 2;
-    color: @disabled-color;
-    font-size: @font-size-sm;
-    line-height: 1;
+    position        : absolute;
+    top             : 50%;
+    right           : @control-padding-horizontal - 1px;
+    margin-top      : -@font-size-sm / 2;
+    color           : @disabled-color;
+    font-size       : @font-size-sm;
+    line-height     : 1;
     transform-origin: 50% 50%;
 
     & &-icon svg {
@@ -70,17 +72,17 @@
   }
 
   &-selection {
-    display: block;
-    box-sizing: border-box;
+    display         : block;
+    box-sizing      : border-box;
     background-color: @select-background;
-    border: @border-width-base @border-style-base @select-border-color;
+    border          : @border-width-base @border-style-base @select-border-color;
     // strange align fix for chrome but works
     // https://gw.alipayobjects.com/zos/rmsportal/VFTfKXJuogBAXcvfAUWJ.gif
     border-top-width: @border-width-base + 0.02px;
-    border-radius: @border-radius-base;
-    outline: none;
-    transition: all 0.3s @ease-in-out;
-    user-select: none;
+    border-radius   : @border-radius-base;
+    outline         : none;
+    transition      : all 0.3s @ease-in-out;
+    user-select     : none;
 
     &:hover {
       .hover;
@@ -101,10 +103,10 @@
     }
 
     &-selected-value {
-      float: left;
-      max-width: 100%;
-      overflow: hidden;
-      white-space: nowrap;
+      float        : left;
+      max-width    : 100%;
+      overflow     : hidden;
+      white-space  : nowrap;
       text-overflow: ellipsis;
     }
   }
@@ -119,25 +121,34 @@
 
   &-disabled &-selection {
     background: @input-disabled-bg;
-    cursor: not-allowed;
+    cursor    : not-allowed;
+
     &:hover,
     &:focus,
     &:active {
       border-color: @select-border-color;
-      box-shadow: none;
+      box-shadow  : none;
     }
 
     &__clear {
-      display: none;
-      visibility: hidden;
+      display       : none;
+      visibility    : hidden;
       pointer-events: none;
     }
   }
 
+  &-readonly &-selection {
+    color: @text-color;
+    background: @select-background;
+    cursor    : default;
+  }
+
+
   &-disabled &-selection--multiple &-selection__choice {
     padding-right: 10px;
-    color: fade(@black, 33%);
-    background: @background-color-base;
+    color        : fade(@black, 33%);
+    background   : @background-color-base;
+
     &__remove {
       display: none;
     }
@@ -145,8 +156,8 @@
 
   &-selection--single {
     position: relative;
-    height: @input-height-base;
-    cursor: pointer;
+    height  : @input-height-base;
+    cursor  : pointer;
 
     .@{select-prefix-cls}-selection__rendered {
       margin-right: 24px;
@@ -160,36 +171,42 @@
   }
 
   &-selection__rendered {
-    position: relative;
-    display: block;
+    position    : relative;
+    display     : block;
     margin-right: @control-padding-horizontal - 1px;
-    margin-left: @control-padding-horizontal - 1px;
-    line-height: @input-height-base - 2px;
+    margin-left : @control-padding-horizontal - 1px;
+    line-height : @input-height-base - 2px;
+
     &::after {
-      display: inline-block;
-      width: 0;
-      visibility: hidden;
-      content: '.';
+      display       : inline-block;
+      width         : 0;
+      visibility    : hidden;
+      content       : '.';
       pointer-events: none;
     }
   }
 
   &-lg {
     font-size: @font-size-lg;
+
     .@{select-prefix-cls}-selection--single {
       height: @input-height-lg;
     }
+
     .@{select-prefix-cls}-selection__rendered {
       line-height: @input-height-lg - 2px;
     }
+
     .@{select-prefix-cls}-selection--multiple {
       min-height: @input-height-lg;
+
       .@{select-prefix-cls}-selection__rendered {
         li {
-          height: @input-height-lg - 8px;
+          height     : @input-height-lg - 8px;
           line-height: @input-height-lg - 8px;
         }
       }
+
       .@{select-prefix-cls}-selection__clear,
       .@{select-prefix-cls}-arrow {
         top: @input-height-lg / 2;
@@ -201,23 +218,28 @@
     .@{select-prefix-cls}-selection--single {
       height: @input-height-sm;
     }
+
     .@{select-prefix-cls}-selection__rendered {
       margin-left: @control-padding-horizontal-sm - 1px;
       line-height: @input-height-sm - 2px;
     }
+
     .@{select-prefix-cls}-selection--multiple {
       min-height: @input-height-sm;
+
       .@{select-prefix-cls}-selection__rendered {
         li {
-          height: @input-height-sm - 8px;
+          height     : @input-height-sm - 8px;
           line-height: @input-height-sm - 10px;
         }
       }
+
       .@{select-prefix-cls}-selection__clear,
       .@{select-prefix-cls}-arrow {
         top: @input-height-sm / 2;
       }
     }
+
     .@{select-prefix-cls}-selection__clear,
     .@{select-prefix-cls}-arrow {
       right: @control-padding-horizontal-sm;
@@ -225,8 +247,9 @@
   }
 
   &-disabled &-selection__choice__remove {
-    color: @disabled-color;
+    color : @disabled-color;
     cursor: default;
+
     &:hover {
       color: @disabled-color;
     }
@@ -234,24 +257,24 @@
 
   &-search__field__wrap {
     position: relative;
-    display: inline-block;
+    display : inline-block;
   }
 
   &-selection__placeholder,
   &-search__field__placeholder {
     // for TreeSelect compatibility
-    position: absolute;
-    top: 50%;
-    right: 9px;
-    left: 0;
-    max-width: 100%;
-    height: 20px;
-    margin-top: -10px;
-    overflow: hidden;
-    color: @input-placeholder-color;
-    line-height: 20px;
-    white-space: nowrap;
-    text-align: left;
+    position     : absolute;
+    top          : 50%;
+    right        : 9px;
+    left         : 0;
+    max-width    : 100%;
+    height       : 20px;
+    margin-top   : -10px;
+    overflow     : hidden;
+    color        : @input-placeholder-color;
+    line-height  : 20px;
+    white-space  : nowrap;
+    text-align   : left;
     text-overflow: ellipsis;
   }
 
@@ -260,117 +283,120 @@
   }
 
   &-search__field__mirror {
-    position: absolute;
-    top: 0;
-    left: 0;
-    white-space: pre;
-    opacity: 0;
+    position      : absolute;
+    top           : 0;
+    left          : 0;
+    white-space   : pre;
+    opacity       : 0;
     pointer-events: none;
   }
 
   &-search--inline {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width   : 100%;
+    height  : 100%;
 
     .@{select-prefix-cls}-search__field__wrap {
-      width: 100%;
+      width : 100%;
       height: 100%;
     }
 
     .@{select-prefix-cls}-search__field {
-      width: 100%;
-      height: 100%;
-      font-size: 100%;
-      line-height: 1;
-      background: transparent;
-      border-width: 0;
+      width        : 100%;
+      height       : 100%;
+      font-size    : 100%;
+      line-height  : 1;
+      background   : transparent;
+      border-width : 0;
       border-radius: @border-radius-base;
-      outline: 0;
+      outline      : 0;
     }
 
-    > i {
+    >i {
       float: right;
     }
   }
 
   &-selection--multiple {
-    min-height: @input-height-base;
+    min-height    : @input-height-base;
     padding-bottom: 3px;
-    cursor: text;
+    cursor        : text;
     .clearfix;
 
     .@{select-prefix-cls}-search--inline {
-      position: static;
-      float: left;
-      width: auto;
+      position : static;
+      float    : left;
+      width    : auto;
       max-width: 100%;
-      padding: 0;
+      padding  : 0;
+
       .@{select-prefix-cls}-search__field {
-        width: 0.75em;
+        width    : 0.75em;
         max-width: 100%;
-        padding: 1px;
+        padding  : 1px;
       }
     }
 
     .@{select-prefix-cls}-selection__rendered {
-      height: auto;
+      height       : auto;
       margin-bottom: -3px;
-      margin-left: 5px;
+      margin-left  : 5px;
     }
 
     .@{select-prefix-cls}-selection__placeholder {
       margin-left: 6px;
     }
 
-    > ul > li,
-    .@{select-prefix-cls}-selection__rendered > ul > li {
-      height: @input-height-base - 8px;
+    >ul>li,
+    .@{select-prefix-cls}-selection__rendered>ul>li {
+      height     : @input-height-base - 8px;
       // for tree-select
-      margin-top: 3px;
+      margin-top : 3px;
       line-height: @input-height-base - 8px - 2px;
     }
 
     .@{select-prefix-cls}-selection__choice {
-      position: relative;
-      float: left;
-      max-width: 99%;
-      margin-right: 4px;
-      padding: 0 20px 0 10px;
-      overflow: hidden;
-      color: @tag-default-color;
+      position        : relative;
+      float           : left;
+      max-width       : 99%;
+      margin-right    : 4px;
+      padding         : 0 20px 0 10px;
+      overflow        : hidden;
+      color           : @tag-default-color;
       background-color: @tag-default-bg;
-      border: 1px solid @border-color-split;
-      border-radius: @border-radius-sm;
-      cursor: default;
-      transition: padding 0.3s @ease-in-out;
+      border          : 1px solid @border-color-split;
+      border-radius   : @border-radius-sm;
+      cursor          : default;
+      transition      : padding 0.3s @ease-in-out;
+
       &__disabled {
         padding: 0 10px;
       }
     }
 
     .@{select-prefix-cls}-selection__choice__content {
-      display: inline-block;
-      max-width: 100%;
-      overflow: hidden;
-      white-space: nowrap;
+      display      : inline-block;
+      max-width    : 100%;
+      overflow     : hidden;
+      white-space  : nowrap;
       text-overflow: ellipsis;
-      transition: margin 0.3s @ease-in-out;
+      transition   : margin 0.3s @ease-in-out;
     }
 
     .@{select-prefix-cls}-selection__choice__remove {
       .iconfont-mixin();
 
-      position: absolute;
-      right: 4px;
-      display: inline-block;
-      color: @text-color-secondary;
+      position   : absolute;
+      right      : 4px;
+      display    : inline-block;
+      color      : @text-color-secondary;
       font-weight: bold;
-      font-size: @font-size-sm;
+      font-size  : @font-size-sm;
       line-height: inherit;
-      cursor: pointer;
-      transition: all 0.3s;
+      cursor     : pointer;
+      transition : all 0.3s;
       .iconfont-size-under-12px(10px);
+
       &:hover {
         color: @icon-color-hover;
       }
@@ -393,6 +419,7 @@
         transform: rotate(180deg);
       }
     }
+
     .@{select-prefix-cls}-selection {
       .active();
     }
@@ -402,24 +429,28 @@
     .@{select-prefix-cls}-arrow {
       display: none;
     }
+
     .@{select-prefix-cls}-search--inline {
-      float: none;
-      width: 100%;
+      float : none;
+      width : 100%;
       height: 100%;
     }
+
     .@{select-prefix-cls}-search__field__wrap {
-      width: 100%;
+      width : 100%;
       height: 100%;
     }
+
     .@{select-prefix-cls}-search__field {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
+      position  : relative;
+      z-index   : 1;
+      width     : 100%;
+      height    : 100%;
       box-shadow: none;
       transition: all 0.3s @ease-in-out, height 0s;
     }
   }
+
   &-combobox&-allow-clear &-selection:hover &-selection__rendered,
   &-combobox&-show-arrow &-selection:hover &-selection__rendered {
     margin-right: 20px; // In case that clear button will overlap content
@@ -429,17 +460,17 @@
 .@{select-prefix-cls}-dropdown {
   .reset-component;
 
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
-  z-index: @zindex-dropdown;
-  box-sizing: border-box;
-  font-size: @font-size-base;
-  font-variant: initial;
+  position        : absolute;
+  top             : -9999px;
+  left            : -9999px;
+  z-index         : @zindex-dropdown;
+  box-sizing      : border-box;
+  font-size       : @font-size-base;
+  font-variant    : initial;
   background-color: @select-dropdown-bg;
-  border-radius: @border-radius-base;
-  outline: none;
-  box-shadow: @box-shadow-base;
+  border-radius   : @border-radius-base;
+  outline         : none;
+  box-shadow      : @box-shadow-base;
 
   &.slide-up-enter.slide-up-enter-active&-placement-bottomLeft,
   &.slide-up-appear.slide-up-appear-active&-placement-bottomLeft {
@@ -464,28 +495,28 @@
   }
 
   &-menu {
-    max-height: 250px;
+    max-height   : 250px;
     margin-bottom: 0;
-    padding: @select-dropdown-edge-child-vertical-padding 0; //Change
-    padding-left: 0; // Override default ul/ol
-    overflow: auto;
-    list-style: none;
-    outline: none;
+    padding      : @select-dropdown-edge-child-vertical-padding 0; //Change
+    padding-left : 0; // Override default ul/ol
+    overflow     : auto;
+    list-style   : none;
+    outline      : none;
 
     &-item-group-list {
-      margin: 0;
+      margin : 0;
       padding: 0;
 
-      > .@{select-prefix-cls}-dropdown-menu-item {
+      >.@{select-prefix-cls}-dropdown-menu-item {
         padding-left: 20px;
       }
     }
 
     &-item-group-title {
-      height: 32px;
-      padding: 0 @control-padding-horizontal;
-      color: @text-color-secondary;
-      font-size: @font-size-sm;
+      height     : 32px;
+      padding    : 0 @control-padding-horizontal;
+      color      : @text-color-secondary;
+      font-size  : @font-size-sm;
       line-height: 32px;
     }
 
@@ -495,49 +526,50 @@
     }
 
     &-item {
-      position: relative;
-      display: block;
-      padding: @select-dropdown-vertical-padding @control-padding-horizontal;
-      overflow: hidden;
-      color: @text-color;
-      font-weight: normal;
-      font-size: @select-dropdown-font-size;
-      line-height: @select-dropdown-line-height;
-      white-space: nowrap;
+      position     : relative;
+      display      : block;
+      padding      : @select-dropdown-vertical-padding @control-padding-horizontal;
+      overflow     : hidden;
+      color        : @text-color;
+      font-weight  : normal;
+      font-size    : @select-dropdown-font-size;
+      line-height  : @select-dropdown-line-height;
+      white-space  : nowrap;
       text-overflow: ellipsis;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      cursor       : pointer;
+      transition   : background 0.3s ease;
 
       &:hover:not(&-disabled) {
         background-color: @item-hover-bg;
       }
 
       &:first-child {
-        & when (@select-dropdown-edge-child-vertical-padding = 0) {
+        & when (@select-dropdown-edge-child-vertical-padding =0) {
           border-radius: @border-radius-base @border-radius-base 0 0;
         }
       }
 
       &:last-child {
-        & when (@select-dropdown-edge-child-vertical-padding = 0) {
+        & when (@select-dropdown-edge-child-vertical-padding =0) {
           border-radius: 0 0 @border-radius-base @border-radius-base;
         }
       }
 
       &-selected {
-        color: @text-color;
-        font-weight: @select-item-selected-font-weight;
+        color           : @text-color;
+        font-weight     : @select-item-selected-font-weight;
         background-color: @select-item-selected-bg;
       }
 
       &-disabled {
-        color: @disabled-color;
+        color : @disabled-color;
         cursor: not-allowed;
 
         &:hover {
-          color: @disabled-color;
+          color : @disabled-color;
           cursor: not-allowed;
         }
+        
       }
 
       &-active:not(&-disabled) {
@@ -545,10 +577,10 @@
       }
 
       &-divider {
-        height: 1px;
-        margin: 1px 0;
-        overflow: hidden;
-        line-height: 0;
+        height          : 1px;
+        margin          : 1px 0;
+        overflow        : hidden;
+        line-height     : 0;
         background-color: @border-color-split;
       }
     }
@@ -557,16 +589,17 @@
   &&--multiple {
     .@{select-prefix-cls}-dropdown-menu-item {
       padding-right: @control-padding-horizontal + 20;
+
       & .@{select-prefix-cls}-selected-icon {
-        position: absolute;
-        top: 50%;
-        right: @control-padding-horizontal;
-        color: transparent;
+        position   : absolute;
+        top        : 50%;
+        right      : @control-padding-horizontal;
+        color      : transparent;
         font-weight: bold;
-        font-size: 12px;
+        font-size  : 12px;
         text-shadow: 0 0.1px 0, 0.1px 0 0, 0 -0.1px 0, -0.1px 0;
-        transform: translateY(-50%);
-        transition: all 0.2s;
+        transform  : translateY(-50%);
+        transition : all 0.2s;
       }
 
       &:hover .@{select-prefix-cls}-selected-icon {
@@ -580,7 +613,7 @@
       &-selected .@{select-prefix-cls}-selected-icon,
       &-selected:hover .@{select-prefix-cls}-selected-icon {
         display: inline-block;
-        color: @primary-color;
+        color  : @primary-color;
       }
     }
   }
