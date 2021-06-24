@@ -106,6 +106,7 @@ const Select = {
     tabIndex: PropTypes.any.def(0),
     dropdownRender: PropTypes.func.def(menu => menu),
     readonly: PropTypes.bool.def(false),
+    showMaxTagCount: PropTypes.bool.def(true),
     // onChange: noop,
     // onFocus: noop,
     // onBlur: noop,
@@ -1306,6 +1307,7 @@ const Select = {
         maxTagCount,
         maxTagPlaceholder,
         showSearch,
+        showMaxTagCount,
       } = props;
       const removeIcon = getComponentFromProp(this, 'removeIcon');
       const className = `${prefixCls}-selection__rendered`;
@@ -1434,7 +1436,7 @@ const Select = {
             );
           });
         }
-        if (maxTagPlaceholderEl) {
+        if (maxTagPlaceholderEl && showMaxTagCount) {
           selectedValueNodes.push(maxTagPlaceholderEl);
         }
         selectedValueNodes.push(

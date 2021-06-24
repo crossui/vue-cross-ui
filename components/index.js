@@ -132,6 +132,8 @@ import { default as Space } from './space';
 
 import { default as areaData } from './area-data';
 
+import { default as Barcode } from './barcode';
+
 const components = [
   Base,
   Affix,
@@ -197,6 +199,7 @@ const components = [
   Descriptions,
   PageHeader,
   Space,
+  Barcode
 ];
 
 const install = function(Vue) {
@@ -289,6 +292,7 @@ export {
   Descriptions,
   PageHeader,
   Space,
+  Barcode
 };
 
 export default {

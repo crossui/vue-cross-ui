@@ -44,6 +44,7 @@ const AbstractSelectProps = () => ({
   dropdownRender: PropTypes.func,
   loading: PropTypes.bool,
   scrollChoose: PropTypes.bool,
+  showMaxTagCount: PropTypes.bool,
 });
 const Value = PropTypes.shape({
   key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -178,6 +179,7 @@ const Select = {
       disabled,
       readonly,
       showArrow,
+      showMaxTagCount,
       ...restProps
     } = getOptionProps(this);
     const getPrefixCls = this.configProvider.getPrefixCls;
@@ -247,6 +249,7 @@ const Select = {
         prefixCls,
         disabled: disabled || readonly ? true : false,
         readonly,
+        showMaxTagCount,
         optionLabelProp: optionLabelProp || 'children',
         notFoundContent: this.getNotFoundContent(renderEmpty),
         maxTagPlaceholder: getComponentFromProp(this, 'maxTagPlaceholder'),

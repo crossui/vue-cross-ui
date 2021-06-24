@@ -1,74 +1,77 @@
 <template>
   <div>
-    <v-button @click="info">Info</v-button>
-    <v-button @click="success">Success</v-button>
-    <v-button @click="error">Error</v-button>
-    <v-button @click="warning">Warning</v-button>
-    <v-button type="primary" @click="showModal">Open</v-button>
-    <v-modal
-      title="Basic Modal"
-      v-model="visible"
-      @ok="handleOk"
+    <v-select
+      mode="multiple"
+      :defaultValue="['a1', 'b2']"
+      style="width: 100px"
+      @change="handleChange"
+      placeholder="Please select"
+      :maxTagCount="1"
+      :showMaxTagCount="false"
     >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-    </v-modal>
+      <v-select-option v-for="i in 25" :key="(i + 9).toString(36) + i">{{
+        (i + 9).toString(36) + i
+      }}</v-select-option>
+    </v-select>
+
+    <v-tree-select
+      showSearch
+      style="width: 100px"
+      :value="value"
+      :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
+      placeholder="Please select"
+      allowClear
+      multiple
+      :maxTagCount="1"
+      :showMaxTagCount="false"
+      treeDefaultExpandAll
+      @change="onChange"
+      @search="onSearch"
+      @select="onSelect"
+    >
+      <v-tree-select-node value="parent 1" title="parent 1" key="0-1">
+        <v-tree-select-node value="parent 1-0" title="parent 1-0" key="0-1-1">
+          <v-tree-select-node
+            value="leaf1"
+            title="my leaf"
+            key="random"
+          ></v-tree-select-node>
+          <v-tree-select-node
+            value="leaf2"
+            title="your leaf"
+            key="random1"
+          ></v-tree-select-node>
+        </v-tree-select-node>
+        <v-tree-select-node value="parent 1-1" title="parent 1-1" key="random2">
+          <v-tree-select-node value="sss" key="random3">
+            <b style="color: #08c" slot="title">sss</b>
+          </v-tree-select-node>
+        </v-tree-select-node>
+      </v-tree-select-node>
+    </v-tree-select>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      visible: false,
-    }
+      value: undefined,
+    };
   },
   methods: {
-    showModal() {
-      this.visible = true
+    onChange(value) {
+      console.log(arguments);
+      this.value = value;
     },
-    handleOk(e) {
-      console.log(e);
-      this.visible = false
+    onSearch() {
+      console.log(arguments);
     },
-    info() {
-      const h = this.$createElement
-      this.$info({
-        title: 'This is a notification message',
-        autoFocusButton: "ok",
-        content: h('div',{}, [
-          h('p', 'some messages...some messages...'),
-          h('p', 'some messages...some messages...'),
-        ]),
-        onOk() {},
-      });
+    onSelect() {
+      console.log(arguments);
     },
-
-    success() {
-      this.$success({
-        title: 'This is a success message',
-        content: (  // JSX support
-          <div>
-            <p>some messages...some messages...</p>
-            <p>some messages...some messages...</p>
-          </div>
-        ),
-      });
+    handleChange(value) {
+      console.log(`selected ${value}`);
     },
-
-    error() {
-      this.$error({
-        title: 'This is an error message',
-        content: 'some messages...some messages...',
-      });
-    },
-
-    warning() {
-      this.$warning({
-        title: 'This is a warning message',
-        content: 'some messages...some messages...',
-      });
-    },
-  }
-}
+  },
+};
 </script>

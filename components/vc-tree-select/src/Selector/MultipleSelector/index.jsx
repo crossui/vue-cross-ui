@@ -25,7 +25,7 @@ const MultipleSelector = {
     labelInValue: PropTypes.bool,
     maxTagCount: PropTypes.number,
     maxTagPlaceholder: PropTypes.any,
-
+    showMaxTagCount: PropTypes.bool,
     // onChoiceAnimationLeave: PropTypes.func,
   },
   inject: {
@@ -84,6 +84,7 @@ const MultipleSelector = {
         prefixCls,
         labelInValue,
         maxTagCount,
+        showMaxTagCount
       } = this.$props;
       const {
         vcTreeSelect: { onMultipleSelectorRemove },
@@ -113,7 +114,7 @@ const MultipleSelector = {
       ));
 
       // Rest node count
-      if (maxTagCount >= 0 && maxTagCount < selectorValueList.length) {
+      if (maxTagCount >= 0 && maxTagCount < selectorValueList.length && showMaxTagCount) {
         let content = `+ ${selectorValueList.length - maxTagCount} ...`;
         const maxTagPlaceholder = getComponentFromProp(this, 'maxTagPlaceholder', {}, false);
         if (typeof maxTagPlaceholder === 'string') {

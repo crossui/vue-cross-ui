@@ -96,6 +96,7 @@ const Select = {
       children: PropTypes.any,
       labelInValue: PropTypes.bool,
       maxTagCount: PropTypes.number,
+      showMaxTagCount: PropTypes.bool.def(true),
       maxTagPlaceholder: PropTypes.oneOfType([PropTypes.any, PropTypes.func]),
       maxTagTextLength: PropTypes.number,
       showCheckedStrategy: PropTypes.oneOf([SHOW_ALL, SHOW_PARENT, SHOW_CHILD]),
