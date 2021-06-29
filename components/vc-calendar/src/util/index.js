@@ -115,6 +115,9 @@ export function formatDate(value, format) {
 export function dateSplicing(value) {
   if (value == undefined || value.length < 4) return value
   const date = value.split("")
+  if (value.indexOf("-") != -1 && date[4] != "-") {
+    return value
+  }
   //month
   if (date[4] != "-") {
     date[4] = "-"

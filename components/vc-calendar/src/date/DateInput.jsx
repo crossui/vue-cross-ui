@@ -94,7 +94,7 @@ const DateInput = {
       const { str: oldStr = '' } = this;
       if (e.isComposing || composing || oldStr === str) return;
 
-      const reg = /(?!-)^[0-9\-]+$/
+      const reg = /^[0-9\-]+$/  //(?!-)
       const { disabledDate, format, selectedValue } = this.$props;
 
       // 没有内容，不合法并直接退出
@@ -107,7 +107,7 @@ const DateInput = {
         return;
       }
 
-      if (str.length <= oldStr.length) {
+      if (str.length < oldStr.length) {
         this.setState({
           invalid: true,
           str,
@@ -117,7 +117,7 @@ const DateInput = {
 
 
       this.inputStr = dateSplicing(str)
-      this.inputStr
+      //this.inputStr
       // 不合法直接退出
       const parsed = moment(this.inputStr, format, true);
       if (!parsed.isValid()) {
