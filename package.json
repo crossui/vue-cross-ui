@@ -58,7 +58,7 @@
     "json2mq": "^0.2.0",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
-    "moment": "^2.21.0",
+    "moment": "^2.29.4",
     "mutationobserver-shim": "^0.3.2",
     "omit.js": "^1.0.0",
     "raf": "^3.4.0",
